@@ -1,0 +1,1 @@
+/*Create tables for Products, Tickets\monthly schedule, Movies, halls, Employees, Customers, Orders(Payments, and Payments history)*/
