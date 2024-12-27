@@ -1,11 +1,9 @@
 /*Create tables for Products, Tickets\monthly schedule, Movies, halls, Employees, Customers, Orders(Payments, and Payments history)*/
 
 CREATE DATABASE Group16
-USE Group16
-CHARACTER SET utf8mb4;
-COLLATE utf8mb4_bin;
+CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 
-
+USE Group16;
 
 
 
@@ -32,7 +30,7 @@ VALUES
 ('Teca7', 'WeLoveTeca', 'Admin', 'Ahmed Marcolino Teca', 'Kanadji', '+905441234567', '1980-01-01', '2010-05-15', 'teca.kanadji@example.com', FALSE),
 ('manager1', 'manager1', 'Manager', 'Mana', 'Ger', '+905111111111', '1981-01-01', '2010-05-15', 'manager1@example.com', FALSE),
 ('admin1', 'admin1', 'Admin', 'Ad', 'Min', '+905222222222', '1982-01-01', '2010-05-15', 'admin1@example.com', FALSE),
-('cashier1', 'cashier1', 'Cashier', 'Cash', 'Ier', '+905333333333', '1983-01-01', '2010-05-15', 'cashier1@example.com', FALSE),;
+('cashier1', 'cashier1', 'Cashier', 'Cash', 'Ier', '+905333333333', '1983-01-01', '2010-05-15', 'cashier1@example.com', FALSE);
 
 CREATE TABLE Customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -57,6 +55,11 @@ CREATE TABLE Halls (
     hall_name VARCHAR(50) UNIQUE NOT NULL,
     capacity INT NOT NULL
 );
+SELECT * FROM Halls;
+INSERT INTO Halls (hall_name, capacity)
+VALUES
+('Hall_A', '16'),
+('Hall_B', '48');
 
 CREATE TABLE Schedules (
     schedule_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -87,6 +90,24 @@ CREATE TABLE Inventory (
     name VARCHAR(100) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     stock_quantity INT NOT NULL
+);
+
+CREATE TABLE Carts (
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE
+);
+
+CREATE TABLE CartItems (
+    cart_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (cart_id) REFERENCES Carts(cart_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES Inventory(product_id) ON DELETE CASCADE
 );
 
 
