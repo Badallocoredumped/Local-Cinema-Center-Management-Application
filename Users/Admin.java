@@ -8,6 +8,7 @@ public class Admin extends Employee
         super(ID,  Username, Role, Name, Surname, Phone, DOB, DOS, Email, Password);
     }
 
+
     /*Admin Menu
      * 
      * View movies
