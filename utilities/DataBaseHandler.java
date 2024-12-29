@@ -119,6 +119,23 @@ public class DataBaseHandler
         return availableSeats;
     }
 
+    public static boolean selectSeat(int sessionId, int seatNumber)
+    {
+        try (Connection conn = getConnection())
+        {
+            String query = "UPDATE Tickets SET customer_name = ? WHERE session_id = ? AND seat_number = ? AND customer_name IS NULL";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, "reserved"); // Placeholder for customer name
+            stmt.setInt(2, sessionId);
+            stmt.setInt(3, seatNumber);
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
     public static void updateTicketSales(int ticketId, String customerName)
     {
         try (Connection conn = getConnection())
