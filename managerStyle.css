@@ -208,3 +208,11 @@
 }
 
 
+
+.menu-card {
+    -fx-text-fill: #fff;          /* Yazı rengi beyaz */
+    -fx-font-weight: bold;         /* Kalın yazı */
+    -ff-cursor: hand;
+    -fx-background-color:  linear-gradient(to right, #800000, #4b0000)
+}
+
