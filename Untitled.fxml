@@ -49,7 +49,7 @@
             </AnchorPane>
          </top>
          <left>
-            <AnchorPane prefHeight="647.0" prefWidth="215.0" style="-fx-background-color: linear-gradient(to right, #800000, #4c0005);" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="647.0" prefWidth="215.0" style="-fx-background-color: linear-gradient(to right, #800000, #4c0005);" styleClass="nav.btn" stylesheets="@managerStyle.css" BorderPane.alignment="CENTER">
                <children>
                   <Label alignment="CENTER" layoutX="74.0" layoutY="117.0" text="Welcome" textFill="WHITE">
                      <font>
@@ -61,27 +61,7 @@
                         <Font name="SansSerif Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Button layoutX="22.0" layoutY="269.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="175.0" style="-fx-background-color: linear-gradient(to right, #800000, #4b0000);;" text="Product Inventory" textFill="WHITE">
-                     <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="GLASS" />
-                     </graphic>
-                  </Button>
-                  <Button layoutX="20.0" layoutY="304.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="175.0" style="-fx-background-color: linear-gradient(to right, #800000, #4b0000);;" text="Personnel" textFill="WHITE">
-                     <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="USERS" />
-                     </graphic>
-                  </Button>
-                  <Button layoutX="22.0" layoutY="339.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="175.0" style="-fx-background-color: linear-gradient(to right, #800000, #4b0000);;" text="Price Management" textFill="WHITE">
-                     <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="MONEY" />
-                     </graphic>
-                  </Button>
-                  <Button layoutX="22.0" layoutY="382.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="175.0" style="-fx-background-color: linear-gradient(to right, #800000, #4b0000);;" text="Revenue and Tax" textFill="WHITE">
-                     <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="DOLLAR" />
-                     </graphic>
-                  </Button>
-                  <Button layoutX="38.0" layoutY="602.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="142.0" text="Sign Out">
+                  <Button layoutX="39.0" layoutY="636.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="142.0" text="Sign Out" AnchorPane.bottomAnchor="86.0">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
@@ -90,6 +70,38 @@
                      </graphic>
                   </Button>
                   <FontAwesomeIcon fill="WHITE" glyphName="USER" layoutX="66.0" layoutY="102.0" size="8em" text="" />
+                  <Button layoutX="18.0" layoutY="279.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" text="Product Inventory">
+                     <font>
+                        <Font name="SansSerif Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIcon fill="WHITE" glyphName="GLASS" />
+                     </graphic>
+                  </Button>
+                  <Button layoutX="21.0" layoutY="383.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" text="Revenue and Tax">
+                     <font>
+                        <Font name="SansSerif Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIcon fill="WHITE" glyphName="DOLLAR" />
+                     </graphic>
+                  </Button>
+                  <Button layoutX="18.0" layoutY="349.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" text="Price Management">
+                     <font>
+                        <Font name="SansSerif Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIcon fill="WHITE" glyphName="MONEY" />
+                     </graphic>
+                  </Button>
+                  <Button layoutX="18.0" layoutY="314.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" text="Personnel">
+                     <font>
+                        <Font name="SansSerif Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIcon fill="WHITE" glyphName="USERS" />
+                     </graphic>
+                  </Button>
                </children>
             </AnchorPane>
          </left>
@@ -484,3 +496,4 @@
       </BorderPane>
    </children>
 </AnchorPane>
+
