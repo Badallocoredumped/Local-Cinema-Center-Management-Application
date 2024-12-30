@@ -1,8 +1,7 @@
-import java.time.LocalDate;
 import java.util.Scanner;
 
 public abstract class Person {
-    //Will herit customer annd Employees (maybe we will just use Person directly as an client).
+    //Will inherit customer annd Employees (maybe we will just use Person directly as an client).
 
     protected String name;
     protected String surname;
