@@ -2,6 +2,7 @@ package utilities;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,19 +11,29 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class DataBaseHandler 
+import javax.swing.ImageIcon;
+
+public class DataBaseHandler
 {
-    private final String url = "jdbc:mysql://localhost:3306/Group16"; 
-    private final String username = "myuser"; 
-    private final String password = "1234"; 
+    private static final String URL = "jdbc:mysql://localhost:3306/Group16";
+    private static final String USER = "myuser";
+    private static final String PASSWORD = "1234";
     private Connection dbconnection;
+
+
+    public static Connection getConnection() throws Exception
+    {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
 
     public DataBaseHandler()
     {
         try 
         {
-            dbconnection = DriverManager.getConnection(url, username, password);
+            dbconnection = DriverManager.getConnection(URL, USER, PASSWORD);
         
         } 
         catch (SQLException e) 
@@ -46,8 +57,8 @@ public class DataBaseHandler
             writer.write(summaryText);
             writer.newLine();  
 
-            String query2do = "INSERT INTO movies (title, poster, genre, summary) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement statement = dbconnection.prepareStatement(query2do))
+            String query = "INSERT INTO movies (title, poster, genre, summary) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement statement = dbconnection.prepareStatement(query))
             {
                 statement.setString(1, title);
                 statement.setString(2, poster);
@@ -70,28 +81,29 @@ public class DataBaseHandler
             System.err.println("Database connection failed!!");
             return; 
         }
+        
 
-        String query2do = "SELECT summary FROM movies WHERE id = ?";
-        try (PreparedStatement selectStatement = dbconnection.prepareStatement(query2do))
+        String query = "SELECT summary FROM movies WHERE movie_id = ?";
+        try (PreparedStatement selectStatement = dbconnection.prepareStatement(query))
         {
             selectStatement.setInt(1, movieId);
             ResultSet infoSet = selectStatement.executeQuery();
 
             if (infoSet.next()) 
             {
-                String summaryPath = infoSet.getString("summary");
-
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(summaryPath))) 
+                String newSummaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/Movie/Summaries/" + newTitle.replaceAll(" ", "_") + "_summary.txt";
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(newSummaryPath))) 
                 {
+
                     writer.write(newSummaryText);
                     writer.newLine();  
-                    query2do = "UPDATE movies SET title = ?, poster = ?, genre = ?, summary = ? WHERE id = ?";
-                    try(PreparedStatement statement = dbconnection.prepareStatement(query2do))
+                    query = "UPDATE movies SET title = ?, poster = ?, genre = ?, summary = ? WHERE movie_id = ?";
+                    try(PreparedStatement statement = dbconnection.prepareStatement(query))
                     {
                         statement.setString(1, newTitle);
                         statement.setString(2, newPoster);
                         statement.setString(3, newGenre);
-                        statement.setString(4, summaryPath);
+                        statement.setString(4, newSummaryPath);
                         statement.setInt(5, movieId);
                         statement.executeUpdate();
 
@@ -119,24 +131,25 @@ public class DataBaseHandler
             return;
         }
 
-        String countQuery = "SELECT COUNT(*) AS total FROM employees";
+        String countQuery = "SELECT COUNT(*) AS total FROM movies";
         try (PreparedStatement countStatement = dbconnection.prepareStatement(countQuery)) 
         {
             ResultSet countResult = countStatement.executeQuery();
-            String query2do = "SELECT id, title, poster, genre, summary FROM movies";
+            String query = "SELECT movie_id, title, poster, genre, summary FROM movies";
 
-            try(PreparedStatement statement = dbconnection.prepareStatement(query2do))
+            try(PreparedStatement statement = dbconnection.prepareStatement(query))
             {
-                ResultSet infoSet = statement.executeQuery(query2do);
+                ResultSet infoSet = statement.executeQuery(query);
         
                 while (infoSet.next()) 
                 {
-                    int id = infoSet.getInt("id");
+                    int id = infoSet.getInt("movie_id");
                     String title = infoSet.getString("title");
-                    String poster = infoSet.getString("poster");
+                    String posterFile = infoSet.getString("poster");
                     String genre = infoSet.getString("genre");
                     String summaryFile = infoSet.getString("summary");
                     String summary = ReadSummary(summaryFile);
+                    ImageIcon poster = new ImageIcon(posterFile);
 
                     System.out.println("ID: " + id);
                     System.out.println("Title: " + title);
@@ -178,18 +191,28 @@ public class DataBaseHandler
         }
         return summary.toString();
     }
-}
 
-public class DataBaseHandler
-{
-    private static final String URL = "jdbc:mysql://localhost:3306/cinemacenter";
-    private static final String USER = "root";
-    private static final String PASSWORD = "Admin_123";
-
-    public static Connection getConnection() throws Exception
+    public ImageIcon readPoster(String posterFilePath) 
     {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        File posterFile = new File(posterFilePath);
+        if (posterFile.exists()) 
+        {
+            return new ImageIcon(posterFile.getAbsolutePath());
+        } 
+        else 
+        {
+            System.out.println("Poster file not found.");
+            return null;
+        }
     }
+
+    /*Add the Checjduplicate method here
+     * Don't forget individual updates
+     * Cancelation and refund operation
+     * Session planning (Can not cancel session after ticket has been sold)
+     * individual update options
+     * add interaction with user()
+    */
 
     public static String authenticate(String username, String password)
     {
