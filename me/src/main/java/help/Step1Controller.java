@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import help.classes.Movie;
 import help.classes.MovieService;
+import help.classes.SelectedMovie;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -139,6 +140,34 @@ public class Step1Controller
     }
 
     @FXML
+    private void handleConfirmSelection() throws IOException 
+    {
+        // Save the selected movie
+        Movie selectedMovie = resultsTableView.getSelectionModel().getSelectedItem().getValue();
+        if (selectedMovie != null) 
+        {
+            SelectedMovie.getInstance().setMovie(selectedMovie);
+
+            // Show confirmation dialog
+            showConfirmationDialog();
+
+            // Proceed to the next stage
+            /* Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/step2.fxml"));
+            Stage stage = (Stage) next_button_step1.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setFullScreen(true); // Ensure full screen
+            stage.setFullScreenExitHint(""); // Turn off the "Press ESC to exit fullscreen" text
+            stage.show(); */
+        } 
+        else 
+        {
+            // Show an error dialog or message indicating that no movie was selected
+            System.out.println("No movie selected");
+        }
+    }
+
+    @FXML
     private void handleNextButtonAction() throws IOException 
     {
         Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/step2.fxml"));
@@ -146,8 +175,10 @@ public class Step1Controller
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setFullScreen(true); // Ensure full screen
+        stage.setFullScreenExitHint(""); // Turn off the "Press ESC to exit fullscreen" text
         stage.show();
     }
+
     private void showErrorDialog(String errorMessage) 
     {
         try 
@@ -160,6 +191,29 @@ public class Step1Controller
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Error");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(next_button_step1.getScene().getWindow());
+            dialogStage.setScene(new Scene(root));
+            controller.setDialogStage(dialogStage);
+            dialogStage.showAndWait();
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void showConfirmationDialog() 
+    {
+        try 
+        {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/ConfirmationDialog.fxml"));
+            Parent root = loader.load();
+
+            ConfirmationDialogController controller = loader.getController();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Confirmation");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(next_button_step1.getScene().getWindow());
             dialogStage.setScene(new Scene(root));

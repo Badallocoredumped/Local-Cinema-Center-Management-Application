@@ -41,7 +41,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../css/style2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="help.Step2Controller">   <children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../css/style2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="help.Step2Controller">
+   <children>
       <AnchorPane prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <BorderPane prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: linear-gradient(to right, #800000, #4c0005);" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
@@ -143,24 +144,24 @@
             </AnchorPane>
          </top>
          <center>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" BorderPane.alignment="CENTER">
                <children>
                   <Button id="next_button_step2" fx:id="next_button_step2" layoutX="1042.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleNextButtonAction" prefHeight="31.0" prefWidth="58.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Next" AnchorPane.bottomAnchor="55.0" AnchorPane.rightAnchor="266.0" />
                   <Button id="back_button_step2" fx:id="back_button_step2" layoutX="107.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleBackButtonAction" prefHeight="31.0" prefWidth="58.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Back" AnchorPane.bottomAnchor="55.0" />
-                  <Label layoutX="8.0" layoutY="8.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" text="SELECTING DAY, SESSION AND HALL" textFill="MAROON">
+                  <Label layoutX="8.0" layoutY="8.0" styleClass="white-text" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" text="SELECTING DAY, SESSION AND HALL" textFill="MAROON">
                      <font>
                         <Font name="SansSerif Bold" size="36.0" />
                      </font>
                   </Label>
-                  <TreeTableView layoutX="325.0" layoutY="181.0" prefHeight="378.0" prefWidth="781.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0.5, 2, 0); -fx-background-radius: 20px;">
+                  <TreeTableView fx:id="sessionsTableView" layoutX="325.0" layoutY="181.0" prefHeight="378.0" prefWidth="781.0" styleClass="dropshadow-effect" style="-fx-background-radius: 20px;">
                      <columns>
-                        <TreeTableColumn prefWidth="195.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000); -fx-text-fill: white;" text="Day" />
-                        <TreeTableColumn prefWidth="174.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Session" />
-                        <TreeTableColumn prefWidth="230.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Hall" />
-                        <TreeTableColumn prefWidth="181.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" styleClass="table.view" text="Number of vacant seat" />
+                        <TreeTableColumn fx:id="dayColumn" prefWidth="195.0" text="Day" styleClass="tree-table-column" />
+                        <TreeTableColumn fx:id="sessionColumn" prefWidth="174.0" text="Session" styleClass="tree-table-column" />
+                        <TreeTableColumn fx:id="hallColumn" prefWidth="230.0" text="Hall" styleClass="tree-table-column" />
+                        <TreeTableColumn fx:id="vacantSeatsColumn" prefWidth="181.0" text="Number of vacant seat" styleClass="tree-table-column" />
                      </columns>
                   </TreeTableView>
-                  <Button layoutX="630.0" layoutY="594.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="172.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Confirm Selection">
+                  <Button layoutX="630.0" layoutY="594.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="172.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Confirm Selection" onAction="#handleConfirmSelection">
                      <graphic>
                         <FontAwesomeIcon glyphName="CHECK" />
                      </graphic>

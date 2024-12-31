@@ -21,6 +21,7 @@ public class App extends Application {
         scene = new Scene(loadFXML("help/fxml/step1"), 640, 480);  // Added the fxml folder to the path
         stage.setScene(scene);
         stage.setFullScreen(true); // Ensure full screen
+        stage.setFullScreenExitHint(""); // Turn off the "Press ESC to exit fullscreen" text
         stage.show();
     }
 

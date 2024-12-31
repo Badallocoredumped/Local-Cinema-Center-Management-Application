@@ -41,6 +41,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="help.Step3AController">   <children>
       <BorderPane prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -228,7 +230,7 @@
                   </Label>
                   <Button id="next_button_step3a" fx:id="next_button_step3a" layoutX="1040.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleNextButtonAction" prefHeight="31.0" prefWidth="58.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Next" AnchorPane.bottomAnchor="55.0" AnchorPane.rightAnchor="57.0" />
                   <Button id="back_button_step3a" fx:id="back_button_step3a" layoutX="107.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleBackButtonAction" prefHeight="31.0" prefWidth="58.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Back" AnchorPane.bottomAnchor="55.0" />
-                  <Button layoutX="591.0" layoutY="649.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="250.0" style="-fx-background-color: #4bb451; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Add Selection to Cart">
+                  <Button id="add_to_cart_button" fx:id="add_to_cart_button" layoutX="591.0" layoutY="649.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="250.0" style="-fx-background-color: #4bb451; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Add Selection to Cart" onAction="#handleAddToCartAction">
                      <graphic>
                         <FontAwesomeIcon glyphName="CHECK" />
                      </graphic>
@@ -257,82 +259,82 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.rowIndex="3">
+                        <Button fx:id="seat_A1" text="A1" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="0" GridPane.columnIndex="0">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Button fx:id="seat_A2" text="A2" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="0" GridPane.columnIndex="1">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                        <Button fx:id="seat_A3" text="A3" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="0" GridPane.columnIndex="2">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                        <Button fx:id="seat_A4" text="A4" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="0" GridPane.columnIndex="3">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.rowIndex="2">
+                        <Button fx:id="seat_B1" text="B1" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="1" GridPane.columnIndex="0">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.rowIndex="1">
+                        <Button fx:id="seat_B2" text="B2" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="1" GridPane.columnIndex="1">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;">
+                        <Button fx:id="seat_B3" text="B3" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="1" GridPane.columnIndex="2">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="1">
+                        <Button fx:id="seat_B4" text="B4" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="1" GridPane.columnIndex="3">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Button fx:id="seat_C1" text="C1" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="2" GridPane.columnIndex="0">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Button fx:id="seat_C2" text="C2" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="2" GridPane.columnIndex="1">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="2">
+                        <Button fx:id="seat_C3" text="C3" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="2" GridPane.columnIndex="2">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <Button fx:id="seat_C4" text="C4" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="2" GridPane.columnIndex="3">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <Button fx:id="seat_D1" text="D1" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="3" GridPane.columnIndex="0">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="3">
+                        <Button fx:id="seat_D2" text="D2" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="3" GridPane.columnIndex="1">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <Button fx:id="seat_D3" text="D3" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="3" GridPane.columnIndex="2">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: RED; -fx-background-color: YELLOW; -fx-background-color: GREEN;" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                        <Button fx:id="seat_D4" text="D4" mnemonicParsing="false" style="-fx-background-color: GREEN;" GridPane.rowIndex="3" GridPane.columnIndex="3">
                            <graphic>
                               <FontAwesomeIcon glyphName="USER" selectionFill="BLACK" size="3em" text="" wrappingWidth="31.28571319580078" />
                            </graphic>
@@ -351,6 +353,7 @@
                      </font>
                   </Label>
                   <FontAwesomeIcon glyphName="SHOPPING_CART" layoutX="102.0" layoutY="35.0" size="2em" text="" />
+                    <Label fx:id="shoppingCartLabel" layoutX="52.0" layoutY="80.0" text="Shopping Cart" />
                </children>
             </AnchorPane>
          </right>
