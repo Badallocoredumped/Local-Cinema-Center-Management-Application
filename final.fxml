@@ -41,7 +41,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <BorderPane prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: inear-gradient(to right, #800000, #4c0005);">
+      <AnchorPane prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <BorderPane prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: inear-gradient(to right, #800000, #4c0005);" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
             <AnchorPane prefHeight="36.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
                <children>
@@ -53,12 +54,12 @@
                         <Font name="SansSerif Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Button layoutX="1220.0" layoutY="6.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="52.0">
+                  <Button layoutX="1220.0" layoutY="6.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="52.0" AnchorPane.rightAnchor="0.0">
                      <graphic>
                         <FontAwesomeIcon glyphName="TIMES" wrappingWidth="8.428571701049805" />
                      </graphic>
                   </Button>
-                  <Button layoutX="1168.0" layoutY="6.0" mnemonicParsing="false" prefWidth="53.0">
+                  <Button layoutX="1168.0" layoutY="6.0" mnemonicParsing="false" prefWidth="53.0" AnchorPane.rightAnchor="55.0">
                      <graphic>
                         <FontAwesomeIcon glyphName="MINUS" />
                      </graphic>
@@ -67,15 +68,19 @@
             </AnchorPane>
          </top>
          <center>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to right, #800000, #4c0005);" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" BorderPane.alignment="CENTER">
                <children>
-                  <FontAwesomeIcon fill="WHITE" glyphName="CHECK" layoutX="551.0" layoutY="370.0" size="15EM" />
-                  <Label layoutX="299.0" layoutY="397.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 50, 0.5, 0, 0);" text="THANK YOU FOR SHOPPING!" textFill="WHITE">
-                     <font>
-                        <Font name="SansSerif Bold" size="48.0" />
-                     </font>
-                  </Label>
-                  <Button layoutX="1072.0" layoutY="683.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="147.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Back to Main Menu" />
+                  <AnchorPane prefHeight="766.0" prefWidth="1280.0" style="-fx-background-color: linear-gradient(to right, #800000, #4c0005);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <FontAwesomeIcon fill="WHITE" glyphName="CHECK" layoutX="892.0" layoutY="403.0" size="15EM" />
+                        <Label layoutX="616.0" layoutY="430.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 50, 0.5, 0, 0);" text="THANK YOU FOR SHOPPING!" textFill="WHITE">
+                           <font>
+                              <Font name="SansSerif Bold" size="48.0" />
+                           </font>
+                        </Label>
+                        <Button layoutX="1500.0" layoutY="680.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="147.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Back to Main Menu" />
+                     </children>
+                  </AnchorPane>
                </children>
             </AnchorPane>
          </center>
