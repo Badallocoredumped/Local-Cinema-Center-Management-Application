@@ -453,7 +453,7 @@
                                     <Font name="Microsoft Sans Serif" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="642.0" layoutY="149.0" prefHeight="17.0" prefWidth="101.0" text="Discount Rate:">
+                              <Label layoutX="609.0" layoutY="149.0" prefHeight="17.0" prefWidth="134.0" text="New Discount Rate:">
                                  <font>
                                     <Font name="Microsoft Sans Serif" size="15.0" />
                                  </font>
@@ -485,7 +485,11 @@
                                     <Font name="Microsoft Sans Serif" size="15.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="754.0" layoutY="104.0" />
+                              <Label alignment="CENTER" layoutX="774.0" layoutY="106.0" prefHeight="21.0" prefWidth="87.0" text="\$0.0">
+                                 <font>
+                                    <Font name="Microsoft Sans Serif" size="18.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </AnchorPane>
                      </children>
@@ -496,6 +500,7 @@
       </BorderPane>
    </children>
 </AnchorPane>
+
 
 
 
