@@ -60,14 +60,15 @@ CREATE TABLE Halls (
 
 CREATE TABLE Schedules (
     schedule_id INT AUTO_INCREMENT PRIMARY KEY,
+    schedule_name VARCHAR(255) NOT NULL UNIQUE,
     movie_id INT NOT NULL,
-    hall_id INT NOT NULL,
+    hall_name VARCHAR(50) UNIQUE NOT NULL,
     date DATE NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     sold_ticket BOOLEAN DEFAULT FALSE, /*Checks if tickets were sold for this session*/
     FOREIGN KEY (movie_id) REFERENCES Movies(movie_id) ON DELETE CASCADE,
-    FOREIGN KEY (hall_id) REFERENCES Halls(hall_id) ON DELETE CASCADE
+    FOREIGN KEY (hall_name) REFERENCES Halls(hall_name) ON DELETE CASCADE
 );
 
 CREATE TABLE Tickets (
