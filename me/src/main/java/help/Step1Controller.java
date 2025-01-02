@@ -174,9 +174,9 @@ public class Step1Controller
         Stage stage = (Stage) next_button_step1.getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setFullScreen(true); // Ensure full screen
+        /* stage.setFullScreen(true); // Ensure full screen
         stage.setFullScreenExitHint(""); // Turn off the "Press ESC to exit fullscreen" text
-        stage.show();
+        stage.show(); */
     }
 
     private void showErrorDialog(String errorMessage) 
