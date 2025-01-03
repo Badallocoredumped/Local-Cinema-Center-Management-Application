@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="help.ConfirmationDialogController" style="-fx-background-color: #f0f0f0; -fx-padding: 20;">
+   <children>
+      <VBox alignment="CENTER" spacing="20.0" layoutX="14.0" layoutY="14.0">
+         <Label text="Movie Selection Confirmed!" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4bb541;" />
+         <Button mnemonicParsing="false" text="OK" onAction="#handleOkButtonAction" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" />
+      </VBox>
+   </children>
+</AnchorPane>
