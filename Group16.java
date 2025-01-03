@@ -11,7 +11,7 @@ public class Group16
         poster = "C:/GitHub/Local-Cinema-Center-Management-Application/Movie/Poster/Khas.jpg";
         genre = "Horror";
         summary = "The ghosts of the tobacco factory are back to haunt the group 16, how will they handle it?!!";
-        dbhandler.AddMovie(title, poster, genre, summary);
+        //dbhandler.AddMovie(title, poster, genre, summary);
         //dbhandler.FullUpdateMovie(1, title, poster, genre, summary);
         dbhandler.GetAllMovies();
         

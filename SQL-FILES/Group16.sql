@@ -28,7 +28,7 @@ SELECT * FROM employees;
 /*We will create the database manually*/
 INSERT INTO employees (username, password, role, name, surname, phone_no, date_of_birth, date_of_start, email, DEFAULT_PASSWORD)
 VALUES 
-('emir5757', 'manager123', 'Manager', 'Emir', 'Özen', '+905551234567', '1980-01-01', '2010-05-15', 'emirozen57@hotmail.com', FALSE),
+('emir5757', 'Homelander', 'Manager', 'Emir', 'Özen', '+905551234567', '1980-01-01', '2010-05-15', 'emirozen57@hotmail.com', FALSE),
 ('Teca7', 'WeLoveTeca', 'Admin', 'Ahmed Marcolino Teca', 'Kanadji', '+905441234567', '1980-01-01', '2010-05-15', 'teca.kanadji@example.com', FALSE),
 ('manager1', 'manager1', 'Manager', 'Mana', 'Ger', '+905111111111', '1981-01-01', '2010-05-15', 'manager1@example.com', FALSE),
 ('admin1', 'admin1', 'Admin', 'Ad', 'Min', '+905222222222', '1982-01-01', '2010-05-15', 'admin1@example.com', FALSE),
@@ -66,6 +66,7 @@ CREATE TABLE Schedules (
     date DATE NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
+    vacant_seats INT NOT NULL,
     sold_ticket BOOLEAN DEFAULT FALSE, /*Checks if tickets were sold for this session*/
     FOREIGN KEY (movie_id) REFERENCES Movies(movie_id) ON DELETE CASCADE,
     FOREIGN KEY (hall_name) REFERENCES Halls(hall_name) ON DELETE CASCADE
@@ -75,13 +76,25 @@ CREATE TABLE Tickets (
     ticket_id INT AUTO_INCREMENT PRIMARY KEY,
     schedule_id INT NOT NULL,
     seat_id INT NOT NULL,
-    customer_id INT,
+    customer_name VARCHAR(100),
+    age INT,
     price DECIMAL(10, 2) NOT NULL,
     discount_applied BOOLEAN DEFAULT FALSE,
+    refunded BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (schedule_id) REFERENCES Schedules(schedule_id) ON DELETE CASCADE,
     FOREIGN KEY (seat_id) REFERENCES Seats(seat_id) ON DELETE CASCADE,
-    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE SET NULL
+    FOREIGN KEY (customer_name) REFERENCES Customers(customer_name)DELETE SET NULL
 );
+
+CREATE TABLE ProductSales (
+    sale_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    is_refunded BOOLEAN DEFAULT FALSE,
+    refunded_quantity INT DEFAULT,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE
+);
+
 
 CREATE TABLE Inventory (
     product_id INT AUTO_INCREMENT PRIMARY KEY,

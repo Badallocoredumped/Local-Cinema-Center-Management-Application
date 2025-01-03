@@ -544,10 +544,109 @@ public class DataBaseHandler
                 System.out.printf("Schedule Name: %s | Movie: %s | Hall: %d | Date: %s | Time: %s - %s%n",
                                   scheduleName, movieTitle, hallId, date, startTime, endTime);
             }
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) 
+        {
             e.printStackTrace();
         }
     }
+
+    public void TicketRefund(int ticketId) {
+        if (dbconnection == null) {
+            System.err.println("Database connection failed!");
+            return;
+        }
+
+        try 
+        {
+            String ticketQuery = "UPDATE Tickets SET refunded = TRUE WHERE ticket_id = ? AND refunded = FALSE";
+            String updateSeatsQuery = "UPDATE Schedules SET vacant_seats = vacant_seats + 1 " +
+                                      "WHERE schedule_id = (SELECT schedule_id FROM Tickets WHERE ticket_id = ?)";
+
+            try (PreparedStatement ticketStmt = dbconnection.prepareStatement(ticketQuery);
+                 PreparedStatement seatStmt = dbconnection.prepareStatement(updateSeatsQuery)) {
+
+                ticketStmt.setInt(1, ticketId);
+                seatStmt.setInt(1, ticketId);
+
+                int ticketUpdated = ticketStmt.executeUpdate();
+
+                if (ticketUpdated > 0) 
+                {
+                    seatStmt.executeUpdate();
+                    System.out.println("Ticket refunded successfully.");
+                } 
+                else 
+                {
+                    System.out.println("No ticket found or already refunded.");
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void ProductRefund(int saleId, int refundQuantity) 
+    {
+        if (dbconnection == null) 
+        {
+            System.err.println("Database connection failed!");
+            return;
+        }
+
+        try 
+        {
+            String validationQuery = "SELECT quantity, refunded_quantity FROM ProductSales WHERE sale_id = ? AND is_refunded = FALSE";
+            int purchasedQuantity = 0;
+            int alreadyRefunded = 0;
+
+            try (PreparedStatement validationStmt = dbconnection.prepareStatement(validationQuery)) {
+                validationStmt.setInt(1, saleId);
+                ResultSet resultSet = validationStmt.executeQuery();
+
+                if (resultSet.next()) 
+                {
+                    purchasedQuantity = resultSet.getInt("quantity");
+                    alreadyRefunded = resultSet.getInt("refunded_quantity");
+                } 
+                else 
+                {
+                    System.out.println("Sale ID not found or already refunded.");
+                    return;
+                }
+
+                if (refundQuantity > (purchasedQuantity - alreadyRefunded)) 
+                {
+                    System.out.println("Refund quantity exceeds available quantity for refund.");
+                    return;
+                }
+            }
+
+            String updateSalesQuery = "UPDATE ProductSales SET refunded_quantity = refunded_quantity + ? WHERE sale_id = ?";
+            String updateInventoryQuery = "UPDATE Products SET inventory = inventory + ? " +
+                                           "WHERE product_id = (SELECT product_id FROM ProductSales WHERE sale_id = ?)";
+
+            try (PreparedStatement salesStmt = dbconnection.prepareStatement(updateSalesQuery);
+                 PreparedStatement inventoryStmt = dbconnection.prepareStatement(updateInventoryQuery)) {
+
+                salesStmt.setInt(1, refundQuantity);
+                salesStmt.setInt(2, saleId);
+                inventoryStmt.setInt(1, refundQuantity);
+                inventoryStmt.setInt(2, saleId);
+
+                salesStmt.executeUpdate();
+                inventoryStmt.executeUpdate();
+                System.out.println("Product refund processed successfully.");
+            }
+        } 
+        catch (SQLException e) 
+        {
+            System.err.println("Product refund process failed. Transaction rolled back.");
+            e.printStackTrace();
+        }        
+    } 
     
 
 
