@@ -1,4 +1,4 @@
-package help;
+package me.src.main.java.help;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

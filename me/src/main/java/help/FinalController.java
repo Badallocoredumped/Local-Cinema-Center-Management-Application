@@ -1,4 +1,4 @@
-package help;
+package me.src.main.java.help;
 
 import java.io.IOException;
 import javafx.fxml.FXML;

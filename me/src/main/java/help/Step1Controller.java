@@ -1,10 +1,10 @@
-package help;
+package me.src.main.java.help;
 
 import java.io.IOException;
 import java.util.List;
-import help.classes.Movie;
-import help.classes.MovieService;
-import help.classes.SelectedMovie;
+import me.src.main.java.help.classes.Movie;
+import me.src.main.java.help.classes.MovieService;
+import me.src.main.java.help.classes.SelectedMovie;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

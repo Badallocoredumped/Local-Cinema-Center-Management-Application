@@ -1,9 +1,9 @@
-package help;
+package me.src.main.java.help;
 
 import java.io.IOException;
 import java.util.List;
 
-import help.classes.ShoppingCart;
+import me.src.main.java.help.classes.ShoppingCart;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,8 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import help.classes.SelectedSession;
-import help.classes.Session;
+import me.src.main.java.help.classes.SelectedSession;
+import me.src.main.java.help.classes.Session;
 
 public class Step4Controller {
 

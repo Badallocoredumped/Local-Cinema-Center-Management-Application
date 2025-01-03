@@ -1,11 +1,11 @@
-package help.utilities;
+package me.src.main.java.help.utilities;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import help.classes.Movie;
+import me.src.main.java.help.classes.Movie;
 
 public class MovieDBO 
 {

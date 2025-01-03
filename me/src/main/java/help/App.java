@@ -1,11 +1,10 @@
-package help;
+package me.src.main.java.help;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 /**
@@ -18,7 +17,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Load FXML file from the fxml folder
-        scene = new Scene(loadFXML("help/fxml/step1"), 640, 480);  // Added the fxml folder to the path
+        scene = new Scene(loadFXML("help/fxml/admin"), 640, 480);  // Added the fxml folder to the path
         stage.setScene(scene);
         stage.setFullScreen(true); // Ensure full screen
         stage.setFullScreenExitHint(""); // Turn off the "Press ESC to exit fullscreen" text

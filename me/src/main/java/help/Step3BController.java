@@ -1,9 +1,9 @@
-package help;
+package me.src.main.java.help;
 
 import java.io.IOException;
 
-import help.classes.SelectedSession;
-import help.classes.Session;
+import me.src.main.java.help.classes.SelectedSession;
+import me.src.main.java.help.classes.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

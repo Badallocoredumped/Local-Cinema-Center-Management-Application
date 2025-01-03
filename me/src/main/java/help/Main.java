@@ -1,6 +1,6 @@
-package help;
+package me.src.main.java.help;
 
-import help.utilities.DataBaseHandler;
+import me.src.main.java.help.utilities.DataBaseHandler;
 
 public class Main {
     public static void main(String[] args) 
