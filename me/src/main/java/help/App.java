@@ -1,4 +1,6 @@
-package me.src.main.java.help;
+package help;
+
+
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

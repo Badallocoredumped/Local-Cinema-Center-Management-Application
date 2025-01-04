@@ -16,30 +16,18 @@ CREATE TABLE employees (
     password VARCHAR(255) NOT NULL,
     role ENUM('Manager', 'Admin', 'Cashier') NOT NULL,
     name VARCHAR(100) NOT NULL,
-    surname VARCHAR(100) NOT NULL,
-    phone_no VARCHAR(25),
-    date_of_birth DATE,
-    date_of_start DATE,
-    email VARCHAR(100),
-    DEFAULT_PASSWORD BOOLEAN DEFAULT TRUE
+    surname VARCHAR(100) NOT NULL
 );
 
 SELECT * FROM employees;
 /*We will create the database manually*/
 INSERT INTO employees (username, password, role, name, surname, phone_no, date_of_birth, date_of_start, email, DEFAULT_PASSWORD)
 VALUES 
-('emir5757', 'Homelander', 'Manager', 'Emir', 'Özen', '+905551234567', '1980-01-01', '2010-05-15', 'emirozen57@hotmail.com', FALSE),
-('Teca7', 'WeLoveTeca', 'Admin', 'Ahmed Marcolino Teca', 'Kanadji', '+905441234567', '1980-01-01', '2010-05-15', 'teca.kanadji@example.com', FALSE),
-('manager1', 'manager1', 'Manager', 'Mana', 'Ger', '+905111111111', '1981-01-01', '2010-05-15', 'manager1@example.com', FALSE),
-('admin1', 'admin1', 'Admin', 'Ad', 'Min', '+905222222222', '1982-01-01', '2010-05-15', 'admin1@example.com', FALSE),
-('cashier1', 'cashier1', 'Cashier', 'Cash', 'Ier', '+905333333333', '1983-01-01', '2010-05-15', 'cashier1@example.com', FALSE),;
-
-CREATE TABLE Customers (
-    customer_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50),
-    surname VARCHAR(50),
-    age INT
-);
+('emir5757', 'Homelander', 'Manager', 'Emir', 'Özen'),
+('Teca7', 'WeLoveTeca', 'Admin', 'Ahmed Marcolino Teca', 'Kanadji'),
+('manager1', 'manager1', 'Manager', 'Mana', 'Ger'),
+('admin1', 'admin1', 'Admin', 'Ad', 'Min'),
+('cashier1', 'cashier1', 'Cashier', 'Cash', 'Ier');
 
 
 
@@ -47,14 +35,29 @@ CREATE TABLE Customers (
 CREATE TABLE Movies (
     movie_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
-    poster VARCHAR(255),
+    poster_url VARCHAR(255),
+    poster_image LONGBLOB,
     genre VARCHAR(255), -- Comma-separated genres or normalize into a separate table
-    summary TEXT
+    summary TEXT,
+    duration INT NOT NULL
 );
+
+ -- A way to upload jps files to the database
+ SET SQL_SAFE_UPDATES = 0;
+UPDATE Movies
+SET poster_image = LOAD_FILE('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/titanic.jpg')
+WHERE title = 'Titanic';
+SET SQL_SAFE_UPDATES = 1;
+
+-- to check if the upload worked
+SELECT movie_id, title, LENGTH(poster_image) AS image_size
+FROM Movies
+WHERE title = 'Titanic';
+
 
 CREATE TABLE Halls (
     hall_id INT AUTO_INCREMENT PRIMARY KEY,
-    hall_name VARCHAR(50) UNIQUE NOT NULL,
+    hall_name ENUM('Hall_A', 'Hall_B') UNIQUE NOT NULL,
     capacity INT NOT NULL
 );
 
@@ -75,15 +78,12 @@ CREATE TABLE Schedules (
 CREATE TABLE Tickets (
     ticket_id INT AUTO_INCREMENT PRIMARY KEY,
     schedule_id INT NOT NULL,
-    seat_id INT NOT NULL,
     customer_name VARCHAR(100),
     age INT,
-    price DECIMAL(10, 2) NOT NULL,
+    seat_number INT NOT NULL,
     discount_applied BOOLEAN DEFAULT FALSE,
     refunded BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (schedule_id) REFERENCES Schedules(schedule_id) ON DELETE CASCADE,
-    FOREIGN KEY (seat_id) REFERENCES Seats(seat_id) ON DELETE CASCADE,
-    FOREIGN KEY (customer_name) REFERENCES Customers(customer_name)DELETE SET NULL
 );
 
 CREATE TABLE ProductSales (

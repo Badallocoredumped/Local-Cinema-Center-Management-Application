@@ -1,19 +1,19 @@
-package me.src.main.java.help;
+package help;
+
 
 import java.io.File;
-import java.lang.classfile.Label;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
-import me.src.main.java.help.utilities.AdminDBH;
-import utilities.DataBaseHandler; // Import your DataBaseHandler
+import help.utilities.AdminDBH;
 
 public class AdminController {
 
@@ -70,8 +70,10 @@ public class AdminController {
 
     public void initialize() {
         dbHandler = new AdminDBH(); // Initialize DataBaseHandler
-        paneDashboard.setVisible(true);
-        paneAddMovie.setVisible(false); // Initially hide the add movie pane
+        paneDashboard = new AnchorPane();
+        paneDashboard.setVisible(false);
+        paneAddMovie = new AnchorPane();
+        paneAddMovie.setVisible(true); // Initially hide the add movie pane
     }
 
     @FXML

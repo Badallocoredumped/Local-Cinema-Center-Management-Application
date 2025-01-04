@@ -1,4 +1,4 @@
-package me.src.main.java.help;
+package help;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

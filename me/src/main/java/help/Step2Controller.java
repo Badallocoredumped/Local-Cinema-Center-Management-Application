@@ -1,4 +1,4 @@
-package me.src.main.java.help;
+package help;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -7,10 +7,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.src.main.java.help.utilities.DataBaseHandler;
-import me.src.main.java.help.classes.Movie;
-import me.src.main.java.help.classes.SelectedMovie;
-import me.src.main.java.help.classes.SelectedSession;
+import help.utilities.DataBaseHandler;
+import help.classes.Movie;
+import help.classes.SelectedMovie;
+import help.classes.SelectedSession;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,8 +23,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import me.src.main.java.help.classes.Session;
+import help.classes.Session;
 
 public class Step2Controller 
 {

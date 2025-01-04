@@ -1,12 +1,12 @@
-package me.src.main.java.help;
+package help;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.src.main.java.help.classes.SelectedSession;
-import me.src.main.java.help.classes.Session;
-import me.src.main.java.help.classes.ShoppingCart;
+import help.classes.SelectedSession;
+import help.classes.Session;
+import help.classes.ShoppingCart;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

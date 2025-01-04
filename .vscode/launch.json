@@ -8,6 +8,13 @@
             "type": "java",
             "name": "App",
             "request": "launch",
+            "mainClass": "help/help.App",
+            "projectName": "me"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
             "mainClass": "me.src.main.java.help.App",
             "projectName": "Local-Cinema-Center-Management-Application_c76a0a5f"
         },

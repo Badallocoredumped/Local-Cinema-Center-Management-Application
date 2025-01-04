@@ -1,4 +1,4 @@
-package me.src.main.java.help.utilities;
+package help.utilities;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
-
 import javafx.beans.property.StringProperty;
 
 public class AdminDBH 

@@ -1,4 +1,5 @@
-package me.src.main.java.help.utilities;
+package help.utilities;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
