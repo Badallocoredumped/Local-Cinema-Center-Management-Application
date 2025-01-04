@@ -1,11 +1,10 @@
 /*Create tables for Products, Tickets\monthly schedule, Movies, halls, Employees, Customers, Orders(Payments, and Payments history)*/
 
 CREATE DATABASE Group16
-USE Group16
-CHARACTER SET utf8mb4;
-COLLATE utf8mb4_bin;
 
+CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 
+USE Group16;
 
 
 
@@ -21,7 +20,7 @@ CREATE TABLE employees (
 
 SELECT * FROM employees;
 /*We will create the database manually*/
-INSERT INTO employees (username, password, role, name, surname, phone_no, date_of_birth, date_of_start, email, DEFAULT_PASSWORD)
+INSERT INTO employees (username, password, role, name, surname)
 VALUES 
 ('emir5757', 'Homelander', 'Manager', 'Emir', 'Özen'),
 ('Teca7', 'WeLoveTeca', 'Admin', 'Ahmed Marcolino Teca', 'Kanadji'),
@@ -41,11 +40,16 @@ CREATE TABLE Movies (
     summary TEXT,
     duration INT NOT NULL
 );
+SELECT * FROM Movies;
+/*We will create the database manually*/
+INSERT INTO Movies (title, poster_url, poster_image, genre, summary, duration)
+VALUES 
+('Titanic', '', '', 'Romance', 'Love in Cruiser that sinks', '160');
 
  -- A way to upload jps files to the database
- SET SQL_SAFE_UPDATES = 0;
+SET SQL_SAFE_UPDATES = 0;
 UPDATE Movies
-SET poster_image = LOAD_FILE('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/titanic.jpg')
+SET poster_image = LOAD_FILE('C:/ProgramData/MySQL/MySQL Server 9.1/Uploads/titanic.jpeg')
 WHERE title = 'Titanic';
 SET SQL_SAFE_UPDATES = 1;
 
