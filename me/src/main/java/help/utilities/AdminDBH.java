@@ -20,14 +20,14 @@ public class AdminDBH
     private static final String URL = "jdbc:mysql://localhost:3306/Group16";
     private static final String USER = "myuser";
     private static final String PASSWORD = "1234";
-    private Connection dbconnection;
-
-
+    private static Connection dbconnection;
+    
+    
     public static Connection getConnection() throws Exception
     {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
-
+    
     public AdminDBH()
     {
         try 
@@ -40,15 +40,15 @@ public class AdminDBH
             System.err.println("Database connection failed!! ");
         }
     }
-
-    public void AddMovie(String title, String poster, String genre, String summaryText) 
+    
+    public static void AddMovie(String title, String poster, String genre, String summaryText, String duration) 
     {
         if (dbconnection == null) 
         {
             System.err.println("Database connection failed!!");
             return; 
         }
-        
+    
         String summaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/Movie/Summaries/" + title.replaceAll(" ", "_") + "_summary.txt";
         
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(summaryPath))) 
@@ -56,13 +56,14 @@ public class AdminDBH
             writer.write(summaryText);
             writer.newLine();  
 
-            String query = "INSERT INTO movies (title, poster, genre, summary) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO movies (title, poster, genre, summary, duration) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = dbconnection.prepareStatement(query))
             {
                 stmt.setString(1, title);
                 stmt.setString(2, poster);
                 stmt.setString(3, genre);
                 stmt.setString(4, summaryPath);
+                stmt.setString(5, duration);
                 stmt.executeUpdate();
                 System.out.println("Movie added successfully.");
             }
@@ -72,8 +73,9 @@ public class AdminDBH
             e.printStackTrace();
         }
     }
+    
 
-    public void FullUpdateMovie(int movieId, String newTitle, String newPoster, String newGenre, String newSummaryText) 
+    public void FullUpdateMovie(int movieId, String newTitle, String newPoster, String newGenre, String newSummaryText, String newDuration) 
     {
         if (dbconnection == null) 
         {
@@ -96,14 +98,15 @@ public class AdminDBH
 
                     writer.write(newSummaryText);
                     writer.newLine();  
-                    query = "UPDATE movies SET title = ?, poster = ?, genre = ?, summary = ? WHERE movie_id = ?";
+                    query = "UPDATE movies SET title = ?, poster = ?, genre = ?, summary = ?, duration = ? WHERE movie_id = ?";
                     try(PreparedStatement stmt = dbconnection.prepareStatement(query))
                     {
                         stmt.setString(1, newTitle);
                         stmt.setString(2, newPoster);
                         stmt.setString(3, newGenre);
                         stmt.setString(4, newSummaryPath);
-                        stmt.setInt(5, movieId);
+                        stmt.setString(5, newDuration);
+                        stmt.setInt(6, movieId);
                         stmt.executeUpdate();
 
                         System.out.println("Movie updated successfully.");

@@ -28,54 +28,7 @@ import help.utilities.AdminDBH;
 
 public class AdminController {
 
-    @FXML
-    private TextField movieTitleField;
-    @FXML
-    private TextField movieGenreField;
-    @FXML
-    private TextArea movieSummaryArea;
-    @FXML
-    private ImageView moviePosterImageView;
-    @FXML
-    private Label imagePathLabel;
-    @FXML
-    private TableView<AdminDBH.Movie> movieTable;
-    @FXML
-    private TableColumn<AdminDBH.Movie, String> titleColumn;
-    @FXML
-    private TableColumn<AdminDBH.Movie, String> genreColumn;
-    @FXML
-    private TableColumn<AdminDBH.Movie, String> summaryColumn;
-    @FXML
-    private File selectedFile;
-    @FXML
-    private Button btnSignOut;
-    @FXML
-    private Button btnDashboard;
-    @FXML
-    private Button btnAddMovies;
-    @FXML
-    private Button btnAvailableMovies;
-    @FXML
-    private Button btnEditScreening;
-    @FXML
-    private Button btnMonthlyDisplayPlan;
-    @FXML
-    private Button btnCancellationsAndRefunds;
-    @FXML
-    private AnchorPane paneDashboard;
-    @FXML
-    private AnchorPane paneAddMovie; // Pane for adding movies
-    @FXML
-    private TextField txtMoviePoster;
-    @FXML
-    private TextField txtMovieGenre;
-    @FXML
-    private TextArea txtMovieSummary;
-    @FXML
-    private Button btnSaveMovie;
-
-    private AdminDBH dbHandler;
+    
 
     @FXML
     private TreeTableView<Movie> resultsTableView;
@@ -88,7 +41,7 @@ public class AdminController {
     @FXML
     private TextField txtSummary;
     @FXML
-    private ComboBox<String> cmbType;
+    private ComboBox<String> cmbGenre;
     @FXML
     private Button btnAdd, btnUpdate, btnClear, btnDelete;
     @FXML
@@ -101,49 +54,45 @@ public class AdminController {
     private ObservableList<Movie> movieList = FXCollections.observableArrayList();
     private Movie selectedMovie = null;
     private String posterPath = null;
+    private AdminDBH dbHandler = new AdminDBH();
 
     @FXML
     public void initialize() {
-        // Initialize the ComboBox with movie types
-        cmbType.setItems(FXCollections.observableArrayList("Action", "Drama", "Comedy", "Horror"));
+        cmbGenre.setItems(FXCollections.observableArrayList("Action", "Drama", "Comedy", "Horror"));
 
-        // Set up table columns
         colTitle.setCellValueFactory(data -> data.getValue().titleProperty());
         colGenre.setCellValueFactory(data -> data.getValue().genreProperty());
         colDuration.setCellValueFactory(data -> data.getValue().durationProperty());
         colSummary.setCellValueFactory(data -> data.getValue().summaryProperty());
 
-        // Set the table's items
         tblMovies.setItems(movieList);
-
-        // Add listener for table row selection
         tblMovies.setOnMouseClicked(this::onRowSelect);
 
+        loadMoviesFromDatabase();
     }
 
     @FXML
     private void onAdd(ActionEvent event) {
         String title = txtMovieTitle.getText();
-        String genre = txtGenre.getText();
+        String genre = cmbGenre.getValue();
         String duration = txtDuration.getText();
         String summary = txtSummary.getText();
-        String type = cmbType.getValue();
 
-        if (title.isEmpty() || genre.isEmpty() || duration.isEmpty() || summary.isEmpty() || type == null || posterPath == null) {
+        if (title.isEmpty() || genre == null || duration.isEmpty() || summary.isEmpty() || posterPath == null) {
             showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
             return;
         }
 
-        Movie newMovie = new Movie(0, title, posterPath, genre, summary, duration, null);
-        movieList.add(newMovie);
+        AdminDBH.AddMovie(title, posterPath, genre, summary, duration);
+        loadMoviesFromDatabase();
+        showAlert(Alert.AlertType.INFORMATION, "Success", "Movie added successfully!");
         clearForm();
     }
 
     @FXML
     private void onUpdate(ActionEvent event) 
     {
-        if (selectedMovie == null) 
-        {
+        if (selectedMovie == null) {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a movie to update.");
             return;
         }
@@ -153,8 +102,16 @@ public class AdminController {
         if (!txtDuration.getText().isEmpty()) selectedMovie.setDuration(txtDuration.getText());
         if (!txtSummary.getText().isEmpty()) selectedMovie.setSummary(txtSummary.getText());
         if (posterPath != null) selectedMovie.setPosterUrl(posterPath);
-
+        String newTitle = txtMovieTitle.getText();
+        String newGenre = cmbGenre.getValue();
+        String newDuration = txtDuration.getText();
+        String newSummary = txtSummary.getText();
         tblMovies.refresh();
+
+        int movieId = dbHandler.getMovieIdFromTitle(selectedMovie.getTitle());
+        dbHandler.FullUpdateMovie(movieId, newTitle, posterPath, newGenre, newSummary, newDuration);
+        loadMoviesFromDatabase();
+        showAlert(Alert.AlertType.INFORMATION, "Success", "Movie updated successfully!");
         clearForm();
     }
 
@@ -172,7 +129,7 @@ public class AdminController {
 
         File selectedFile = fileChooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
-            posterPath = selectedFile.toURI().toString(); // Convert to URI for ImageView
+            posterPath = selectedFile.toURI().toString();
             imgPoster.setImage(new Image(posterPath));
         }
     }
@@ -181,7 +138,7 @@ public class AdminController {
         selectedMovie = tblMovies.getSelectionModel().getSelectedItem();
         if (selectedMovie != null) {
             txtMovieTitle.setText(selectedMovie.getTitle());
-            txtGenre.setText(selectedMovie.getGenre());
+            cmbGenre.setValue(selectedMovie.getGenre());
             txtDuration.setText(selectedMovie.getDuration());
             txtSummary.setText(selectedMovie.getSummary());
             imgPoster.setImage(new Image(selectedMovie.getPosterUrl()));
@@ -189,12 +146,17 @@ public class AdminController {
         }
     }
 
+    private void loadMoviesFromDatabase() {
+        movieList.clear();
+        dbHandler.GetAllMovies(); // Assuming GetAllMovies populates movieList
+    }
+
     private void clearForm() {
         txtMovieTitle.clear();
         txtGenre.clear();
         txtDuration.clear();
         txtSummary.clear();
-        cmbType.setValue(null);
+        cmbGenre.setValue(null);
         imgPoster.setImage(null);
         posterPath = null;
         selectedMovie = null;
