@@ -238,15 +238,47 @@
             </AnchorPane>
          </center>
          <right>
-            <AnchorPane prefHeight="767.0" prefWidth="226.0" style="-fx-background-color: #e4e4e4;" BorderPane.alignment="CENTER">
+                        <AnchorPane prefHeight="767.0" prefWidth="226.0" style="-fx-background-color: #e4e4e4;" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="52.0" layoutY="47.0" text="Shopping Cart">
+                  <Label layoutX="64.0" layoutY="516.0" text="Shopping Cart">
                      <font>
-                        <Font name="System Bold" size="18.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <FontAwesomeIcon glyphName="SHOPPING_CART" layoutX="102.0" layoutY="35.0" size="2em" text="" />
-                  <Button layoutX="34.0" layoutY="700.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="159.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Accept Payment" />
+                  <FontAwesomeIcon glyphName="SHOPPING_CART" layoutX="101.0" layoutY="502.0" size="2em" text="" />
+                  <Label layoutX="63.0" layoutY="67.0" text="Selected Movie">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="53.0" layoutY="32.0" textFill="WHITE">
+                     <font>
+                        <Font name="SansSerif Bold" size="61.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIcon fill="#030303" glyphName="FILM" layoutX="100.0" layoutY="53.0" size="2em" />
+                  <Label layoutX="15.0" layoutY="140.0" textFill="WHITE">
+                     <font>
+                        <Font name="SansSerif Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="11.0" layoutY="215.0" text="Selecting Day, Seasion and Hall">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIcon fill="#252424" glyphName="CALENDAR" layoutX="100.0" layoutY="197.0" size="2em" />
+                  <Label layoutX="62.0" layoutY="339.0" textFill="WHITE">
+                     <font>
+                        <Font name="SansSerif Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="64.0" layoutY="353.0" text="Choosing Seat">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIcon fill="#0a0a0a" glyphName="USERS" layoutX="100.0" layoutY="335.0" size="2em" text="" />
                </children>
             </AnchorPane>
          </right>

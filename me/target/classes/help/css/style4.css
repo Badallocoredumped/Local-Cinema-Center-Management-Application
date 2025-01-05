@@ -17,3 +17,8 @@
     -fx-alignment: center; /* Ortalanmış metin */
     -fx-line-height: 50px;
 }
+
+.tree-table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #800000, #ff0000);
+    -fx-text-fill: white;
+}

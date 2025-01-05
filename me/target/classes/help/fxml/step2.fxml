@@ -54,7 +54,7 @@
                         <Font name="SansSerif Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Button layoutX="54.0" layoutY="642.0" text="Sign Out">
+                  <Button fx:id="SignoutButton" layoutX="54.0" layoutY="642.0" onAction="#handleSignOutButtonAction" text="Sign Out">
                      <graphic>
                         <FontAwesomeIcon glyphName="SIGN_OUT" wrappingWidth="12.0" />
                      </graphic>
@@ -130,12 +130,12 @@
                         <Font name="SansSerif Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Button layoutX="1220.0" layoutY="6.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="52.0" AnchorPane.rightAnchor="0.0">
+                  <Button fx:id="CloseButton" layoutX="1220.0" layoutY="6.0" mnemonicParsing="false" onAction="#handleCloseButtonAction" prefHeight="24.0" prefWidth="52.0" AnchorPane.rightAnchor="0.0">
                      <graphic>
                         <FontAwesomeIcon glyphName="TIMES" wrappingWidth="8.428571701049805" />
                      </graphic>
                   </Button>
-                  <Button layoutX="1168.0" layoutY="6.0" mnemonicParsing="false" prefWidth="53.0" AnchorPane.rightAnchor="55.0">
+                  <Button fx:id="MinimizeButton" layoutX="1168.0" layoutY="6.0" mnemonicParsing="false" onAction="#handleMinimizeButtonAction" prefWidth="53.0" AnchorPane.rightAnchor="55.0">
                      <graphic>
                         <FontAwesomeIcon glyphName="MINUS" />
                      </graphic>
@@ -148,20 +148,20 @@
                <children>
                   <Button id="next_button_step2" fx:id="next_button_step2" layoutX="1042.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleNextButtonAction" prefHeight="31.0" prefWidth="58.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Next" AnchorPane.bottomAnchor="55.0" AnchorPane.rightAnchor="266.0" />
                   <Button id="back_button_step2" fx:id="back_button_step2" layoutX="107.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleBackButtonAction" prefHeight="31.0" prefWidth="58.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Back" AnchorPane.bottomAnchor="55.0" />
-                  <Label layoutX="8.0" layoutY="8.0" styleClass="white-text" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" text="SELECTING DAY, SESSION AND HALL" textFill="MAROON">
+                  <Label layoutX="8.0" layoutY="8.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" styleClass="white-text" text="SELECTING DAY, SESSION AND HALL" textFill="MAROON">
                      <font>
                         <Font name="SansSerif Bold" size="36.0" />
                      </font>
                   </Label>
-                  <TreeTableView fx:id="sessionsTableView" layoutX="325.0" layoutY="181.0" prefHeight="378.0" prefWidth="781.0" styleClass="dropshadow-effect" style="-fx-background-radius: 20px;">
+                  <TreeTableView fx:id="sessionsTableView" layoutX="325.0" layoutY="181.0" prefHeight="378.0" prefWidth="781.0" style="-fx-background-radius: 20px;" styleClass="dropshadow-effect">
                      <columns>
-                        <TreeTableColumn fx:id="dayColumn" prefWidth="195.0" text="Day" styleClass="tree-table-column" />
-                        <TreeTableColumn fx:id="sessionColumn" prefWidth="174.0" text="Session" styleClass="tree-table-column" />
-                        <TreeTableColumn fx:id="hallColumn" prefWidth="230.0" text="Hall" styleClass="tree-table-column" />
-                        <TreeTableColumn fx:id="vacantSeatsColumn" prefWidth="181.0" text="Number of vacant seat" styleClass="tree-table-column" />
+                        <TreeTableColumn fx:id="dayColumn" prefWidth="195.0" styleClass="tree-table-column" text="Day" />
+                        <TreeTableColumn fx:id="sessionColumn" prefWidth="174.0" styleClass="tree-table-column" text="Session" />
+                        <TreeTableColumn fx:id="hallColumn" prefWidth="230.0" styleClass="tree-table-column" text="Hall" />
+                        <TreeTableColumn fx:id="vacantSeatsColumn" prefWidth="181.0" styleClass="tree-table-column" text="Number of vacant seat" />
                      </columns>
                   </TreeTableView>
-                  <Button layoutX="630.0" layoutY="594.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="172.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Confirm Selection" onAction="#handleConfirmSelection">
+                  <Button layoutX="630.0" layoutY="594.0" mnemonicParsing="false" onAction="#handleConfirmSelection" prefHeight="34.0" prefWidth="172.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Confirm Selection">
                      <graphic>
                         <FontAwesomeIcon glyphName="CHECK" />
                      </graphic>
@@ -172,12 +172,65 @@
          <right>
             <AnchorPane prefHeight="767.0" prefWidth="226.0" style="-fx-background-color: #e4e4e4;" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="52.0" layoutY="47.0" text="Shopping Cart">
+                  <Label layoutX="64.0" layoutY="524.0" text="Shopping Cart">
                      <font>
-                        <Font name="System Bold" size="18.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <FontAwesomeIcon glyphName="SHOPPING_CART" layoutX="102.0" layoutY="35.0" size="2em" text="" />
+                  <FontAwesomeIcon glyphName="SHOPPING_CART" layoutX="101.0" layoutY="510.0" size="2em" text="" />
+                  <Label layoutX="63.0" layoutY="67.0" text="Selected Movie">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="53.0" layoutY="32.0" textFill="WHITE">
+                     <font>
+                        <Font name="SansSerif Bold" size="61.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIcon fill="#030303" glyphName="FILM" layoutX="100.0" layoutY="53.0" size="2em" />
+                  <Label layoutX="15.0" layoutY="140.0" textFill="WHITE">
+                     <font>
+                        <Font name="SansSerif Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="11.0" layoutY="215.0" text="Selecting Day, Seasion and Hall">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIcon fill="#252424" glyphName="CALENDAR" layoutX="100.0" layoutY="197.0" size="2em" />
+                  <Label layoutX="62.0" layoutY="339.0" textFill="WHITE">
+                     <font>
+                        <Font name="SansSerif Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="64.0" layoutY="385.0" text="Choosing Seat">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIcon fill="#0a0a0a" glyphName="USERS" layoutX="100.0" layoutY="367.0" size="2em" text="" />
+                  <Label fx:id="selectedMovieLabel" layoutX="88.0" layoutY="92.0" text="Empty">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="selectedSession" layoutX="90.0" layoutY="249.0" text="Empty">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="selectedSeat" layoutX="93.0" layoutY="421.0" text="Empty">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="selectedShoppingCart" layoutX="92.0" layoutY="558.0" text="Empty">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
          </right>

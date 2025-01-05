@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import help.classes.Movie;
 
-public class MovieDBO 
-{
+public class MovieDBO {
     public List<Movie> findAll() 
     {
         List<Movie> movies = new ArrayList<>();
@@ -19,15 +18,16 @@ public class MovieDBO
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) 
             {
+                // Create the Movie object with the necessary fields
                 Movie movie = new Movie(
                     rs.getInt("movie_id"),
                     rs.getString("title"),
-                    rs.getString("poster_url"),
+                    rs.getString("poster_url"), // Get the poster URL
                     rs.getString("genre"),
                     rs.getString("summary"),
-                    rs.getString("duration"),
-                    rs.getBytes("poster_image") 
+                    rs.getString("duration")
                 );
+                // Add the movie to the list
                 movies.add(movie);
             }
         } 

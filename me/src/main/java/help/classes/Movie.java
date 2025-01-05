@@ -3,122 +3,101 @@ package help.classes;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
-import java.io.ByteArrayInputStream;
 
-public class Movie 
-{
+public class Movie {
     private int id;
     private StringProperty title;
     private StringProperty posterUrl;
     private StringProperty genre;
     private StringProperty summary;
     private StringProperty duration;
-    private byte[] posterData;
 
-    public Movie(int id, String title, String posterUrl, String genre, String summary, String duration, byte[] posterData) 
-    {
+    // Constructor
+    public Movie(int id, String title, String posterUrl, String genre, String summary, String duration) {
         this.id = id;
         this.title = new SimpleStringProperty(title);
-        this.posterUrl = new SimpleStringProperty(posterUrl);
+        this.posterUrl = new SimpleStringProperty(posterUrl); // Path to the poster image (file or URL)
         this.genre = new SimpleStringProperty(genre);
         this.summary = new SimpleStringProperty(summary);
         this.duration = new SimpleStringProperty(duration);
-        this.posterData = posterData;
     }
 
     // Getters and setters
-    public int getId() 
-    {
+    public int getId() {
         return id;
     }
 
-    public void setId(int id) 
-    {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getTitle() 
-    {
+    public String getTitle() {
         return title.get();
     }
 
-    public void setTitle(String title) 
-    {
+    public void setTitle(String title) {
         this.title.set(title);
     }
 
-    public StringProperty titleProperty() 
-    {
+    public StringProperty titleProperty() {
         return title;
     }
 
-    public String getPosterUrl() 
-    {
+    public String getPosterUrl() {
         return posterUrl.get();
     }
 
-    public void setPosterUrl(String posterUrl) 
-    {
+    public void setPosterUrl(String posterUrl) {
         this.posterUrl.set(posterUrl);
     }
 
-    public StringProperty posterUrlProperty() 
-    {
+    public StringProperty posterUrlProperty() {
         return posterUrl;
     }
 
-    public String getGenre() 
-    {
+    public String getGenre() {
         return genre.get();
     }
 
-    public void setGenre(String genre) 
-    {
+    public void setGenre(String genre) {
         this.genre.set(genre);
     }
 
-    public StringProperty genreProperty() 
-    {
+    public StringProperty genreProperty() {
         return genre;
     }
 
-    public String getSummary() 
-    {
+    public String getSummary() {
         return summary.get();
     }
 
-    public void setSummary(String summary) 
-    {
+    public void setSummary(String summary) {
         this.summary.set(summary);
     }
 
-    public StringProperty summaryProperty() 
-    {
+    public StringProperty summaryProperty() {
         return summary;
     }
 
-    public String getDuration() 
-    {
+    public String getDuration() {
         return duration.get();
     }
 
-    public void setDuration(String duration) 
-    {
+    public void setDuration(String duration) {
         this.duration.set(duration);
     }
 
-    public StringProperty durationProperty() 
-    {
+    public StringProperty durationProperty() {
         return duration;
     }
 
-    public byte[] getPosterData() 
+    // Method to load image from the URL (only using the posterUrl)
+    public Image getPosterImage() 
     {
-        return posterData;
-    }
-
-    public void setPosterData(byte[] posterData) 
-    {
-        this.posterData = posterData;
+        if (posterUrl != null && !posterUrl.get().isEmpty()) 
+        {
+            return new Image("file:" + posterUrl); // Assuming it's a local file path (use "http://" for URLs)
+        }
+        return null; // No image available
     }
 }
