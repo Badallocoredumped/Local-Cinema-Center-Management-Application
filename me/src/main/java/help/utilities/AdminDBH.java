@@ -11,8 +11,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
+
+import help.classes.Movie;
 import javafx.beans.property.StringProperty;
 
 public class AdminDBH 
@@ -41,41 +45,44 @@ public class AdminDBH
         }
     }
     
-    public static void AddMovie(String title, String poster, String genre, String summaryText, String duration) 
+    public static void AddMovie(String title, String poster, byte[] posterData, String genre, String summaryText, String duration) 
     {
-        if (dbconnection == null) 
-        {
+        if (dbconnection == null) {
             System.err.println("Database connection failed!!");
-            return; 
+            return;
         }
     
-        String summaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/Movie/Summaries/" + title.replaceAll(" ", "_") + "_summary.txt";
-        
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(summaryPath))) 
-        {
+        String summaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/Movie/Summaries/"
+                             + title.replaceAll(" ", "_") + "_summary.txt";
+    
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(summaryPath))) {
+            // Write the summary content to the summary file
             writer.write(summaryText);
-            writer.newLine();  
-
-            String query = "INSERT INTO movies (title, poster, genre, summary, duration) VALUES (?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = dbconnection.prepareStatement(query))
-            {
+            writer.newLine();
+    
+            // Insert the movie into the database
+            String query = "INSERT INTO movies (title, poster_url, poster_image, genre, summary, duration) VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement stmt = dbconnection.prepareStatement(query)) {
                 stmt.setString(1, title);
-                stmt.setString(2, poster);
-                stmt.setString(3, genre);
-                stmt.setString(4, summaryPath);
-                stmt.setString(5, duration);
-                stmt.executeUpdate();
+                stmt.setString(2, poster);  // URL or file path of the poster
+                stmt.setBytes(3, posterData);   // Byte array of the poster image
+                stmt.setString(4, genre);
+                stmt.setString(5, summaryPath); // File path of the summary
+                stmt.setString(6, duration);
+                stmt.executeUpdate();  // Execute the insertion query
                 System.out.println("Movie added successfully.");
             }
-        } 
-        catch (IOException | SQLException e) 
-        {
+        } catch (IOException e) {
+            System.err.println("Failed to write summary file: " + e.getMessage());
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("Failed to add movie to the database: " + e.getMessage());
             e.printStackTrace();
         }
     }
     
 
-    public void FullUpdateMovie(int movieId, String newTitle, String newPoster, String newGenre, String newSummaryText, String newDuration) 
+    public void FullUpdateMovie(int movieId, String newTitle, String newPoster, byte[] newPosterData, String newGenre, String newSummaryText, String newDuration) 
     {
         if (dbconnection == null) 
         {
@@ -98,17 +105,17 @@ public class AdminDBH
 
                     writer.write(newSummaryText);
                     writer.newLine();  
-                    query = "UPDATE movies SET title = ?, poster = ?, genre = ?, summary = ?, duration = ? WHERE movie_id = ?";
+                    query = "UPDATE movies SET title = ?,  poster_url = ?, poster_image = ?, genre = ?, summary = ?, duration = ? WHERE movie_id = ?";
                     try(PreparedStatement stmt = dbconnection.prepareStatement(query))
                     {
                         stmt.setString(1, newTitle);
                         stmt.setString(2, newPoster);
-                        stmt.setString(3, newGenre);
-                        stmt.setString(4, newSummaryPath);
-                        stmt.setString(5, newDuration);
-                        stmt.setInt(6, movieId);
+                        stmt.setBytes(3, newPosterData);
+                        stmt.setString(4, newGenre);
+                        stmt.setString(5, newSummaryPath);
+                        stmt.setString(6, newDuration);
+                        stmt.setInt(7, movieId);
                         stmt.executeUpdate();
-
                         System.out.println("Movie updated successfully.");
                     } 
                 }
@@ -123,58 +130,80 @@ public class AdminDBH
             e.printStackTrace();
         }
     }
-    
-    //Gott fix the errors related to Get All Movies and Get Movie by ID
-    public void GetAllMovies() 
-    {
-        if (dbconnection == null) 
-        {
+
+    public void deleteMovie(int movieId) {
+        if (dbconnection == null) {
             System.err.println("Database connection failed!!");
             return;
         }
-
-        String countQuery = "SELECT COUNT(*) AS total FROM movies";
-        try (PreparedStatement countStmt = dbconnection.prepareStatement(countQuery)) 
-        {
-            ResultSet countResult = countStmt.executeQuery();
-            String query = "SELECT movie_id, title, poster, genre, summary FROM movies";
-
-            try(PreparedStatement stmt = dbconnection.prepareStatement(query))
-            {
-                ResultSet infoSet = stmt.executeQuery(query);
-        
-                while (infoSet.next()) 
-                {
-                    int id = infoSet.getInt("movie_id");
-                    String title = infoSet.getString("title");
-                    String posterFile = infoSet.getString("poster");
-                    String genre = infoSet.getString("genre");
-                    String summaryFile = infoSet.getString("summary");
-                    String summary = ReadSummary(summaryFile);
-                    ImageIcon poster = new ImageIcon(posterFile);
-
-                    System.out.println("ID: " + id);
-                    System.out.println("Title: " + title);
-                    System.out.println("Poster: " + poster);
-                    System.out.println("Genre: " + genre);
-                    System.out.println("Summary: " + summary);
-                    System.out.println("----------");
+    
+        String query = "SELECT summary FROM movies WHERE movie_id = ?";
+        try (PreparedStatement selectStmt = dbconnection.prepareStatement(query)) {
+            selectStmt.setInt(1, movieId);
+            ResultSet resultSet = selectStmt.executeQuery();
+    
+            if (resultSet.next()) {
+                String summaryPath = resultSet.getString("summary");
+                File summaryFile = new File(summaryPath);
+                if (summaryFile.exists() && !summaryFile.delete()) {
+                    System.err.println("Failed to delete summary file: " + summaryPath);
                 }
-            } 
-
-            int totalMovies = 0;
-            if (countResult.next()) 
-            {
-                totalMovies = countResult.getInt("total");
             }
-            System.out.println("\nTotal Movies: " + totalMovies);
-        } 
-        catch (SQLException e) 
-        { 
-            System.out.println("Error occurred: " + e.getMessage());
-            e.printStackTrace(); 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        query = "DELETE FROM movies WHERE movie_id = ?";
+        try (PreparedStatement deleteStmt = dbconnection.prepareStatement(query)) {
+            deleteStmt.setInt(1, movieId);
+            int rowsAffected = deleteStmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Movie deleted successfully.");
+            } else {
+                System.out.println("No movie found with the given ID.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+    
+    
+    //Gott fix the errors related to Get All Movies and Get Movie by ID
+    public List<Movie> GetAllMovies() {
+        List<Movie> movies = new ArrayList<>();
+
+        if (dbconnection == null) {
+            System.err.println("Database connection failed!!");
+            return movies;
+        }
+
+        String query = "SELECT movie_id, title, poster_url, poster_image, genre, summary, duration FROM movies";
+
+        try (PreparedStatement stmt = dbconnection.prepareStatement(query);
+             ResultSet infoSet = stmt.executeQuery()) 
+             {
+
+            while (infoSet.next()) {
+                int id = infoSet.getInt("movie_id");
+                String title = infoSet.getString("title");
+                String posterFile = infoSet.getString("poster_url");
+                String genre = infoSet.getString("genre");
+                String summaryPath = infoSet.getString("summary");
+                String duration = infoSet.getString("duration");
+                byte[] posterImage = infoSet.getBytes("poster_image");
+                String summary = ReadSummary(summaryPath);
+
+                Movie movie = new Movie(id, title, posterFile, genre, summary, duration, posterImage);
+                movies.add(movie);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return movies;
+    }
+    
 
     public String ReadSummary(String summaryPath) 
     {
@@ -238,7 +267,7 @@ public class AdminDBH
             return;
         }
     
-        String query = "UPDATE movies SET poster = ? WHERE movie_id = ?";
+        String query = "UPDATE movies SET  poster_url = ? WHERE movie_id = ?";
         try (PreparedStatement stmt = dbconnection.prepareStatement(query)) 
         {
             stmt.setString(1, newPoster);
@@ -649,32 +678,4 @@ public class AdminDBH
             e.printStackTrace();
         }        
     } 
-
-    public static class Movie {
-        private int id;
-        private String title;
-        private String genre;
-        private String summary;
-        protected String posterPath;
-
-        public Movie(int id, String title, String genre, String summary, String posterPath) 
-        {
-            this.id = id;
-            this.title = title;
-            this.genre = genre;
-            this.summary = summary;
-            this.posterPath = posterPath;
-        }
-    
-        public int getId() {return id;}
-        public String getTitle() {return title;}
-        public void setTitle(String title) {this.title = title;}
-        public String getGenre() {return genre;}
-        public void setGenre(String genre) {this.genre = genre;}
-        public String getSummary() {return summary;}
-        public void setSummary(String summary) {this.summary = summary;}
-        public String getPosterPath() {return posterPath;}
-        public void setPosterPath(String posterPath) {this.posterPath = posterPath;
-        }
-    }
 }
