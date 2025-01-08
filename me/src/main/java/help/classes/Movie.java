@@ -10,17 +10,18 @@ import java.io.ByteArrayInputStream;
 public class Movie {
     private int id;
     private StringProperty title;
-    private ObjectProperty<byte[]> posterImage; // BLOB data
+    private byte[] posterImage; // BLOB data
     private ObjectProperty<Image> posterImageView; // JavaFX Image
     private StringProperty genre;
     private StringProperty summary;
     private StringProperty duration;
 
     // Constructor
-    public Movie(int id, String title, byte[] posterImage, String genre, String summary, String duration) {
+    public Movie(int id, String title, byte[] posterImage, String genre, String summary, String duration) 
+    {
         this.id = id;
         this.title = new SimpleStringProperty(title);
-        this.posterImage = new SimpleObjectProperty<>(posterImage);
+        this.posterImage = posterImage;
         this.posterImageView = new SimpleObjectProperty<>(convertToImage(posterImage));
         this.genre = new SimpleStringProperty(genre);
         this.summary = new SimpleStringProperty(summary);
@@ -56,18 +57,20 @@ public class Movie {
         return title;
     }
 
-    public byte[] getPosterImage() {
-        return posterImage.get();
-    }
-
-    public void setPosterImage(byte[] image) {
-        this.posterImage.set(image);
-        this.posterImageView.set(convertToImage(image));
-    }
-
-    public ObjectProperty<byte[]> posterImageProperty() {
+    public byte[] getPosterImage() 
+    {
         return posterImage;
     }
+
+    /* public void setPosterImage(byte[] image) 
+    {
+        this.posterImage.set(image);
+        this.posterImageView.set(convertToImage(image));
+    } */
+
+    /* public ObjectProperty<byte[]> posterImageProperty() {
+        return posterImage;
+    } */
 
     public Image getPosterImageView() {
         return posterImageView.get();

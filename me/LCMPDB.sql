@@ -22,6 +22,12 @@ CREATE TABLE Movies (
     summary TEXT,
     duration INT NOT NULL
 );
+
+ALTER TABLE Movies
+DROP COLUMN poster_image;
+
+
+
 -- Halls table
 CREATE TABLE Halls (
     hall_name ENUM('Hall_A', 'Hall_B') PRIMARY KEY,
@@ -52,8 +58,15 @@ CREATE TABLE Seats (
 );
 
 SET SQL_SAFE_UPDATES = 0;
+
+UPDATE Movies
+SET poster_image = LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\titanic.jpg')
+WHERE title = 'Titanic';
+
+
 SET SQL_SAFE_UPDATES = 1;
 
+SHOW VARIABLES LIKE 'secure_file_priv';
 
 -- Tickets table
 CREATE TABLE Tickets (
@@ -124,8 +137,9 @@ SELECT * FROM Users;
 -- allows duplicates but it shouldnt i think
 INSERT INTO Movies (title, poster_image, genre, summary, duration)
 VALUES
-('Inception', 'C:\\Users\\emiro\\Desktop\\me\\images\\inception.jpg', 'Sci-Fi', 'A mind-bending thriller about dreams within dreams.', 148),
-('Titanic','C:\\Users\\emiro\\Desktop\\me\\images\\titanic.jpg' , 'Romance', 'A tragic love story aboard the ill-fated Titanic.', 195);
+('Inception', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\inception.jpg'), 'Sci-Fi', 'A mind-bending thriller about dreams within dreams.', 148),
+('Titanic',LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\titanic.jpg') , 'Romance', 'A tragic love story aboard the ill-fated Titanic.', 195);
+
 
 #TO MAKE IT BLOB
 #LOAD_FILE('C:\\Users\\emiro\\Desktop\\me\\images\\inception.jpg')
@@ -228,18 +242,34 @@ VALUES
 ('Hall_B', 'H5', 4, FALSE),
 ('Hall_B', 'H6', 4, FALSE);
 
-
-
-
-
 -- Products
 INSERT INTO Products (name, price, stock_quantity, tax_rate, image)
 VALUES
-('Beverage', 5.00, 100, 0.10, 'C:/Users/emiro/Desktop/me/images/beverage.jpg'),
-('Biscuit', 3.00, 200, 0.10, 'C:/Users/emiro/Desktop/me/images/biscuit.jpg'),
-('Toy', 10.00, 50, 0.10, 'C:/Users/emiro/Desktop/me/images/toy.jpg');
+('Beverage', 5.00, 100, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\beverage.jpg')),
+('Biscuit', 3.00, 200, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\biscuit.jpg')),
+('Toy', 10.00, 50, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\toy.jpg'));
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE Products
+SET image = LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\toy.jpg')
+WHERE name = 'Toy';
+
+SELECT * FROM Invoices;
+SELECT * FROM Tickets;
+
+SET SQL_SAFE_UPDATES = 1;
 
 
+CREATE TABLE Ticket_Products (
+    ticket_id INT NOT NULL,       -- Reference to the Tickets table
+    product_id INT NOT NULL,      -- Reference to the Products table
+    quantity INT NOT NULL,        -- Quantity of the product purchased
+    price DECIMAL(10, 2) NOT NULL, -- Price of the product at the time of purchase
+    PRIMARY KEY (ticket_id, product_id),
+    FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE
+);
 
 
 

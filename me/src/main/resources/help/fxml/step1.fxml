@@ -5,7 +5,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.image.ImageView?>
@@ -151,34 +150,31 @@
                      <children>
                         <Label fx:id="movieTitleLabel" layoutX="348.0" layoutY="36.0" styleClass="movie-label" text="Movie Title...">
                            <font>
-                              <Font name="SansSerif Bold" size="14.0" />
+                              <Font name="SansSerif Bold" size="24.0" />
                            </font>
                         </Label>
-                        <Label fx:id="movieSummaryLabel" layoutX="348.0" layoutY="131.0" styleClass="movie-label" text="Summary...">
+                        <Label fx:id="movieSummaryLabel" layoutX="348.0" layoutY="196.0" styleClass="movie-label" text="Summary...">
                            <font>
-                              <Font name="SansSerif Bold" size="14.0" />
+                              <Font name="SansSerif Bold" size="24.0" />
                            </font>
                         </Label>
-                        <Label fx:id="movieGenreLabel" layoutX="348.0" layoutY="69.0" styleClass="movie-label" text="Genre...">
+                        <Label fx:id="movieGenreLabel" layoutX="348.0" layoutY="84.0" styleClass="movie-label" text="Genre...">
                            <font>
-                              <Font name="SansSerif Bold" size="14.0" />
+                              <Font name="SansSerif Bold" size="24.0" />
                            </font>
                         </Label>
-                        <Label fx:id="movieDurationLabel" layoutX="348.0" layoutY="99.0" styleClass="movie-label" text="Duration...">
+                        <Label fx:id="movieDurationLabel" layoutX="348.0" layoutY="132.0" styleClass="movie-label" text="Duration...">
                            <font>
-                              <Font name="SansSerif Bold" size="14.0" />
+                              <Font name="SansSerif Bold" size="24.0" />
                            </font>
                         </Label>
-                        <ImageView fx:id="moviePosterImageView" fitHeight="150.0" fitWidth="200.0" layoutX="45.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="moviePosterImageView" fitHeight="253.0" fitWidth="226.0" layoutX="45.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </AnchorPane>
                   <Button fx:id="confirmButton" layoutX="763.0" layoutY="629.0" mnemonicParsing="false" onAction="#handleConfirmSelection" prefHeight="31.0" prefWidth="100.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold;                                   -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px;                                   -fx-border-radius: 5px;" text="Confirm" textFill="#3c8a32">
                      <graphic>
                         <FontAwesomeIcon fill="WHITE" glyphName="CHECK" text="" />
                      </graphic>
-                     <tooltip>
-                        <Tooltip fx:id="Tooltip" text="Help me" />
-                     </tooltip>
                   </Button>
 
                   <TreeTableView fx:id="resultsTableView" layoutX="660.0" layoutY="98.0" prefHeight="229.0" prefWidth="588.0" style="-fx-background-radius: 20px; -fx-text-fill: black; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0.5, 2, 2);">

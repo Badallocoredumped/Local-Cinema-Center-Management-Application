@@ -598,9 +598,27 @@ public class Step4Controller {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/step5.fxml"));
             Parent step5Root = loader.load();
             Scene scene = next_button_step4.getScene();
-            scene.setRoot(step5Root);
-            Stage stage = (Stage) next_button_step4.getScene().getWindow();
-            stage.setTitle("Step 5");
+
+            if (scene == null) 
+            {
+                scene = next_button_step4.getParent().getScene(); // This will fetch the scene from the parent of the button
+            }
+            if (scene != null) 
+            {
+                // Set the new root for the next scene
+                scene.setRoot(step5Root);
+                Stage stage = (Stage) scene.getWindow();
+                stage.setTitle("Step 5");
+
+                // Ensure the stage remains in fullscreen or add any other stage settings
+                stage.setFullScreen(true);
+                stage.setFullScreenExitHint(""); // Hide the exit hint if needed
+            } 
+            else 
+            {
+                // Handle the case when the scene is still null (very rare but might happen during initialization)
+                System.err.println("Error: Scene not found. Could not change scene.");
+            }
         
     }
     @FXML
@@ -753,8 +771,8 @@ public class Step4Controller {
                         
                         // Configure ImageView
                         imageView.setImage(image);
-                        imageView.setFitHeight(50);  // Adjust size as needed
-                        imageView.setFitWidth(50);   // Adjust size as needed
+                        imageView.setFitHeight(250);  // Increased from 50 to 100
+                        imageView.setFitWidth(250);   // Increased from 50 to 100
                         imageView.setPreserveRatio(true);
                         
                         setGraphic(imageView);

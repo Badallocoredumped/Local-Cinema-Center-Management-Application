@@ -63,6 +63,9 @@ public class Step1Controller
     @FXML
     private ImageView moviePosterImageView;
 
+
+    private List<Movie> moviesList = null;
+
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
@@ -77,30 +80,7 @@ public class Step1Controller
     private MovieService movieService = new MovieService();
 
 
-    private void updateMoviePoster(Movie movie) 
-    {
-        if (movie != null && movie.getPosterImageView() != null) {
-            // Ensure the update happens on the JavaFX thread
-            Platform.runLater(() -> {
-                try {
-                    Image posterImage = movie.getPosterImageView();
-                    if (posterImage != null) {
-                        moviePosterImageView.setImage(posterImage);
-                        moviePosterImageView.setFitWidth(200);
-                        moviePosterImageView.setFitHeight(300);
-                        moviePosterImageView.setPreserveRatio(true);
-                    } else {
-                        moviePosterImageView.setImage(null);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        } else {
-            // Handle case where the poster image is null or movie is null
-            moviePosterImageView.setImage(null);
-        }
-    }
+    
     
     @FXML
     private void initialize() 
@@ -110,8 +90,9 @@ public class Step1Controller
         searchComboBox.setValue("Genre"); // Set default value to "Genre"
 
         // Bind the TreeTableColumn to the movie title property
-        movies.setCellValueFactory(cellData -> cellData.getValue().getValue().titleProperty());
 
+       
+        movies.setCellValueFactory(cellData -> cellData.getValue().getValue().titleProperty());
         // Set up the root node and hide it
         resultsTableView.setRoot(new TreeItem<Movie>(new Movie(0, "Hidden Root", null, "", "", "")));
         resultsTableView.setShowRoot(false);
@@ -124,6 +105,8 @@ public class Step1Controller
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setFullScreen(true);
         });
+
+
     }
 
     public void updateSelectedMovie(Movie movie) 
@@ -156,7 +139,6 @@ public class Step1Controller
             return;
         }
 
-        List<Movie> moviesList = null;
 
         // Perform the search based on the selected search type
         if (searchType.equals("Genre")) 
@@ -193,19 +175,49 @@ public class Step1Controller
 
 
     @FXML
-    private void handleMovieSelection() {
-        Movie selectedMovie = resultsTableView.getSelectionModel().getSelectedItem().getValue();
-        if (selectedMovie != null) {
-            System.out.println("Selected movie: " + selectedMovie.getTitle()); // Debugging log
-            movieTitleLabel.setText(selectedMovie.getTitle());
-            movieGenreLabel.setText(selectedMovie.getGenre());
-            movieSummaryLabel.setText(selectedMovie.getSummary());
-            movieDurationLabel.setText(selectedMovie.getDuration() + " minutes");
-            selectedMovieLabel.setText(selectedMovie.getTitle());
-            updateMoviePoster(selectedMovie);  // This should update the poster image
-        } else {
-            System.out.println("No movie selected");
+    private void handleMovieSelection() 
+    {
+        System.out.println("Movie selected");
+        TreeItem<Movie> selectedItem = resultsTableView.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) 
+        {
+            System.out.println("No selection"); // Debugging log
+            return; // Exit if no selection
         }
+    
+        Movie selectedMovie = selectedItem.getValue();
+        if (selectedMovie == null) 
+        {
+            System.out.println("No movie data"); // Debugging log
+            return; // Exit if no movie data
+        }
+    
+        // Set movie details
+        movieTitleLabel.setText(selectedMovie.getTitle());
+        movieGenreLabel.setText(selectedMovie.getGenre());
+        movieSummaryLabel.setText(selectedMovie.getSummary());
+        movieDurationLabel.setText(selectedMovie.getDuration() + " minutes");
+        selectedMovieLabel.setText(selectedMovie.getTitle());
+    
+        // Set poster image if available
+
+        byte[] posterImage = selectedMovie.getPosterImage();
+        if (posterImage != null && posterImage.length > 0) 
+        {
+            System.out.println("Setting poster image..."); // Debugging log
+            Image image = new Image(new java.io.ByteArrayInputStream(posterImage));
+            moviePosterImageView.setImage(image);
+            moviePosterImageView.setFitHeight(300); // Adjust this value as needed
+            moviePosterImageView.setFitWidth(200);  // Adjust this value as needed
+            moviePosterImageView.setPreserveRatio(true);
+            System.out.println(image); // Debugging log
+        } 
+        else 
+        {
+            moviePosterImageView.setImage(null); // Clear image if no poster available
+        }
+    
+        System.out.println("Selected movie: " + selectedMovie.getTitle()); // Debugging log
     }
 
     
@@ -268,16 +280,26 @@ public class Step1Controller
         // Get the current scene from the Next button
         Scene scene = next_button_step1.getScene();
 
-        // Set the new root to the current scene
-        scene.setRoot(step2Root);
-
-        // Optionally, update the stage title if needed
-        Stage stage = (Stage) next_button_step1.getScene().getWindow();
-        stage.setTitle("Step 2");
+        if (scene == null) {
+            scene = next_button_step1.getParent().getScene(); // This will fetch the scene from the parent of the button
+        }
+    
+        if (scene != null) {
+            // Set the new root to the current scene
+            scene.setRoot(step2Root);
+    
+            // Optionally, update the stage title if needed
+            Stage stage = (Stage) scene.getWindow();
+            stage.setTitle("Step 2");
+    
+            // Ensure the stage remains in fullscreen
+            stage.setFullScreen(true);
+            stage.setFullScreenExitHint(""); // Hide the exit hint
+        } else {
+            // Handle the case when the scene is still null (very rare but might happen during initialization)
+            System.err.println("Error: Scene not found. Could not change scene.");
+        }
         
-        // Ensure the stage remains in fullscreen
-        stage.setFullScreen(true);
-        stage.setFullScreenExitHint(""); // Hide the exit hint
     }
 
     @FXML
