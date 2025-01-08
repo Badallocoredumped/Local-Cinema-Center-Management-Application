@@ -10,6 +10,7 @@ import help.classes.Movie;
 public class MovieDBO {
     public List<Movie> findAll() 
     {
+        System.out.println("Finding all movies...");
         List<Movie> movies = new ArrayList<>();
         try (Connection conn = DataBaseHandler.getConnection()) 
         {

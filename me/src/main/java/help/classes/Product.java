@@ -12,7 +12,8 @@ public class Product {
     private final IntegerProperty stockAvailability;
 
     // Default constructor with default values
-    public Product() {
+    public Product() 
+    {
         this.image = new SimpleStringProperty("");
         this.name = new SimpleStringProperty("");
         this.price = new SimpleObjectProperty<>(BigDecimal.ZERO);  // Default price to 0
@@ -20,7 +21,8 @@ public class Product {
     }
 
     // Constructor with parameters
-    public Product(String image, String name, BigDecimal price, int stockAvailability) {
+    public Product(String image, String name, BigDecimal price, int stockAvailability) 
+    {
         this.image = new SimpleStringProperty(image);
         this.name = new SimpleStringProperty(name);
         this.price = new SimpleObjectProperty<>(price);
@@ -74,7 +76,8 @@ public class Product {
         this.price.set(price);
     }
 
-    public void setStockAvailability(int stockAvailability) {
+    public void setStockAvailability(int stockAvailability) 
+    {
         this.stockAvailability.set(stockAvailability);
     }
 }

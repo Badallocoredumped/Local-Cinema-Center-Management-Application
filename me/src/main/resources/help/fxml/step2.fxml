@@ -172,12 +172,6 @@
          <right>
             <AnchorPane prefHeight="767.0" prefWidth="226.0" style="-fx-background-color: #e4e4e4;" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="64.0" layoutY="524.0" text="Shopping Cart">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <FontAwesomeIcon glyphName="SHOPPING_CART" layoutX="101.0" layoutY="510.0" size="2em" text="" />
                   <Label layoutX="63.0" layoutY="67.0" text="Selected Movie">
                      <font>
                         <Font name="System Bold" size="14.0" />
@@ -226,9 +220,15 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="selectedShoppingCart" layoutX="92.0" layoutY="558.0" text="Empty">
+                  <Label layoutX="72.0" layoutY="509.0" text="Shopping Cart">
                      <font>
                         <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIcon glyphName="SHOPPING_CART" layoutX="109.0" layoutY="495.0" size="2em" text="" />
+                  <Label fx:id="selectedShoppingCart1" layoutX="34.0" layoutY="541.0" text="Empty">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
                </children>

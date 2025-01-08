@@ -1,7 +1,9 @@
 package help.classes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ShoppingCart {
 
@@ -9,15 +11,15 @@ public class ShoppingCart {
     private List<String> selectedSeats;
     private Movie selectedMovie;
     private Session selectedDaySessionAndHall;
-    private List<String> itemsBought;
+    private Map<Product, Integer> itemsBought; // Map to store products and their quantities
 
     private ShoppingCart() 
     {
         selectedSeats = new ArrayList<>();
-        itemsBought = new ArrayList<>();
+        itemsBought = new HashMap<>();
     }
 
-    //basically a global point of access to the instance
+    // Singleton instance
     public static ShoppingCart getInstance() 
     {
         if (instance == null) 
@@ -49,7 +51,7 @@ public class ShoppingCart {
 
     public Session getSelectedDaySessionAndHall() 
     {
-        if(selectedDaySessionAndHall == null)
+        if (selectedDaySessionAndHall == null) 
         {
             System.out.println("No session selected");
             return null;
@@ -62,20 +64,43 @@ public class ShoppingCart {
         this.selectedDaySessionAndHall = selectedDaySessionAndHall;
     }
 
-    public List<String> getItemsBought() 
+    /**
+     * Adds a product to the cart with the specified quantity.
+     * If the product already exists in the cart, it updates the quantity.
+     * 
+     * @param item     The product to add.
+     * @param quantity The quantity of the product.
+     */
+    public void addItemBought(Product item, int quantity) 
     {
-        return new ArrayList<>(itemsBought);
+        itemsBought.put(item, itemsBought.getOrDefault(item, 0) + quantity);
     }
 
-    public void addItemBought(String item) 
+    /**
+     * Removes a product from the cart.
+     * 
+     * @param item The product to remove.
+     */
+    public void removeItemBought(Product item) 
     {
-        itemsBought.add(item);
+        itemsBought.remove(item);
+    }
+
+    /**
+     * Gets all items in the cart with their quantities.
+     * 
+     * @return A map of products and their quantities.
+     */
+    public Map<Product, Integer> getItemsBought() 
+    {
+        return new HashMap<>(itemsBought);
     }
 
     public void clearSession() 
     {
         selectedDaySessionAndHall = null;
     }
+
     public void clear() 
     {
         selectedSeats.clear();
@@ -83,6 +108,7 @@ public class ShoppingCart {
         selectedDaySessionAndHall = null;
         itemsBought.clear();
     }
+
     public void clearSeats() 
     {
         selectedSeats.clear();
@@ -91,5 +117,9 @@ public class ShoppingCart {
     public void clearItemsBought() 
     {
         itemsBought.clear();
+    }
+    public void clearSelectedMovie() 
+    {
+        selectedMovie = null;
     }
 }

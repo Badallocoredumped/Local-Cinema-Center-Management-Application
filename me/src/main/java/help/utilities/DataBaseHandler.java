@@ -15,14 +15,18 @@ public class DataBaseHandler
 
     public static Connection getConnection() throws Exception
     {
+        System.out.println("Connecting to database...");
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
+    
 
     public static String authenticate(String username, String password)
     {
         String role = null;
         try (Connection conn = getConnection())
         {
+        
+
             String query = "SELECT role FROM Users WHERE username = ? AND password = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, username);

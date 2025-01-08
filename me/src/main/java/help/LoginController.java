@@ -1,12 +1,18 @@
 package help;
 
+import help.utilities.DataBaseHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
+import java.io.IOException;
 
 public class LoginController {
 
@@ -24,8 +30,9 @@ public class LoginController {
      * after the FXML file has been loaded.
      */
     @FXML
-    private void initialize() {
-        // Optional: Add any initialization logic here
+    private void initialize() 
+    {
+
     }
 
     /**
@@ -34,9 +41,14 @@ public class LoginController {
      * @param event The action event triggered by clicking the login button.
      */
     @FXML
-    private void handleLoginButtonAction(ActionEvent event) {
+    private void handleLoginButtonAction(ActionEvent event) 
+    {
         String username = usernameField.getText();
         String password = passwordField.getText();
+
+        // Debugging: Print entered credentials
+        System.out.println("Username entered: " + username);
+        System.out.println("Password entered: " + password);
 
         // Simple validation
         if (username.isEmpty() || password.isEmpty()) {
@@ -44,29 +56,58 @@ public class LoginController {
             return;
         }
 
-        // TODO: Implement actual authentication logic
-        boolean isAuthenticated = authenticate(username, password);
+        // Authenticate using DataBaseHandler
+        String role = DataBaseHandler.authenticate(username, password); // Get the role of the user
 
-        if (isAuthenticated) {
+        if (role != null) 
+        {
             showAlert(AlertType.INFORMATION, "Login Successful", "Welcome, " + username + "!");
-            // TODO: Navigate to the next scene or perform other actions
-        } else {
+            loadUIForRole(role);
+        } 
+        else 
+        {
             showAlert(AlertType.ERROR, "Login Failed", "Invalid username or password");
         }
     }
 
     /**
-     * Authenticates the user based on username and password.
-     * This is a placeholder method and should be replaced with real authentication logic.
+     * Loads the appropriate UI based on the user's role.
      *
-     * @param username The entered username.
-     * @param password The entered password.
-     * @return true if authentication is successful, false otherwise.
+     * @param role The role of the authenticated user.
      */
-    private boolean authenticate(String username, String password) {
-        // Placeholder authentication logic
-        // Replace with real authentication (e.g., database query)
-        return "admin".equals(username) && "password".equals(password);
+    private void loadUIForRole(String role) 
+    {
+        String fxmlFile = "";
+
+        switch (role.toLowerCase()) 
+        {
+            case "cashier":
+                fxmlFile = "/help/fxml/step1.fxml";
+                break;
+            case "admin":
+                fxmlFile = "/help/fxml/admin.fxml";
+                break;
+            case "manager":
+                fxmlFile = "/help/fxml/manager.fxml";
+                break;
+            default:
+                showAlert(AlertType.ERROR, "Role Error", "Unrecognized user role.");
+                return;
+        }
+
+        try 
+        {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            Parent root = loader.load();
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } 
+        catch (IOException e) 
+        {
+            showAlert(AlertType.ERROR, "Error", "Cannot load the appropriate UI for the role.");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -76,7 +117,8 @@ public class LoginController {
      * @param title     The title of the alert dialog.
      * @param message   The content message of the alert dialog.
      */
-    private void showAlert(AlertType alertType, String title, String message) {
+    private void showAlert(AlertType alertType, String title, String message) 
+    {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);

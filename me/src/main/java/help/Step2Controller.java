@@ -20,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -227,6 +228,7 @@ public class Step2Controller
         ShoppingCart cart = ShoppingCart.getInstance();
         step1Controller.updateSelectedMovie(cart.getSelectedMovie());
         cart.clearSession();
+        cart.clearSelectedMovie();
 
         // Get the current scene
         Scene scene = back_button_step2.getScene();
@@ -336,26 +338,43 @@ public class Step2Controller
         return hall.contains("A") ? "/help/fxml/step3_salonA.fxml" : "/help/fxml/step3_salonB.fxml";
         
     }
-    @FXML
-    private void handleSignOutButtonAction(ActionEvent event) throws IOException 
+        @FXML
+    private void handleSignOutButtonAction(ActionEvent event) 
     {
-        // Load the login.fxml
-        Parent loginRoot = FXMLLoader.load(getClass().getResource("/help/fxml/login.fxml"));
-        ShoppingCart cart = ShoppingCart.getInstance();
-        cart.clear();
+        try 
+        {
+            // Load 'login.fxml'
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/login.fxml"));
+            Parent root = loader.load();
 
-        // Get the current stage
-        Stage stage = (Stage) SignoutButton.getScene().getWindow();
+            // Get the current stage from the SignoutButton
+            Stage stage = (Stage) SignoutButton.getScene().getWindow();
 
-        // Set the new root to the current scene
-        Scene scene = SignoutButton.getScene();
-        scene.setRoot(loginRoot);
+            // Create a new scene with specified size
+            Scene scene = new Scene(root, 600, 400);
 
-        // Update the stage title if needed
-        stage.setTitle("Login");
+            // Set the new scene to the stage
+            stage.setScene(scene);
 
-        // Exit fullscreen mode
-        stage.setFullScreen(false);
-        stage.setFullScreenExitHint(""); // Hide the exit hint
+            // Center the stage on the screen
+            stage.centerOnScreen();
+
+            // Optionally, disable fullscreen if it was enabled
+            stage.setFullScreen(false);
+
+            // Show the stage
+            stage.show();
+        } 
+        catch (IOException e) 
+        {
+            // Display an error alert if loading fails
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Sign Out Failed");
+            alert.setHeaderText("Unable to Sign Out");
+            alert.setContentText("There was an error signing out. Please try again.");
+            alert.showAndWait();
+
+            e.printStackTrace();
+        }
     }
 }

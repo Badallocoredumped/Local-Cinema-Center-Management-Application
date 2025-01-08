@@ -37,6 +37,13 @@ public class Step3AController
     @FXML
     private Button add_to_cart_button;
     @FXML
+    private Button SignoutButton;
+    @FXML
+    private Button CloseButton;
+    @FXML
+    private Button MinimizeButton; 
+
+    @FXML
     private Label selectedSeat;
     @FXML
     private Label selectedMovieLabel;
@@ -45,16 +52,7 @@ public class Step3AController
 
 
     @FXML
-    private Button SignoutButton;
-    @FXML
-    private Button CloseButton;
-    @FXML
-    private Button MinimizeButton; 
-
-    @FXML
     private Button A1, A2, A3, A4;
-    @FXML
-    private GridPane seatsGridPane;
     @FXML
     private Button B1, B2, B3, B4;
     @FXML
@@ -62,6 +60,9 @@ public class Step3AController
     @FXML
     private Button D1, D2, D3, D4;
 
+    @FXML
+    private GridPane seatsGridPane;
+    
     private List<String> selectedSeats = new ArrayList<>();
     private List<String> confirmedSeats = new ArrayList<>();
 
@@ -94,34 +95,32 @@ public class Step3AController
         initializeSeatButtons();
     }
 
-    private List<String> fetchSoldSeats() throws Exception 
-    {
+    private List<String> fetchSoldSeats() throws Exception {
         List<String> soldSeats = new ArrayList<>();
         ShoppingCart cart = ShoppingCart.getInstance();
-        Session session = cart.getSelectedDaySessionAndHall();
-        
-        try (Connection conn = DataBaseHandler.getConnection()) 
-        {
-            // Assuming "purchases" table has a column "seat_id" that tracks sold seats
+        Session session = cart.getSelectedDaySessionAndHall(); // This should give you the session
+    
+        try (Connection conn = DataBaseHandler.getConnection()) {
+            // Query to fetch sold seats by session_id only
             String query = "SELECT seat_label FROM Seats WHERE session_id = ? AND is_occupied = TRUE";
             PreparedStatement stmt = conn.prepareStatement(query);
-            
-            // Pass in the selected session_id from the ShoppingCart or your current session
-            stmt.setInt(1, session.getSessionId());
-            
+    
+            // Pass in the selected session_id
+            stmt.setInt(1, session.getSessionId()); // session_id
+    
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()) 
-            {
+            while (rs.next()) {
                 soldSeats.add(rs.getString("seat_label"));
             }
-        } 
-        catch (SQLException e) 
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+    
         System.out.println("Sold seats: " + soldSeats.size());
         return soldSeats;
     }
+    
+    
 
 
     private void initializeSeatButtons() throws Exception 
@@ -176,18 +175,7 @@ public class Step3AController
         updateShoppingCart();
     }
     
-    /* private void updateSelectedSeatsLabel() 
-    {
-        if (selectedSeats.isEmpty()) {
-            selectedSeat.setText("No seats selected.");
-        } 
-        else 
-        {
-            // Join the selected seats with commas and update the label
-            String selectedSeatsText = String.join(", ", selectedSeats);
-            selectedSeat.setText("Selected Seats: " + selectedSeatsText);
-        }
-    } */
+    
 
     private void updateShoppingCart() 
     {
@@ -237,9 +225,7 @@ public class Step3AController
             markSeatsAsSold(selectedSeats);
             for (String seatId : selectedSeats) 
             {
-                // Assuming you have a method to get the hall_id for a seat
-                String hall_name = cart.getSelectedDaySessionAndHall().getHall();
-                reduceHallCapacity(hall_name);
+                reduceHallCapacity(cart.getSelectedDaySessionAndHall().getSessionId());
             }
     
             // Mark the selected seats as confirmed and change their color to red
@@ -266,38 +252,77 @@ public class Step3AController
         }
     }
 
-    private void reduceHallCapacity(String hall_name) throws Exception 
+    private void reduceHallCapacity(int sessionId) throws Exception 
     {
         try (Connection conn = DataBaseHandler.getConnection()) 
         {
-            // Fetch session ID based on the hall name
-            String querySessionId = "SELECT session_id FROM Sessions WHERE hall_name = ?";
-            PreparedStatement stmtSessionId = conn.prepareStatement(querySessionId);
-            stmtSessionId.setString(1, hall_name);
-            ResultSet rsSession = stmtSessionId.executeQuery();
-            
-            int sessionId = -1;
-            if (rsSession.next()) 
+            // Get the current vacant seats for the given session ID
+            int currentVacantSeats = getVacantSeatsForSession(sessionId);
+    
+            // Ensure there are vacant seats available to reduce
+            if (currentVacantSeats <= 0) 
             {
-                sessionId = rsSession.getInt("session_id");
+                throw new SQLException("No vacant seats available for session ID: " + sessionId);
             }
+    
+            // Reduce vacant seats by 1 (or by the desired number of seats)
+            int updatedVacantSeats = currentVacantSeats - 1;  // Decrement by 1
+    
+            // Now, update the vacant seats for the session to the new value
+            String updateQuery = "UPDATE Sessions SET vacant_seats = ? WHERE session_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(updateQuery);
             
-            if (sessionId == -1) 
-            {
-                throw new SQLException("No session found for hall: " + hall_name);
-            }
-            
-            // Now reduce the vacant seats for the correct session ID
-            String query = "UPDATE Sessions SET vacant_seats = vacant_seats - 1 WHERE session_id = ?";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, sessionId);  // Pass the session ID instead of hall_name
+            // Set the updated value of vacant seats
+            stmt.setInt(1, updatedVacantSeats);  // Set the updated vacant seats
+            stmt.setInt(2, sessionId);           // Set the session ID
+    
+            // Execute the update
             stmt.executeUpdate();
+    
+            System.out.println("Updated vacant seats to " + updatedVacantSeats + " for session ID " + sessionId);
         } 
         catch (SQLException e) 
         {
             e.printStackTrace();
+            throw e;  // Rethrow the exception after logging it
         }
     }
+    
+    
+
+    private int getVacantSeatsForSession(int sessionId) throws Exception 
+    {
+        int vacantSeats = -1;  // Default value in case no data is found.
+    
+        // SQL query to get the current number of vacant seats for a session
+        String query = "SELECT vacant_seats FROM Sessions WHERE session_id = ?";
+    
+        // Try-with-resources to ensure the connection is closed properly
+        try (Connection conn = DataBaseHandler.getConnection()) 
+        {
+            // Prepare the statement and set the session ID
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, sessionId);
+    
+            // Execute the query and get the result
+            ResultSet rs = stmt.executeQuery();
+    
+            // If a result is returned, extract the vacant seats
+            if (rs.next()) 
+            {
+                vacantSeats = rs.getInt("vacant_seats");
+            } 
+            else 
+            {
+                // If no result is found for the session ID
+                throw new SQLException("No session found with session_id: " + sessionId);
+            }
+        }
+    
+        // Return the number of vacant seats (can be 0 or more)
+        return vacantSeats;
+    }
+    
     
     
     private void markSeatsAsSold(List<String> seatLabels) throws Exception 
@@ -306,43 +331,31 @@ public class Step3AController
         System.out.println("Marking seats as sold: " + seatLabels);
         String markSeatQuery = "UPDATE Seats SET is_occupied = TRUE WHERE seat_label = ? AND session_id = ?";
     
-        // Query to decrement the vacant seats count
-        String updateVacantSeatsQuery = "UPDATE Sessions SET vacant_seats = vacant_seats - ? WHERE session_id = ?";
-    
         try (Connection conn = DataBaseHandler.getConnection()) 
         {
-    
-            try (PreparedStatement markSeatStmt = conn.prepareStatement(markSeatQuery))
+            try (PreparedStatement markSeatStmt = conn.prepareStatement(markSeatQuery)) 
             {
-
-                PreparedStatement updateVacantSeatsStmt = conn.prepareStatement(updateVacantSeatsQuery);
                 int sessionId = ShoppingCart.getInstance().getSelectedDaySessionAndHall().getSessionId();
     
                 // Mark each seat as occupied
                 for (String seatLabel : seatLabels) 
                 {
                     markSeatStmt.setString(1, seatLabel); // Set seat label
-                    markSeatStmt.setInt(2, sessionId);   // Set session ID
+                    markSeatStmt.setInt(2, sessionId);    // Set session ID
                     markSeatStmt.addBatch();
                 }
+    
                 // Execute batch to update all seats
                 markSeatStmt.executeBatch();
-    
-                // Update vacant seats count
-                updateVacantSeatsStmt.setInt(1, seatLabels.size()); // Number of seats booked
-                updateVacantSeatsStmt.setInt(2, sessionId);         // Session ID
-                updateVacantSeatsStmt.executeUpdate();
-    
-                // Commit the transaction
             } 
             catch (SQLException e) 
             {
                 // Rollback in case of error
                 throw e;
-            } 
-            
+            }
         }
     }
+    
     
     
 
@@ -411,15 +424,22 @@ public class Step3AController
     @FXML
     private void handleNextButtonAction() throws IOException 
     {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/step4.fxml"));
-        Parent root = loader.load();
+        // Load the step2.fxml
+        Parent step2Root = FXMLLoader.load(getClass().getResource("/help/fxml/step4.fxml"));
 
-        Step4Controller controller = loader.getController();
+        // Get the current scene from the Next button
+        Scene scene = next_button_step3a.getScene();
 
+        // Set the new root to the current scene
+        scene.setRoot(step2Root);
+
+        // Optionally, update the stage title if needed
         Stage stage = (Stage) next_button_step3a.getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setFullScreen(true); // Ensure full screen
+        stage.setTitle("Step 4");
+        
+        // Ensure the stage remains in fullscreen
+        stage.setFullScreen(true);
+        stage.setFullScreenExitHint(""); // Hide the exit hint
     }
 
     @FXML
@@ -450,6 +470,7 @@ public class Step3AController
         // Clear confirmed seats
         confirmedSeats.clear();
 
+
         // Load the Step1 FXML file
         Parent backRoot = FXMLLoader.load(getClass().getResource("/help/fxml/step1.fxml"));
         
@@ -462,6 +483,7 @@ public class Step3AController
         // Pass the selected movie to Step 1
         ShoppingCart cart = ShoppingCart.getInstance();
         cart.clearSeats();//noo
+        cart.clearSession();
         step2Controller.updateSelectedMovie(cart.getSelectedMovie());
 
         // Get the current scene
@@ -477,28 +499,47 @@ public class Step3AController
         // Ensure the stage remains in fullscreen
         stage.setFullScreen(true);
         stage.setFullScreenExitHint(""); // Hide the exit hint
+
+        
     }
 
     @FXML
-    private void handleSignOutButtonAction(ActionEvent event) throws IOException 
+    private void handleSignOutButtonAction(ActionEvent event) 
     {
-        // Load the login.fxml
-        Parent loginRoot = FXMLLoader.load(getClass().getResource("/help/fxml/login.fxml"));
-        ShoppingCart cart = ShoppingCart.getInstance();
-        cart.clear();
+        try 
+        {
+            // Load 'login.fxml'
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/login.fxml"));
+            Parent root = loader.load();
 
-        // Get the current stage
-        Stage stage = (Stage) SignoutButton.getScene().getWindow();
+            // Get the current stage from the SignoutButton
+            Stage stage = (Stage) SignoutButton.getScene().getWindow();
 
-        // Set the new root to the current scene
-        Scene scene = SignoutButton.getScene();
-        scene.setRoot(loginRoot);
+            // Create a new scene with specified size
+            Scene scene = new Scene(root, 600, 400);
 
-        // Update the stage title if needed
-        stage.setTitle("Login");
+            // Set the new scene to the stage
+            stage.setScene(scene);
 
-        // Exit fullscreen mode
-        stage.setFullScreen(false);
-        stage.setFullScreenExitHint(""); // Hide the exit hint
+            // Center the stage on the screen
+            stage.centerOnScreen();
+
+            // Optionally, disable fullscreen if it was enabled
+            stage.setFullScreen(false);
+
+            // Show the stage
+            stage.show();
+        } 
+        catch (IOException e) 
+        {
+            // Display an error alert if loading fails
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Sign Out Failed");
+            alert.setHeaderText("Unable to Sign Out");
+            alert.setContentText("There was an error signing out. Please try again.");
+            alert.showAndWait();
+
+            e.printStackTrace();
+        }
     }
 }

@@ -16,18 +16,20 @@ public class App extends Application {
     private static Scene scene;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException 
+    {
         // Correctly load 'login.fxml' without duplicating the path
-        Parent root = loadFXML("step4"); // Pass only the FXML name without path
+        Parent root = loadFXML("step1"); // Pass only the FXML name without path
         scene = new Scene(root, 600, 400); // Adjust size as needed
         stage.setScene(scene);
-        stage.setFullScreen(true);
+        //stage.setFullScreen(true);
         stage.setTitle("Login");
         stage.setFullScreenExitHint(""); // Turn off the "Press ESC to exit fullscreen" text
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
+    static void setRoot(String fxml) throws IOException 
+    {
         scene.setRoot(loadFXML(fxml));
     }
 
@@ -40,7 +42,8 @@ public class App extends Application {
         return fxmlLoader.load();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         launch();
     }
 
