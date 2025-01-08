@@ -3,7 +3,6 @@ CREATE DATABASE CinemaCenter
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 USE CinemaCenter;
-
 -- Users table
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -51,20 +50,10 @@ CREATE TABLE Seats (
     FOREIGN KEY (hall_name) REFERENCES Halls(hall_name),
     FOREIGN KEY (session_id) REFERENCES Sessions(session_id)
 );
-SELECT * FROM Sessions;
 
--- A way to upload JPG files to the database
 SET SQL_SAFE_UPDATES = 0;
-
-
-UPDATE Products
-SET stock_quantity = 100;
-
 SET SQL_SAFE_UPDATES = 1;
 
-SELECT * FROM Sessions;
-SELECT * FROM Seats;
-SELECT * FROM Products;
 
 -- Tickets table
 CREATE TABLE Tickets (
@@ -79,17 +68,22 @@ CREATE TABLE Tickets (
     total_cost DECIMAL(10, 2),             -- Add total_cost column
     FOREIGN KEY (session_id) REFERENCES Sessions(session_id)
 );
-DESCRIBE Tickets;
 
-ALTER TABLE Tickets
-ADD COLUMN discounted_seat_numbers TEXT;
+CREATE TABLE Invoices (
+    invoice_id INT AUTO_INCREMENT PRIMARY KEY,        -- Unique identifier for the invoice
+    ticket_id INT NOT NULL,                            -- Foreign key linking to the Tickets table
+    invoice_format ENUM('PDF', 'HTML', 'TXT') NOT NULL, -- The format of the invoice (PDF, HTML, etc.)
+    invoice_file BLOB NOT NULL,                        -- Binary data of the invoice file (PDF/HTML/TXT, etc.)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    -- Timestamp when the invoice was created
+    FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE -- Linking to Tickets table
+);
 
 
 
 
 
 
-SELECT * FROM Tickets;
+
 -- Products table
 CREATE TABLE Products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -100,8 +94,6 @@ CREATE TABLE Products (
     image BLOB
     
 );
-
-
 
 
 
@@ -249,18 +241,5 @@ VALUES
 
 
 
-
-
-
-
--- Select movies
-SELECT * FROM Movies;
-SELECT session_date, start_time, hall_name, vacant_seats FROM Sessions WHERE movie_id = 2;
-SELECT * FROM Sessions;
-SELECT * FROM Seats;
-SELECT * FROM Halls;
-SELECT * FROM Products;
-SELECT * FROM Sessions;
-SELECT * FROM Sessions WHERE session_id = 13;
 
 

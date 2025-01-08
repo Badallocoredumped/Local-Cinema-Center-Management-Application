@@ -3,6 +3,8 @@ package help;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 
 import help.classes.ShoppingCart;
 import help.classes.Tickets;
+import help.utilities.DataBaseHandler;
 import help.utilities.InvoiceDBO;
 import help.utilities.ProductDBO;
 import help.utilities.TicketsDBO;
@@ -38,7 +41,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.Node;
 
 public class Step5Controller {
 
@@ -152,11 +157,8 @@ public class Step5Controller {
             for (Map.Entry<Product, Integer> entry : cart.getItemsBought().entrySet()) 
             {
                 Product product = entry.getKey();
-                int quantity = entry.getValue();
-                
-                // Update product stock in database
-                product.setStockAvailability(product.getStockAvailability() + quantity);
-                productDBO.updateProductStock(product.getName(), product.getStockAvailability());
+                Integer quantity = entry.getValue();
+                productDBO.returnProductStock(product.getName(), quantity);
             }
 
             // Delete ticket from database
@@ -165,6 +167,7 @@ public class Step5Controller {
             // Clear shopping cart and ticket
             cart.clearItemsBought();
             ticket.clear();
+
             // Navigate back
             Parent step4Root = FXMLLoader.load(getClass().getResource("/help/fxml/step4.fxml"));
             Scene scene = back_button_step5.getScene();
@@ -175,50 +178,83 @@ public class Step5Controller {
         
     }
 
-        private void savePDFToDatabase(String filepath, int ticketId, String format) throws Exception 
-        {
-            File file = new File(filepath);
-            byte[] pdfData = Files.readAllBytes(file.toPath());
-            
-            InvoiceDBO invoiceDBO = new InvoiceDBO();
-            invoiceDBO.saveInvoice(ticketId, pdfData, format);
+
+
+        
+
+    private void savePDFToDatabase(String filepath, int ticketId, String format) throws Exception 
+    {
+        File file = new File(filepath);
+        if (!file.exists() || !file.canRead()) {
+            throw new IOException("Cannot read PDF file: " + filepath);
         }
+    
+        byte[] pdfData = Files.readAllBytes(file.toPath());
+        if (pdfData == null || pdfData.length == 0) {
+            throw new IOException("PDF data is empty");
+        }
+    
+        System.out.println("Uploading PDF: " + filepath);
+        System.out.println("PDF size: " + pdfData.length + " bytes");
+    
+        InvoiceDBO invoiceDBO = new InvoiceDBO();
+        invoiceDBO.saveInvoice(ticketId, pdfData, format);
+    }
 
 
 
 
 
         @FXML
-    private void handleSaveTicketInvoice(ActionEvent event) {
-        try {
-            ShoppingCart cart = ShoppingCart.getInstance();
-            Tickets ticket = Tickets.getInstance();
-            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-            
-            // Create ticket PDF
-            String ticketPath = "ticket_" + ticket.getTicketId() + "_" + timestamp + ".pdf";
-            createTicketPDF(ticketPath, ticket, cart);
-            
-            // Create invoice PDF
-            String invoicePath = "invoice_" + ticket.getTicketId() + "_" + timestamp + ".pdf";
-            createInvoicePDF(invoicePath, ticket, cart);
+        private void handleSaveTicketInvoice(ActionEvent event) 
+        {
+            try {
+                // Get user's Documents folder path
+                String documentsPath = System.getProperty("user.home") + "\\Documents\\MovieTickets\\";
+                File directory = new File(documentsPath);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+        
+                ShoppingCart cart = ShoppingCart.getInstance();
+                Tickets ticket = Tickets.getInstance();
+                String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+                
+                // Create full file paths
+                String ticketPath = documentsPath + "ticket_" + ticket.getTicketId() + "_" + timestamp + ".pdf";
+                String invoicePath = documentsPath + "invoice_" + ticket.getTicketId() + "_" + timestamp + ".pdf";
+                
+                // Create PDFs
+                createTicketPDF(ticketPath, ticket, cart);
+                createInvoicePDF(invoicePath, ticket, cart);
+        
+                // Debug print
+                System.out.println("PDFs created at: " + ticketPath);
+                System.out.println("Attempting database upload...");
+        
+                // Save to database with verification
+                savePDFToDatabase(ticketPath, ticket.getTicketId(), "PDF");
+                savePDFToDatabase(invoicePath, ticket.getTicketId(), "PDF");
+        
+                showAlert("Success", "PDFs Created and Saved", 
+                 "Files saved to:\n" + documentsPath + "\nand uploaded to database.",
+                 Alert.AlertType.INFORMATION);
 
-            savePDFToDatabase(ticketPath, ticket.getTicketId(), "PDF");
-            savePDFToDatabase(invoicePath, ticket.getTicketId(), "PDF");
-            
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setContentText("PDFs created successfully!");
-            alert.showAndWait();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("Failed to create PDFs: " + e.getMessage());
-            alert.showAndWait();
+                 Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/final.fxml"));
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.setFullScreen(true);
+                stage.show();
+                        
+            } 
+            catch (Exception e) 
+            {
+                e.printStackTrace();
+                showAlert("Error", null, "Error: " + e.getMessage(), 
+                 Alert.AlertType.ERROR);
+            }
         }
-    }
 
     private void createTicketPDF(String filepath, Tickets ticket, ShoppingCart cart) throws IOException {
         try (PDDocument document = new PDDocument()) {
@@ -310,5 +346,26 @@ public class Step5Controller {
             
             document.save(filepath);
         }
+    }
+
+    private void showAlert(String title, String header, String content, Alert.AlertType type) 
+    {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        
+        // Get current stage
+        Stage stage = (Stage) MovieName.getScene().getWindow();
+        
+        // Make alert non-modal and set owner
+        alert.initOwner(stage);
+        alert.initModality(Modality.NONE);
+        
+        // Position alert in center of screen
+        alert.setX(stage.getX() + stage.getWidth()/2 - alert.getWidth()/2);
+        alert.setY(stage.getY() + stage.getHeight()/2 - alert.getHeight()/2);
+        
+        alert.show();
     }
 }

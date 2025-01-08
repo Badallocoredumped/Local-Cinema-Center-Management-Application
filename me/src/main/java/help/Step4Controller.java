@@ -1,11 +1,15 @@
 package help;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import java.io.ByteArrayInputStream;
 
 import help.classes.ShoppingCart;
 import help.classes.Tickets;
@@ -335,7 +339,8 @@ public class Step4Controller {
             cart.addItemBought(product, quantity);
     
             // Update stock in Product object
-            product.setStockAvailability(product.getStockAvailability() - quantity);
+            int newStock = product.getStockAvailability() - quantity;
+            product.setStockAvailability(newStock);
     
             // Update the stock in the database
             try 
@@ -602,10 +607,18 @@ public class Step4Controller {
     private void handleBackButtonAction() throws Exception 
     {
         ShoppingCart cart = ShoppingCart.getInstance();
+        ProductDBO productDBO = new ProductDBO();
         
         // Get the list of seats to unmark
         List<String> seatsToUnmark = cart.getSelectedSeats();
         
+        // Return products to inventory
+        for (Map.Entry<Product, Integer> entry : cart.getItemsBought().entrySet()) 
+        {
+            Product product = entry.getKey();
+            Integer quantity = entry.getValue();
+            productDBO.returnProductStock(product.getName(), quantity);
+        }
         // Unmark seats in database if there are any selected seats
         if (!seatsToUnmark.isEmpty()) 
         {
@@ -698,43 +711,67 @@ public class Step4Controller {
         }
     }
 
+    private Image byteArrayToImage(byte[] imageData) 
+    {
+        if (imageData == null || imageData.length == 0) return null;
+        try {
+            return new Image(new ByteArrayInputStream(imageData));
+        } catch (Exception e) {
+            System.err.println("Error converting image data: " + e.getMessage());
+            return null;
+        }
+    }
+
     /**
      * Sets up the product table columns.
      */
     private void setupProductTable() 
     {
-        imageColumn.setCellValueFactory(param -> param.getValue().getValue().imageProperty());
+        //imageColumn.setCellValueFactory(param -> param.getValue().getValue().imageProperty());
         nameColumn.setCellValueFactory(param -> param.getValue().getValue().nameProperty());
         priceColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getPrice().toString()));  // Convert BigDecimal to String
         stockAvailabilityColumn.setCellValueFactory(param -> new SimpleStringProperty(Integer.toString(param.getValue().getValue().getStockAvailability())));  // Convert int to String
     
         // Custom cell factory to display images
+        // Custom cell factory for image column
         imageColumn.setCellFactory(column -> new TreeTableCell<Product, String>() {
-            private final ImageView imageView = new ImageView();
-    
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-                } else {
+        private final ImageView imageView = new ImageView();
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty) {
+                setGraphic(null);
+            } else {
+                Product product = getTreeTableRow().getItem();
+                if (product != null && product.getImageData() != null) {
                     try {
-                        // Convert the image path to a valid file URL
-                        String imageUrl = "file:///" + item.replace("\\", "/");
-    
-                        // Load the image
-                        Image image = new Image(imageUrl);
+                        // Convert BLOB data to Image
+                        ByteArrayInputStream bis = new ByteArrayInputStream(product.getImageData());
+                        Image image = new Image(bis);
+                        
+                        // Configure ImageView
                         imageView.setImage(image);
-                        imageView.setFitHeight(100); // Adjust image size as needed
-                        imageView.setFitWidth(100);
+                        imageView.setFitHeight(50);  // Adjust size as needed
+                        imageView.setFitWidth(50);   // Adjust size as needed
+                        imageView.setPreserveRatio(true);
+                        
                         setGraphic(imageView);
                     } catch (Exception e) {
-                        setGraphic(null);  // In case the image URL is invalid
                         System.err.println("Error loading image: " + e.getMessage());
+                        setGraphic(null);
                     }
+                } else {
+                    setGraphic(null);
                 }
             }
-        });
+        }
+    });
+
+    // Set cell value factory for image column
+    imageColumn.setCellValueFactory(param -> new SimpleStringProperty(""));  // Dummy value, actual image is handled in cell factory
+ 
     }
     
 

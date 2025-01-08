@@ -76,6 +76,32 @@ public class Step1Controller
     }
     private MovieService movieService = new MovieService();
 
+
+    private void updateMoviePoster(Movie movie) 
+    {
+        if (movie != null && movie.getPosterImageView() != null) {
+            // Ensure the update happens on the JavaFX thread
+            Platform.runLater(() -> {
+                try {
+                    Image posterImage = movie.getPosterImageView();
+                    if (posterImage != null) {
+                        moviePosterImageView.setImage(posterImage);
+                        moviePosterImageView.setFitWidth(200);
+                        moviePosterImageView.setFitHeight(300);
+                        moviePosterImageView.setPreserveRatio(true);
+                    } else {
+                        moviePosterImageView.setImage(null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        } else {
+            // Handle case where the poster image is null or movie is null
+            moviePosterImageView.setImage(null);
+        }
+    }
+    
     @FXML
     private void initialize() 
     {
@@ -87,7 +113,7 @@ public class Step1Controller
         movies.setCellValueFactory(cellData -> cellData.getValue().getValue().titleProperty());
 
         // Set up the root node and hide it
-        resultsTableView.setRoot(new TreeItem<>(new Movie(0, "Hidden Root", "", "", "", "")));
+        resultsTableView.setRoot(new TreeItem<Movie>(new Movie(0, "Hidden Root", null, "", "", "")));
         resultsTableView.setShowRoot(false);
         // Disable selection for the TreeTableView itself
         resultsTableView.getSelectionModel().setCellSelectionEnabled(false);
@@ -115,7 +141,7 @@ public class Step1Controller
 
 
     @FXML
-    private void handleSearchButtonAction() 
+    private void handleSearchButtonAction() throws Exception 
     {
         System.out.println("Search button clicked");
 
@@ -168,36 +194,20 @@ public class Step1Controller
 
     @FXML
     private void handleMovieSelection() {
-        // Handle row selection and display movie details
         Movie selectedMovie = resultsTableView.getSelectionModel().getSelectedItem().getValue();
         if (selectedMovie != null) {
-            // Update existing labels
+            System.out.println("Selected movie: " + selectedMovie.getTitle()); // Debugging log
             movieTitleLabel.setText(selectedMovie.getTitle());
             movieGenreLabel.setText(selectedMovie.getGenre());
             movieSummaryLabel.setText(selectedMovie.getSummary());
             movieDurationLabel.setText(selectedMovie.getDuration() + " minutes");
-    
-            // Update the "Selected Movie" label
             selectedMovieLabel.setText(selectedMovie.getTitle());
-    
-            // Update movie poster using the poster URL (path)
-            String posterUrl = selectedMovie.getPosterUrl();  // Assuming getPosterUrl() returns the path or URL
-            if (posterUrl != null && !posterUrl.isEmpty()) {
-                try {
-                    // If it's a valid file path
-                    Image posterImage = new Image("file:" + posterUrl);  // Use "file:" for local file paths
-                    moviePosterImageView.setImage(posterImage);
-                } catch (Exception e) {
-                    // Handle error if image cannot be loaded
-                    moviePosterImageView.setImage(null);
-                    System.err.println("Failed to load image: " + e.getMessage());
-                }
-            } else {
-                // If there is no poster URL, clear the image
-                moviePosterImageView.setImage(null);
-            }
+            updateMoviePoster(selectedMovie);  // This should update the poster image
+        } else {
+            System.out.println("No movie selected");
         }
     }
+
     
 
     @FXML

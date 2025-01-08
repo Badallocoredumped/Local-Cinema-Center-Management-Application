@@ -10,21 +10,21 @@ public class MovieService
 {
     private MovieDBO movieDao = new MovieDBO();
 
-    public List<Movie> searchByGenre(String genre) 
+    public List<Movie> searchByGenre(String genre) throws Exception 
     {
         return movieDao.findAll().stream()
                 .filter(movie -> movie.getGenre().equalsIgnoreCase(genre))
                 .collect(Collectors.toList());
     }
 
-    public List<Movie> searchByPartialName(String partialName) 
+    public List<Movie> searchByPartialName(String partialName) throws Exception 
     {
         return movieDao.findAll().stream()
                 .filter(movie -> movie.getTitle().toLowerCase().contains(partialName.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
-    public List<Movie> searchByFullName(String fullName) 
+    public List<Movie> searchByFullName(String fullName) throws Exception 
     {
         return movieDao.findAll().stream()
                 .filter(movie -> movie.getTitle().equalsIgnoreCase(fullName))
