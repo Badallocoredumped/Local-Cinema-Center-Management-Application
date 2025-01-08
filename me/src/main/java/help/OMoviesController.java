@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 import help.classes.Movie;
 import help.utilities.AdminDBH;
 
-public class AdminController {
+public class OMoviesController {
 
     
 
@@ -108,7 +108,8 @@ public class AdminController {
                 showAlert(Alert.AlertType.WARNING, "Invalid Poster", "The specified poster file does not exist.");
                 return;
             }
-        } else {
+        } else 
+        {
             posterData = selectedMovie.getPosterData();
             posterPath = selectedMovie.getPosterUrl();
         }

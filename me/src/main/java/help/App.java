@@ -19,7 +19,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Load FXML file from the fxml folder
-        scene = new Scene(loadFXML("help/fxml/admin"), 640, 480);  // Added the fxml folder to the path
+        scene = new Scene(loadFXML("help/fxml/MovieSchedule"), 640, 480);  // Added the fxml folder to the path
         stage.setScene(scene);
         stage.setFullScreen(true); // Ensure full screen
         stage.setFullScreenExitHint(""); // Turn off the "Press ESC to exit fullscreen" text

@@ -7,21 +7,25 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
 import help.classes.Movie;
+import help.classes.Session;
 import javafx.beans.property.StringProperty;
 
 public class AdminDBH 
 {
-    private static final String URL = "jdbc:mysql://localhost:3306/Group16";
+    private static final String URL = "jdbc:mysql://localhost:3306/CinemaCenter";
     private static final String USER = "myuser";
     private static final String PASSWORD = "1234";
     private static Connection dbconnection;
@@ -52,7 +56,7 @@ public class AdminDBH
             return;
         }
     
-        String summaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/Movie/Summaries/"
+        String summaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/me/src/main/resources/help/summaries/"
                              + title.replaceAll(" ", "_") + "_summary.txt";
     
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(summaryPath))) {
@@ -99,7 +103,7 @@ public class AdminDBH
 
             if (infoSet.next()) 
             {
-                String newSummaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/Movie/Summaries/" + newTitle.replaceAll(" ", "_") + "_summary.txt";
+                String newSummaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/me/src/main/resources/help/summaries/" + newTitle.replaceAll(" ", "_") + "_summary.txt";
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(newSummaryPath))) 
                 {
 
@@ -169,10 +173,12 @@ public class AdminDBH
     
     
     //Gott fix the errors related to Get All Movies and Get Movie by ID
-    public List<Movie> GetAllMovies() {
+    public List<Movie> GetAllMovies() 
+    {
         List<Movie> movies = new ArrayList<>();
 
-        if (dbconnection == null) {
+        if (dbconnection == null) 
+        {
             System.err.println("Database connection failed!!");
             return movies;
         }
@@ -333,7 +339,7 @@ public class AdminDBH
         }
     }
     
-    public int getMovieIdFromTitle(String title) 
+    public static int getMovieIdFromTitle(String title) 
     {
         if (dbconnection == null) 
         {
@@ -362,224 +368,161 @@ public class AdminDBH
         }
     }
 
-    public void AddSession(int movieId, int hallId, String date, String startTime, String endTime) {
-        if (dbconnection == null) 
-        {
-            System.err.println("Database connection failed!!");
-            return;
-        }
-    
-        String overlapQuery = "SELECT COUNT(*) FROM Schedules WHERE hall_id = ? AND date = ? AND " +
-                              "((start_time < ? AND end_time > ?) OR " +
-                              "(start_time < ? AND end_time > ?) OR " +
-                              "(start_time >= ? AND end_time <= ?))";
-        try (PreparedStatement stmt = dbconnection.prepareStatement(overlapQuery)) {
-            stmt.setInt(1, hallId);
-            stmt.setString(2, date);
-            stmt.setString(3, endTime);
-            stmt.setString(4, startTime);
-            stmt.setString(5, startTime);
-            stmt.setString(6, endTime);
-            stmt.setString(7, startTime);
-            stmt.setString(8, endTime);
-    
-            ResultSet resultSet = stmt.executeQuery();
-            if (resultSet.next() && resultSet.getInt(1) > 0) {
-                System.out.println("Session overlaps with an existing session.");
-            }
-    
-            // Retrieve movie title
-            String movieTitleQuery = "SELECT title FROM Movies WHERE movie_id = ?";
-            String movieTitle = null;
-    
-            try (PreparedStatement titleStmt = dbconnection.prepareStatement(movieTitleQuery)) {
-                titleStmt.setInt(1, movieId);
-                resultSet = titleStmt.executeQuery();
-                if (resultSet.next()) {
-                    movieTitle = resultSet.getString("title");
-                } 
-                else 
-                {
-                    System.out.println("Movie ID not found.");
-                }
-            } catch (SQLException e) 
-            {
-                e.printStackTrace();
-            }
-    
-            // Insert schedule and retrieve the generated schedule_id
-            String insertQuery = "INSERT INTO Schedules (movie_id, hall_id, date, start_time, end_time) " +
-                                 "VALUES (?, ?, ?, ?, ?)";
-            try (PreparedStatement insertStmt = dbconnection.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS)) 
-            {
-                insertStmt.setInt(1, movieId);
-                insertStmt.setInt(2, hallId);
-                insertStmt.setString(3, date);
-                insertStmt.setString(4, startTime);
-                insertStmt.setString(5, endTime);
-                insertStmt.executeUpdate();
-    
-                ResultSet Keys = insertStmt.getGeneratedKeys();
-                if (Keys.next()) 
-                {
-                    int scheduleId = Keys.getInt(1);
-    
-                    String scheduleName = movieTitle.replaceAll(" ", "") + "_" + scheduleId;
-    
-                    String updateQuery = "UPDATE Schedules SET schedule_name = ? WHERE schedule_id = ?";
-                    try (PreparedStatement updateStmt = dbconnection.prepareStatement(updateQuery)) 
-                    {
-                        updateStmt.setString(1, scheduleName);
-                        updateStmt.setInt(2, scheduleId);
-                        updateStmt.executeUpdate();
-                    }
-    
-                    System.out.println("Session added successfully with name: " + scheduleName);
-                } 
-                else 
-                {
-                    System.err.println("Failed to retrieve the generated schedule ID.");
-                }
-            }
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
-    }
-    
-
-    public void DeleteSession(int scheduleName) 
+    public String getMovieTitleFromId(int movieId) throws SQLException 
     {
         if (dbconnection == null) 
         {
             System.err.println("Database connection failed!!");
-            return;
+            return null;
         }
 
-        String checkQuery = "SELECT sold_ticket FROM Schedules WHERE schedule_name = ?";
-        try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkQuery)) 
-        {
-            checkStmt.setInt(1, scheduleName);
-            ResultSet resultSet = checkStmt.executeQuery();
+        String title = null;
+        String query = "SELECT title FROM movies WHERE movie_id = ?"; 
 
-            if (resultSet.next() && resultSet.getBoolean("sold_ticket")) 
-            {
-                System.out.println("Cannot delete session: tickets have been sold.");
-            }
-
-            String deleteQuery = "DELETE FROM Schedules WHERE schedule_name = ?";
-            try (PreparedStatement deleteStmt = dbconnection.prepareStatement(deleteQuery)) 
-            {
-                deleteStmt.setInt(1, scheduleName);
-                deleteStmt.executeUpdate();
-                System.out.println("Session deleted successfully.");
-            }
-        } 
-        catch (SQLException e) 
+        try (PreparedStatement statement = dbconnection.prepareStatement(query)) 
         {
-            e.printStackTrace();
+            statement.setInt(1, movieId);
+            try (ResultSet resultSet = statement.executeQuery()) 
+            {
+                if (resultSet.next()) 
+                {
+                    title = resultSet.getString("title");
+                }
+            }
         }
+        return title;
     }
 
-    public void UpdateSession(int scheduleId, String newDate, String newStartTime, String newEndTime) 
+    // Add a new session
+    public void AddSession(int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
     {
-        if (dbconnection == null) 
+        String checkOverlapQuery = "SELECT COUNT(*) FROM Sessions WHERE hall_name = ? AND session_date = ? AND (? BETWEEN start_time AND ADDTIME(start_time, '2:00:00') OR ADDTIME(?, '2:00:00') BETWEEN start_time AND ADDTIME(start_time, '2:00:00'))";
+        try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkOverlapQuery)) 
         {
-            System.err.println("Database connection failed!!");
-            return;
-        }
-
-        String checkQuery = "SELECT sold_ticket FROM Schedules WHERE schedule_id = ?";
-        try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkQuery)) 
-        {
-            checkStmt.setInt(1, scheduleId);
-            ResultSet resultSet = checkStmt.executeQuery();
-
-            if (resultSet.next() && resultSet.getBoolean("sold_ticket")) 
+            checkStmt.setString(1, hallName);
+            checkStmt.setDate(2, java.sql.Date.valueOf(sessionDate));
+            checkStmt.setTime(3, startTime);
+            checkStmt.setTime(4, startTime);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) 
             {
-                System.out.println("Cannot update session: tickets have been sold.");
+                System.out.println("Error: Overlapping session detected.");
                 return;
             }
+        }
 
-            String overlapQuery = "SELECT COUNT(*) FROM Schedules WHERE hall_id = (SELECT hall_id FROM Schedules WHERE schedule_id = ?) " +
-                                  "AND date = ? AND schedule_id != ? AND " +
-                                  "((start_time < ? AND end_time > ?) OR " +
-                                  "(start_time < ? AND end_time > ?) OR " +
-                                  "(start_time >= ? AND end_time <= ?))";
-            try (PreparedStatement stmt = dbconnection.prepareStatement(overlapQuery)) 
-            {
-                stmt.setInt(1, scheduleId);
-                stmt.setString(2, newDate);
-                stmt.setInt(3, scheduleId);
-                stmt.setString(4, newEndTime);
-                stmt.setString(5, newStartTime);
-                stmt.setString(6, newStartTime);
-                stmt.setString(7, newEndTime);
-                stmt.setString(8, newStartTime);
-                stmt.setString(9, newEndTime);
-
-                ResultSet overlapResult = stmt.executeQuery();
-                if (overlapResult.next() && overlapResult.getInt(1) > 0) {
-                    System.out.println("Session overlaps with an existing session.");
-                    return;
-                }
-
-                String updateQuery = "UPDATE Schedules SET date = ?, start_time = ?, end_time = ? WHERE schedule_id = ?";
-                try (PreparedStatement updateStmt = dbconnection.prepareStatement(updateQuery)) 
-                {
-                    updateStmt.setString(1, newDate);
-                    updateStmt.setString(2, newStartTime);
-                    updateStmt.setString(3, newEndTime);
-                    updateStmt.setInt(4, scheduleId);
-                    updateStmt.executeUpdate();
-                    System.out.println("Session updated successfully.");
-                }
-            }
-        } 
-        catch (SQLException e) 
+        String insertQuery = "INSERT INTO Sessions (movie_id, hall_name, session_date, start_time) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = dbconnection.prepareStatement(insertQuery)) 
         {
-            e.printStackTrace();
+            stmt.setInt(1, movieId);
+            stmt.setString(2, hallName);
+            stmt.setDate(3, java.sql.Date.valueOf(sessionDate));
+            stmt.setTime(4, startTime);
+            stmt.executeUpdate();
         }
     }
 
-    public void getMonthlySchedule(int month) 
+    // Update an existing session
+    public void UpdateSession(int sessionId, int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
     {
-        if (dbconnection == null) {
-            System.err.println("Database connection failed!");
-            return;
-        }
-    
-        String query = "SELECT Schedules.schedule_name, Movies.title AS movie_title, Schedules.hall_id, " +
-                       "Schedules.date, Schedules.start_time, Schedules.end_time " +
-                       "FROM Schedules " +
-                       "INNER JOIN Movies ON Schedules.movie_id = Movies.movie_id " +
-                       "WHERE MONTH(Schedules.date) = ? " +
-                       "ORDER BY Schedules.date, Schedules.start_time";
-    
-        try (PreparedStatement stmt = dbconnection.prepareStatement(query)) {
-            stmt.setInt(1, month);
-    
-            ResultSet resultSet = stmt.executeQuery();
-    
-            System.out.println("Monthly Schedule:");
-            System.out.println("------------------------------------------------------------");
-            while (resultSet.next()) {
-                String scheduleName = resultSet.getString("schedule_name");
-                String movieTitle = resultSet.getString("movie_title");
-                int hallId = resultSet.getInt("hall_id");
-                String date = resultSet.getString("date");
-                String startTime = resultSet.getString("start_time");
-                String endTime = resultSet.getString("end_time");
-    
-                System.out.printf("Schedule Name: %s | Movie: %s | Hall: %d | Date: %s | Time: %s - %s%n",
-                                  scheduleName, movieTitle, hallId, date, startTime, endTime);
+        String checkTicketsQuery = "SELECT COUNT(*) FROM Tickets WHERE session_id = ?";
+        try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkTicketsQuery)) 
+        {
+            checkStmt.setInt(1, sessionId);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) 
+            {
+                System.out.println("Error: Cannot update a session with sold tickets.");
+                return;
             }
-        } 
+        }
+
+        String checkOverlapQuery = "SELECT COUNT(*) FROM Sessions WHERE hall_name = ? AND session_date = ? AND (? BETWEEN start_time AND ADDTIME(start_time, '2:00:00') OR ADDTIME(?, '2:00:00') BETWEEN start_time AND ADDTIME(start_time, '2:00:00')) AND session_id <> ?";
+        try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkOverlapQuery)) 
+        {
+            checkStmt.setString(1, hallName);
+            checkStmt.setDate(2, java.sql.Date.valueOf(sessionDate));
+            checkStmt.setTime(3, startTime);
+            checkStmt.setTime(4, startTime);
+            checkStmt.setInt(5, sessionId);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) 
+            {
+                System.out.println("Error: Overlapping session detected.");
+                return;
+            }
+        }
+
+        String updateQuery = "UPDATE Sessions SET movie_id = ?, hall_name = ?, session_date = ?, start_time = ? WHERE session_id = ?";
+        try (PreparedStatement stmt = dbconnection.prepareStatement(updateQuery)) 
+        {
+            stmt.setInt(1, movieId);
+            stmt.setString(2, hallName);
+            stmt.setDate(3, java.sql.Date.valueOf(sessionDate));
+            stmt.setTime(4, startTime);
+            stmt.setInt(5, sessionId);
+            stmt.executeUpdate();
+        }
+    }
+
+    // Delete a session
+    public void DeleteSession(int sessionId) throws SQLException 
+    {
+        String checkTicketsQuery = "SELECT COUNT(*) FROM Tickets WHERE session_id = ?";
+        try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkTicketsQuery)) 
+        {
+            checkStmt.setInt(1, sessionId);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) 
+            {
+                System.out.println("Error: Cannot delete a session with sold tickets.");
+                return;
+            }
+        }
+
+        String deleteQuery = "DELETE FROM Sessions WHERE session_id = ?";
+        try (PreparedStatement stmt = dbconnection.prepareStatement(deleteQuery)) 
+        {
+            stmt.setInt(1, sessionId);
+            stmt.executeUpdate();
+        }
+    }
+
+    // Get all sessions
+    public List<Session> GetAllSessions() throws SQLException 
+    {
+        List<Session> sessions = new ArrayList<>();
+
+        if (dbconnection == null) 
+        {
+            System.err.println("Database connection failed!!");
+            return sessions;
+        }
+
+        String query = "SELECT * FROM Sessions";
+
+        try (PreparedStatement stmt = dbconnection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery())
+        {
+            while (rs.next()) 
+            {
+                int sessionid = rs.getInt("session_id");
+                int movieId = rs.getInt("movie_id");
+                String hallName = rs.getString("hall_name");
+                LocalDate sessionDate = rs.getDate("session_date").toLocalDate();
+                Time starTime = rs.getTime("start_time");
+                int vacantSeats = rs.getInt("vacant_seats");
+
+                Session session = new Session(sessionid, movieId, hallName, sessionDate, starTime, vacantSeats);
+                sessions.add(session);
+            }
+        }
         catch (SQLException e) 
         {
-            e.printStackTrace();
+        System.out.println("Error occurred: " + e.getMessage());
+        e.printStackTrace();
         }
+        return sessions;
     }
 
     public void TicketRefund(int ticketId) {

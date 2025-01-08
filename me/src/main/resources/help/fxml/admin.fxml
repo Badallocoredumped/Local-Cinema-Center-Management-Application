@@ -51,7 +51,7 @@
             </AnchorPane>
          </top>
          <left>
-            <AnchorPane prefHeight="647.0" prefWidth="215.0" style="-fx-background-color: linear-gradient(to right, #800000, #4c0005);" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="746.0" prefWidth="224.0" style="-fx-background-color: linear-gradient(to right, #800000, #4c0005);" BorderPane.alignment="CENTER">
                <children>
                   <Label alignment="CENTER" layoutX="75.0" layoutY="119.0" text="Welcome" textFill="WHITE">
                      <font>
@@ -72,52 +72,28 @@
                      </graphic>
                   </Button>
                   <FontAwesomeIcon fill="WHITE" glyphName="USER" layoutX="66.0" layoutY="102.0" size="8em" text="" />
-                  <Button layoutX="21.0" layoutY="233.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" stylesheets="@styles.css" text="Dashboard">
+                  <Button layoutX="21.0" layoutY="270.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" stylesheets="@styles.css" text="Monthly Schedule">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
                      <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="DASHBOARD" wrappingWidth="13.0" />
+                        <FontAwesomeIcon glyphName="LIST" text="" />
                      </graphic>
                   </Button>
-                  <Button layoutX="21.0" layoutY="272.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" stylesheets="@styles.css" text="Add Movies">
+                  <Button layoutX="18.0" layoutY="227.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="183.0" styleClass="menu-card" stylesheets="@styles.css" text="Organize Movies">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
                      <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="PLUS" />
+                        <FontAwesomeIcon glyphName="FILM" text="" wrappingWidth="13.928571701049805" />
                      </graphic>
                   </Button>
-                  <Button layoutX="18.0" layoutY="307.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" stylesheets="@styles.css" text="Available Movies">
+                  <Button layoutX="2.0" layoutY="312.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="220.0" styleClass="menu-card" stylesheets="@styles.css" text="Cancellations and Refunds">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
                      <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="LIST" text="" />
-                     </graphic>
-                  </Button>
-                  <Button layoutX="21.0" layoutY="340.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" stylesheets="@styles.css" text="Edit Screening">
-                     <font>
-                        <Font name="SansSerif Bold" size="14.0" />
-                     </font>
-                     <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="EDIT" />
-                     </graphic>
-                  </Button>
-                  <Button layoutX="17.0" layoutY="374.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="183.0" styleClass="menu-card" stylesheets="@styles.css" text="Monthly Display Plan">
-                     <font>
-                        <Font name="SansSerif Bold" size="14.0" />
-                     </font>
-                     <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="FILM" text="" wrappingWidth="13.928571701049805" />
-                     </graphic>
-                  </Button>
-                  <Button layoutX="-3.0" layoutY="415.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="220.0" styleClass="menu-card" stylesheets="@styles.css" text="Cancellations and Refunds">
-                     <font>
-                        <Font name="SansSerif Bold" size="14.0" />
-                     </font>
-                     <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="MONEY" />
+                        <FontAwesomeIcon glyphName="MONEY" />
                      </graphic>
                   </Button>
                </children>
