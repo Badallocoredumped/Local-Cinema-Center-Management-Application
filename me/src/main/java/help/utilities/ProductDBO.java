@@ -59,11 +59,8 @@ public class ProductDBO
             stmt.setString(2, productName);
             stmt.setInt(3, quantity);
 
-            int rowsAffected = stmt.executeUpdate();
 
-            if (rowsAffected == 0) {
-                throw new Exception("Insufficient stock for product: " + productName);
-            }
+            
         } catch (SQLException e) {
             throw new Exception("Error updating stock for product: " + productName, e);
         }

@@ -1,12 +1,14 @@
 package help;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 import help.classes.ShoppingCart;
+import help.classes.Tickets;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,6 +27,7 @@ import help.classes.Movie;
 import help.classes.SelectedSession;
 import help.classes.Session;
 import help.classes.Product;
+import help.utilities.DataBaseHandler;
 import help.utilities.PriceDBO;
 import help.utilities.ProductDBO;
 import help.utilities.TicketsDBO;
@@ -37,6 +40,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.collections.FXCollections;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
@@ -85,6 +90,8 @@ public class Step4Controller {
     private Label SeatPrices;
     @FXML
     private Label TotalTax;
+    @FXML
+    private Label SeatDiscountedPrice;
 
     @FXML
     private TreeTableView<Product> AdditionalProductTable;
@@ -114,20 +121,50 @@ public class Step4Controller {
     private double productTaxAmount = 0.0;
     private double ticketTaxAmount = 0.0;
 
-    // Add getters/setters
+    private String customerName;
+    private String customerSurname;
+
     public double getProductTaxAmount() 
     {
         return productTaxAmount;
     }
 
 
-    public double getTicketTaxAmount() {
+    public double getTicketTaxAmount() 
+    {
         return ticketTaxAmount;
     }
 
-    public double getTotalTaxAmount() {
+    public double getTotalTaxAmount() 
+    {
+        System.out.println("Product Tax: " + productTaxAmount);
+        System.out.println("Ticket Tax: " + ticketTaxAmount);
         return productTaxAmount + ticketTaxAmount;
     }
+
+    private double calculateSeatTax(double basePrice) 
+    {
+        return basePrice * TICKET_TAX_RATE;
+    }
+    
+    private double calculateProductTax(double basePrice) 
+    {
+        return basePrice * PRODUCT_TAX_RATE;
+    }
+
+    private double calculateDiscountSavings(double originalPrice, double discountedPrice) 
+    {
+        return originalPrice - discountedPrice;
+    }
+    
+    private void updateDiscountSavingsLabel(int seatCount, double seatPrice, double discountedTotal) 
+    {
+        double originalTotal = seatCount * seatPrice;
+        double savings = calculateDiscountSavings(originalTotal, discountedTotal);
+        SeatDiscountedPrice.setText("Savings: $" + String.format("%.2f", savings));
+    }
+
+    
     
 
     @FXML
@@ -150,7 +187,7 @@ public class Step4Controller {
         // Get the selected movie
         ShoppingCart cart = ShoppingCart.getInstance();
         TicketsDBO ticketsDBO = new TicketsDBO();
-        ticketsDBO.saveTicket(cart.getSelectedDaySessionAndHall().getSessionId(), 0, "John Doe", 25, 0.0, 0.0);
+        //ticketsDBO.saveTicket(cart.getSelectedDaySessionAndHall().getSessionId(), 0, "John Doe", 25, 0.0, 0.0);
         TotalPrice.setText("$0.00");
         SeatPrices.setText("");
         TotalTax.setText("");
@@ -192,6 +229,7 @@ public class Step4Controller {
         {
             double totalSeatPrice = getTotalSeatPrice();
             SeatPrices.setText("Total Seat Price: $" + String.format("%.2f",totalSeatPrice));
+            updateTaxLabel();
         } 
         catch (Exception e) 
         {
@@ -202,74 +240,67 @@ public class Step4Controller {
 
     private void updateTaxLabel() 
     {
+
         double totalTax = getTotalTaxAmount();
         TotalTax.setText("$ " + String.format("%.2f", totalTax));
     }
 
-    private double getTotalSeatPrice() throws Exception
+    private double getTotalSeatPrice() throws Exception 
     {
         ShoppingCart cart = ShoppingCart.getInstance();
-        double totalSeatPrice = 0.0;
-
+        double baseSeatPrice = 0.0;
+    
         List<String> seats = cart.getSelectedSeats();
-
         if (seats != null && !seats.isEmpty()) 
         {
             double seatPrice = priceDBO.getSeatPrice(cart.getSelectedDaySessionAndHall().getHall());
             int seatCount = seats.size();
-
-            if(isDiscountApplied && discountedSeatsCount > 0)
+    
+            if(isDiscountApplied && discountedSeatsCount > 0) 
             {
                 int regularSeatsCount = seatCount - discountedSeatsCount;
                 double regularSeatPrice = regularSeatsCount * seatPrice;
-                
                 double discountFactor = 1 - (priceDBO.getSeatDiscount(cart.getSelectedDaySessionAndHall().getHall()) / 100.0);                
                 double discountedSeatPrice = discountedSeatsCount * seatPrice * discountFactor;
-
-                totalSeatPrice = regularSeatPrice + discountedSeatPrice;
-            }
-            else
+                baseSeatPrice = regularSeatPrice + discountedSeatPrice;
+                updateDiscountSavingsLabel(seatCount, seatPrice, baseSeatPrice);
+            } 
+            else 
             {
-                totalSeatPrice = seatPrice * seatCount;
+                baseSeatPrice = seatPrice * seatCount;
+                SeatDiscountedPrice.setText("No discount applied");
             }
             
-            // Add tax
-            double basePrice = seatPrice * seatCount;
-            ticketTaxAmount = basePrice * TICKET_TAX_RATE;
-            totalSeatPrice = basePrice + ticketTaxAmount;
+            // Calculate tax separately
+            ticketTaxAmount = calculateSeatTax(baseSeatPrice);
+            return baseSeatPrice;
         } 
-        else 
-        {
-            selectedSeat.setText("No seats selected");
-        }
-        System.out.println("Total Seat Price: " + totalSeatPrice);
-        return totalSeatPrice;
+        return 0.0;
     }
 
-    private double getTotalProductPrice() throws Exception
+    private double getTotalProductPrice() throws Exception 
     {
         ShoppingCart cart = ShoppingCart.getInstance();
-        double totalProductPrice = 0.0;
+        double baseProductPrice = 0.0;
         ObservableList<Product> cartProducts = FXCollections.observableArrayList(
             cart.getItemsBought().keySet().stream().collect(Collectors.toList())
         );
+        
         for (Product product : cartProducts) 
         {
             int quantity = cart.getItemsBought().get(product);
-            double basePrice = product.getPrice().doubleValue() * quantity;
-            // Add tax
-            productTaxAmount = basePrice * PRODUCT_TAX_RATE;
-            totalProductPrice += basePrice + productTaxAmount;
+            baseProductPrice += product.getPrice().doubleValue() * quantity;
         }
-        System.out.println("Total Product Price: " + totalProductPrice);
-        return totalProductPrice;
+        
+        // Calculate tax separately
+        productTaxAmount = calculateProductTax(baseProductPrice);
+        return baseProductPrice;
     }
-    
     private void getsetTotalPrice() throws Exception
     {
         
-        TotalPrice.setText("$" + (getTotalSeatPrice() + getTotalProductPrice()));
         updateTaxLabel();
+        TotalPrice.setText("$" + (getTotalSeatPrice() + getTotalProductPrice() + getTotalTaxAmount()));
     
     }
 
@@ -324,6 +355,7 @@ public class Step4Controller {
 
         getsetTotalPrice();
         setselectedShoppingCart();
+        updateTaxLabel();
     }
     
 
@@ -382,6 +414,9 @@ public class Step4Controller {
     @FXML
     private void handleApplyDiscountAction(ActionEvent event) throws Exception 
     {
+        customerName = NameEnter.getText().trim();
+        customerSurname = SurnameEnter.getText().trim();
+
         if (isDiscountApplied) 
         {
             showErrorDialog("Discount already applied");
@@ -414,6 +449,7 @@ public class Step4Controller {
             discountedSeatsCount = discount;
             isDiscountApplied = true;
             getsetTotalPrice();
+            updateTaxLabel();
 
             NameEnter.setEditable(false);
             SurnameEnter.setEditable(false);
@@ -428,6 +464,8 @@ public class Step4Controller {
             next_button_step4.setDisable(false);
             AddProductToCart.setDisable(false);
             EmptyCartButton.setDisable(false);
+            
+            calculateSeatTax(seatsBought);
         } 
         catch (NumberFormatException e) 
         {
@@ -523,52 +561,94 @@ public class Step4Controller {
     }
     
 
-    @FXML
-    private void handleNextButtonAction() throws IOException 
-    {
-
-        // Load the step2.fxml
-        Parent step2Root = FXMLLoader.load(getClass().getResource("/help/fxml/final.fxml"));
-
-        // Get the current scene from the Next button
-        Scene scene = next_button_step4.getScene();
-
-        // Set the new root to the current scene
-        scene.setRoot(step2Root);
-
-        // Optionally, update the stage title if needed
-        Stage stage = (Stage) next_button_step4.getScene().getWindow();
-        stage.setTitle("Step 5");
+   @FXML
+    private void handleNextButtonAction() throws Exception {
         
-        // Ensure the stage remains in fullscreen
-        stage.setFullScreen(true);
-        stage.setFullScreenExitHint(""); // Hide the exit hint
-    }
+            // Get existing instances
+            ShoppingCart cart = ShoppingCart.getInstance();
+            Tickets ticket = Tickets.getInstance();
+            
+            // Set ticket data
+            ticket.setSessionId(cart.getSelectedDaySessionAndHall().getSessionId());
+            ticket.setSeatNumbers(new ArrayList<>(cart.getSelectedSeats()));
+            ticket.setCustomerName(customerName + " " + customerSurname);
+            ticket.setTotalSeatCost(getTotalSeatPrice());
+            ticket.setTotalProductCost(getTotalProductPrice());
+            ticket.setTotalTax(getTotalTaxAmount());
+            ticket.setTotalCost(getTotalSeatPrice() + getTotalProductPrice() + getTotalTaxAmount());
+            ticket.setDiscountedSeatNumber(discountedSeatsCount);
 
+            // Debug prints
+            System.out.println("Step4 - Before Scene Change:");
+            System.out.println("Customer Name: " + ticket.getCustomerName());
+            System.out.println("Seat Numbers: " + ticket.getSeatNumbers());
+            System.out.println("Total Cost: " + ticket.getTotalCost());
+
+            // Save to database
+            TicketsDBO ticketsDBO = new TicketsDBO();
+            int ticketId = ticketsDBO.createTicket(ticket);
+            ticket.setTicketId(ticketId);
+
+            // Load next scene
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/step5.fxml"));
+            Parent step5Root = loader.load();
+            Scene scene = next_button_step4.getScene();
+            scene.setRoot(step5Root);
+            Stage stage = (Stage) next_button_step4.getScene().getWindow();
+            stage.setTitle("Step 5");
+        
+    }
     @FXML
     private void handleBackButtonAction() throws Exception 
     {
-        // Get the current cart and product list
         ShoppingCart cart = ShoppingCart.getInstance();
         
-        // Loop through the cart and update stock for each product
-        for (Product product : cart.getItemsBought().keySet()) {
-            int quantityInCart = cart.getItemsBought().get(product);  // Get the quantity of each product in the cart
-            
-            // Update the stock in the database (we use the ProductDBO class)
-            try {
-                // Update product stock back to the database (increase by the quantity in the cart)
-                productDBO.updateProductStock(product.getName(), -quantityInCart);
-            } catch (SQLException e) {
-                showErrorDialog("Database Error");
+        // Get the list of seats to unmark
+        List<String> seatsToUnmark = cart.getSelectedSeats();
+        
+        // Unmark seats in database if there are any selected seats
+        if (!seatsToUnmark.isEmpty()) 
+        {
+            try 
+            {
+                // Create SQL queries
+                String unmarkSeatQuery = "UPDATE Seats SET is_occupied = FALSE WHERE seat_label = ? AND session_id = ?";
+                String updateVacantSeatsQuery = "UPDATE Sessions SET vacant_seats = vacant_seats + ? WHERE session_id = ?";
+    
+                try (Connection conn = DataBaseHandler.getConnection();
+                     PreparedStatement unmarkSeatStmt = conn.prepareStatement(unmarkSeatQuery);
+                     PreparedStatement updateVacantSeatsStmt = conn.prepareStatement(updateVacantSeatsQuery)) {
+                    
+                    int sessionId = cart.getSelectedDaySessionAndHall().getSessionId();
+    
+                    // Unmark each seat as available
+                    for (String seatLabel : seatsToUnmark) 
+                    {
+                        unmarkSeatStmt.setString(1, seatLabel);
+                        unmarkSeatStmt.setInt(2, sessionId);
+                        unmarkSeatStmt.addBatch();
+                    }
+    
+                    // Execute batch to update all seats
+                    unmarkSeatStmt.executeBatch();
+    
+                    // Update vacant seats count
+                    updateVacantSeatsStmt.setInt(1, seatsToUnmark.size());
+                    updateVacantSeatsStmt.setInt(2, sessionId);
+                    updateVacantSeatsStmt.executeUpdate();
+                }
+            } 
+            catch (SQLException e) 
+            {
                 e.printStackTrace();
+                throw e;
             }
         }
-
+    
         // Clear the shopping cart
         cart.clearSession();
         cart.clearSeats();
-
+    
         // Load the previous step (step2.fxml)
         String fxmlFile = "/help/fxml/step2.fxml";
         Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
@@ -578,7 +658,6 @@ public class Step4Controller {
         stage.setFullScreen(true); // Ensure full screen
         stage.show();
     }
-
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {

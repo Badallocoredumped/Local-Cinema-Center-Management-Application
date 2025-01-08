@@ -51,16 +51,14 @@ CREATE TABLE Seats (
     FOREIGN KEY (hall_name) REFERENCES Halls(hall_name),
     FOREIGN KEY (session_id) REFERENCES Sessions(session_id)
 );
+SELECT * FROM Sessions;
 
 -- A way to upload JPG files to the database
 SET SQL_SAFE_UPDATES = 0;
 
 
 UPDATE Products
-SET tax_rate = 0.10;
-
-
-
+SET stock_quantity = 100;
 
 SET SQL_SAFE_UPDATES = 1;
 
@@ -72,12 +70,24 @@ SELECT * FROM Products;
 CREATE TABLE Tickets (
     ticket_id INT AUTO_INCREMENT PRIMARY KEY,
     session_id INT NOT NULL,
-    seat_number INT NOT NULL,
+    seat_numbers TEXT NOT NULL,            -- Store seat numbers as comma-separated values
+    discounted_seat_numbers TEXT,          -- Store discounted seat numbers as comma-separated values
     customer_name VARCHAR(100),
-    total_seat_cost DECIMAL(10, 2),  -- Adding seat cost (decimal to support currency format)
-    total_product_cost DECIMAL(10, 2),  -- Adding product cost (decimal for currency as well)
+    total_seat_cost DECIMAL(10, 2),
+    total_product_cost DECIMAL(10, 2),
+    total_tax DECIMAL(10, 2),              -- Add total_tax column
+    total_cost DECIMAL(10, 2),             -- Add total_cost column
     FOREIGN KEY (session_id) REFERENCES Sessions(session_id)
 );
+DESCRIBE Tickets;
+
+ALTER TABLE Tickets
+ADD COLUMN discounted_seat_numbers TEXT;
+
+
+
+
+
 
 SELECT * FROM Tickets;
 -- Products table
@@ -88,7 +98,10 @@ CREATE TABLE Products (
     stock_quantity INT NOT NULL,
     tax_rate DECIMAL(5, 2) NOT NULL,
     image BLOB
+    
 );
+
+
 
 
 
