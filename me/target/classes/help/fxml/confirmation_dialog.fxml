@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="help.NewConfirmationDialogController">
+    <children>
+        <VBox alignment="CENTER" spacing="20.0" layoutX="50.0" layoutY="50.0">
+            <children>
+                <Label fx:id="confirmationMessage" text="Are you sure you want to add the selected seats to the cart?" wrapText="true">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+                <HBox alignment="CENTER" spacing="20.0">
+                    <children>
+                        <Button text="Confirm" onAction="#handleConfirmAction" />
+                        <Button text="Cancel" onAction="#handleCancelAction" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

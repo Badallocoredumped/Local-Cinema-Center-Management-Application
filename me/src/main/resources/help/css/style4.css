@@ -1,0 +1,24 @@
+/* TableView Başlıklarının Arka Plan Rengi */
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #800000, #ff0000); /* Bordodan kırmızıya geçiş */
+}
+
+.insert-button:hover {
+    -fx-background-color: #c0392b; /* Daha koyu kırmızı */
+    -fx-scale-x: 1.1; /* Genişlik büyütme */
+    -fx-scale-y: 1.1; /* Yükseklik büyütme */
+}
+
+
+/* Başlık Metni Stili */
+.table-view .column-header .label {
+    -fx-text-fill: white; /* Metin rengini beyaz yap */
+    -fx-font-weight: bold; /* Kalın yazı */
+    -fx-alignment: center; /* Ortalanmış metin */
+    -fx-line-height: 50px;
+}
+
+.tree-table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #800000, #ff0000);
+    -fx-text-fill: white;
+}
