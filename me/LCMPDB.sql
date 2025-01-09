@@ -271,7 +271,7 @@ CREATE TABLE Ticket_Products (
     FOREIGN KEY (product_name) REFERENCES Products(name) ON DELETE CASCADE  -- Foreign key reference to Products
 );
 
-
+SELECT * FROM Ticket_Products
 
 
 
