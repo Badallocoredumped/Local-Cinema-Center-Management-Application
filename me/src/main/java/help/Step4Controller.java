@@ -34,6 +34,7 @@ import help.classes.Product;
 import help.utilities.DataBaseHandler;
 import help.utilities.PriceDBO;
 import help.utilities.ProductDBO;
+import help.utilities.TicketProductsDBO;
 import help.utilities.TicketsDBO;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
@@ -593,6 +594,11 @@ public class Step4Controller {
             TicketsDBO ticketsDBO = new TicketsDBO();
             int ticketId = ticketsDBO.createTicket(ticket);
             ticket.setTicketId(ticketId);
+            if (!cart.getItemsBought().isEmpty()) 
+            {
+                TicketProductsDBO ticketProductsDBO = new TicketProductsDBO();
+                ticketProductsDBO.saveTicketProducts(ticketId, cart.getItemsBought());
+            }
 
             // Load next scene
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/step5.fxml"));

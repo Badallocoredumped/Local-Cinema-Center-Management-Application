@@ -30,6 +30,7 @@ import help.classes.Tickets;
 import help.utilities.DataBaseHandler;
 import help.utilities.InvoiceDBO;
 import help.utilities.ProductDBO;
+import help.utilities.TicketProductsDBO;
 import help.utilities.TicketsDBO;
 import help.classes.Product;
 import help.classes.Session;
@@ -152,6 +153,8 @@ public class Step5Controller {
             Tickets ticket = Tickets.getInstance();
             ProductDBO productDBO = new ProductDBO();
             TicketsDBO ticketsDBO = new TicketsDBO();
+            TicketProductsDBO ticketProductsDBO = new TicketProductsDBO();
+
 
             // Return products to stock
             for (Map.Entry<Product, Integer> entry : cart.getItemsBought().entrySet()) 
@@ -160,6 +163,8 @@ public class Step5Controller {
                 Integer quantity = entry.getValue();
                 productDBO.returnProductStock(product.getName(), quantity);
             }
+
+            ticketProductsDBO.deleteTicketProducts(ticket.getTicketId());
 
             // Delete ticket from database
             ticketsDBO.deleteTicket(ticket.getTicketId());

@@ -262,14 +262,16 @@ SET SQL_SAFE_UPDATES = 1;
 
 
 CREATE TABLE Ticket_Products (
-    ticket_id INT NOT NULL,       -- Reference to the Tickets table
-    product_id INT NOT NULL,      -- Reference to the Products table
-    quantity INT NOT NULL,        -- Quantity of the product purchased
-    price DECIMAL(10, 2) NOT NULL, -- Price of the product at the time of purchase
-    PRIMARY KEY (ticket_id, product_id),
-    FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE
+    ticket_id INT NOT NULL,           -- Reference to the Tickets table
+    product_name VARCHAR(255) NOT NULL, -- Product name instead of product_id
+    quantity INT NOT NULL,            -- Quantity of the product purchased
+    price DECIMAL(10, 2) NOT NULL,    -- Price of the product at the time of purchase
+    PRIMARY KEY (ticket_id, product_name),  -- Primary key on ticket_id and product_name
+    FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE,  -- Foreign key reference to Tickets
+    FOREIGN KEY (product_name) REFERENCES Products(name) ON DELETE CASCADE  -- Foreign key reference to Products
 );
+
+
 
 
 

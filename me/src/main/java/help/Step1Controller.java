@@ -85,7 +85,8 @@ public class Step1Controller
     @FXML
     private void initialize() 
     {
-        
+        TreeItem<Movie> root = new TreeItem<>();
+
         searchComboBox.getItems().addAll("Genre", "Partial Title", "Full Title");
         searchComboBox.setValue("Genre"); // Set default value to "Genre"
 

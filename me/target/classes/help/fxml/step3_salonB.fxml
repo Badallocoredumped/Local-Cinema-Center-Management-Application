@@ -192,7 +192,7 @@
                         </Label>
                      </children>
                   </AnchorPane>
-                  <Label layoutX="496.0" layoutY="578.0" prefHeight="30.0" prefWidth="135.0" text="Occupied Seat">
+                  <Label layoutX="496.0" layoutY="578.0" prefHeight="30.0" prefWidth="135.0" text="Vacant Seat">
                      <graphic>
                         <FontAwesomeIcon fill="GREEN" glyphName="USER" size="2em" />
                      </graphic>
@@ -208,7 +208,7 @@
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label layoutX="661.0" layoutY="579.0" prefHeight="29.0" prefWidth="113.0" text="Vacant Seat">
+                  <Label layoutX="661.0" layoutY="579.0" prefHeight="29.0" prefWidth="113.0" text="Occupied Seat">
                      <graphic>
                         <FontAwesomeIcon fill="RED" glyphName="USER" size="2em" text="" />
                      </graphic>
