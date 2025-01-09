@@ -2,24 +2,38 @@ package help.classes;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
+import java.io.ByteArrayInputStream;
 
 public class Movie {
     private int id;
     private StringProperty title;
-    private StringProperty posterUrl;
+    private byte[] posterImage; // BLOB data
+    private ObjectProperty<Image> posterImageView; // JavaFX Image
     private StringProperty genre;
     private StringProperty summary;
     private StringProperty duration;
 
     // Constructor
-    public Movie(int id, String title, String posterUrl, String genre, String summary, String duration) {
+    public Movie(int id, String title, byte[] posterImage, String genre, String summary, String duration) 
+    {
         this.id = id;
         this.title = new SimpleStringProperty(title);
-        this.posterUrl = new SimpleStringProperty(posterUrl); // Path to the poster image (file or URL)
+        this.posterImage = posterImage;
+        this.posterImageView = new SimpleObjectProperty<>(convertToImage(posterImage));
         this.genre = new SimpleStringProperty(genre);
         this.summary = new SimpleStringProperty(summary);
         this.duration = new SimpleStringProperty(duration);
+    }
+
+
+    private Image convertToImage(byte[] imageData) {
+        if (imageData != null && imageData.length > 0) {
+            return new Image(new ByteArrayInputStream(imageData));
+        }
+        return null;
     }
 
     // Getters and setters
@@ -43,16 +57,27 @@ public class Movie {
         return title;
     }
 
-    public String getPosterUrl() {
-        return posterUrl.get();
+    public byte[] getPosterImage() 
+    {
+        return posterImage;
     }
 
-    public void setPosterUrl(String posterUrl) {
-        this.posterUrl.set(posterUrl);
+    /* public void setPosterImage(byte[] image) 
+    {
+        this.posterImage.set(image);
+        this.posterImageView.set(convertToImage(image));
+    } */
+
+    /* public ObjectProperty<byte[]> posterImageProperty() {
+        return posterImage;
+    } */
+
+    public Image getPosterImageView() {
+        return posterImageView.get();
     }
 
-    public StringProperty posterUrlProperty() {
-        return posterUrl;
+    public ObjectProperty<Image> posterImageViewProperty() {
+        return posterImageView;
     }
 
     public String getGenre() {
@@ -89,15 +114,5 @@ public class Movie {
 
     public StringProperty durationProperty() {
         return duration;
-    }
-
-    // Method to load image from the URL (only using the posterUrl)
-    public Image getPosterImage() 
-    {
-        if (posterUrl != null && !posterUrl.get().isEmpty()) 
-        {
-            return new Image("file:" + posterUrl); // Assuming it's a local file path (use "http://" for URLs)
-        }
-        return null; // No image available
     }
 }

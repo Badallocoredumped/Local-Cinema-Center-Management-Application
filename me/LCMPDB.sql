@@ -3,7 +3,6 @@ CREATE DATABASE CinemaCenter
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 USE CinemaCenter;
-
 -- Users table
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -23,6 +22,12 @@ CREATE TABLE Movies (
     summary TEXT,
     duration INT NOT NULL
 );
+
+ALTER TABLE Movies
+DROP COLUMN poster_image;
+
+
+
 -- Halls table
 CREATE TABLE Halls (
     hall_name ENUM('Hall_A', 'Hall_B') PRIMARY KEY,
@@ -52,34 +57,46 @@ CREATE TABLE Seats (
     FOREIGN KEY (session_id) REFERENCES Sessions(session_id)
 );
 
--- A way to upload JPG files to the database
 SET SQL_SAFE_UPDATES = 0;
 
-
-UPDATE Products
-SET tax_rate = 0.10;
-
-
+UPDATE Movies
+SET poster_image = LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\titanic.jpg')
+WHERE title = 'Titanic';
 
 
 SET SQL_SAFE_UPDATES = 1;
 
-SELECT * FROM Sessions;
-SELECT * FROM Seats;
-SELECT * FROM Products;
+SHOW VARIABLES LIKE 'secure_file_priv';
 
 -- Tickets table
 CREATE TABLE Tickets (
     ticket_id INT AUTO_INCREMENT PRIMARY KEY,
     session_id INT NOT NULL,
-    seat_number INT NOT NULL,
+    seat_numbers TEXT NOT NULL,            -- Store seat numbers as comma-separated values
+    discounted_seat_numbers TEXT,          -- Store discounted seat numbers as comma-separated values
     customer_name VARCHAR(100),
-    total_seat_cost DECIMAL(10, 2),  -- Adding seat cost (decimal to support currency format)
-    total_product_cost DECIMAL(10, 2),  -- Adding product cost (decimal for currency as well)
+    total_seat_cost DECIMAL(10, 2),
+    total_product_cost DECIMAL(10, 2),
+    total_tax DECIMAL(10, 2),              -- Add total_tax column
+    total_cost DECIMAL(10, 2),             -- Add total_cost column
     FOREIGN KEY (session_id) REFERENCES Sessions(session_id)
 );
 
-SELECT * FROM Tickets;
+CREATE TABLE Invoices (
+    invoice_id INT AUTO_INCREMENT PRIMARY KEY,        -- Unique identifier for the invoice
+    ticket_id INT NOT NULL,                            -- Foreign key linking to the Tickets table
+    invoice_format ENUM('PDF', 'HTML', 'TXT') NOT NULL, -- The format of the invoice (PDF, HTML, etc.)
+    invoice_file BLOB NOT NULL,                        -- Binary data of the invoice file (PDF/HTML/TXT, etc.)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    -- Timestamp when the invoice was created
+    FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE -- Linking to Tickets table
+);
+
+
+
+
+
+
+
 -- Products table
 CREATE TABLE Products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -88,6 +105,7 @@ CREATE TABLE Products (
     stock_quantity INT NOT NULL,
     tax_rate DECIMAL(5, 2) NOT NULL,
     image BLOB
+    
 );
 
 
@@ -119,8 +137,9 @@ SELECT * FROM Users;
 -- allows duplicates but it shouldnt i think
 INSERT INTO Movies (title, poster_image, genre, summary, duration)
 VALUES
-('Inception', 'C:\\Users\\emiro\\Desktop\\me\\images\\inception.jpg', 'Sci-Fi', 'A mind-bending thriller about dreams within dreams.', 148),
-('Titanic','C:\\Users\\emiro\\Desktop\\me\\images\\titanic.jpg' , 'Romance', 'A tragic love story aboard the ill-fated Titanic.', 195);
+('Inception', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\inception.jpg'), 'Sci-Fi', 'A mind-bending thriller about dreams within dreams.', 148),
+('Titanic',LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\titanic.jpg') , 'Romance', 'A tragic love story aboard the ill-fated Titanic.', 195);
+
 
 #TO MAKE IT BLOB
 #LOAD_FILE('C:\\Users\\emiro\\Desktop\\me\\images\\inception.jpg')
@@ -223,31 +242,36 @@ VALUES
 ('Hall_B', 'H5', 4, FALSE),
 ('Hall_B', 'H6', 4, FALSE);
 
-
-
-
-
 -- Products
 INSERT INTO Products (name, price, stock_quantity, tax_rate, image)
 VALUES
-('Beverage', 5.00, 100, 0.10, 'C:/Users/emiro/Desktop/me/images/beverage.jpg'),
-('Biscuit', 3.00, 200, 0.10, 'C:/Users/emiro/Desktop/me/images/biscuit.jpg'),
-('Toy', 10.00, 50, 0.10, 'C:/Users/emiro/Desktop/me/images/toy.jpg');
+('Beverage', 5.00, 100, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\beverage.jpg')),
+('Biscuit', 3.00, 200, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\biscuit.jpg')),
+('Toy', 10.00, 50, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\toy.jpg'));
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE Products
+SET image = LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\toy.jpg')
+WHERE name = 'Toy';
+
+SELECT * FROM Invoices;
+SELECT * FROM Tickets;
+
+SET SQL_SAFE_UPDATES = 1;
+
+
+CREATE TABLE Ticket_Products (
+    ticket_id INT NOT NULL,           -- Reference to the Tickets table
+    product_name VARCHAR(255) NOT NULL, -- Product name instead of product_id
+    quantity INT NOT NULL,            -- Quantity of the product purchased
+    price DECIMAL(10, 2) NOT NULL,    -- Price of the product at the time of purchase
+    PRIMARY KEY (ticket_id, product_name),  -- Primary key on ticket_id and product_name
+    FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE,  -- Foreign key reference to Tickets
+    FOREIGN KEY (product_name) REFERENCES Products(name) ON DELETE CASCADE  -- Foreign key reference to Products
+);
 
 
 
-
-
-
-
--- Select movies
-SELECT * FROM Movies;
-SELECT session_date, start_time, hall_name, vacant_seats FROM Sessions WHERE movie_id = 2;
-SELECT * FROM Sessions;
-SELECT * FROM Seats;
-SELECT * FROM Halls;
-SELECT * FROM Products;
-SELECT * FROM Sessions;
-SELECT * FROM Sessions WHERE session_id = 13;
 
 

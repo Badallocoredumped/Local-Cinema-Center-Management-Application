@@ -198,16 +198,30 @@ public class Step2Controller
             Scene scene = next_button_step2.getScene();
     
             // Set the new root to the current scene
-            scene.setRoot(nextRoot);
+            if (scene == null) 
+            {
+                scene = next_button_step2.getParent().getScene(); // Get the scene from the parent if button's scene is null
+            }
     
-            // Optionally, update the stage title if needed
-            Stage stage = (Stage) next_button_step2.getScene().getWindow();
-            stage.setTitle("Step 3");
-            
-            // Ensure the stage remains in fullscreen
-            stage.setFullScreen(true);
-            stage.setFullScreenExitHint(""); // Hide the exit hint
-            System.out.println("Navigating to next step");
+            if (scene != null) 
+            {
+                // Set the new root to the current scene
+                scene.setRoot(nextRoot);
+    
+                // Optionally, update the stage title if needed
+                Stage stage = (Stage) scene.getWindow();
+                stage.setTitle("Step 3");
+    
+                // Ensure the stage remains in fullscreen
+                stage.setFullScreen(true);
+                stage.setFullScreenExitHint(""); // Hide the exit hint
+                System.out.println("Navigating to next step");
+            } 
+            else 
+            {
+                // Handle the case where the scene is null
+                System.err.println("Error: Scene not found. Could not navigate to next step.");
+            }
         }
 
     }
@@ -233,16 +247,25 @@ public class Step2Controller
         // Get the current scene
         Scene scene = back_button_step2.getScene();
         
-        // Set the new root to the current scene
-        scene.setRoot(backRoot);
-
-        // Optionally, update the stage title if needed
-        Stage stage = (Stage) back_button_step2.getScene().getWindow();
-        stage.setTitle("Step 1");
-        
-        // Ensure the stage remains in fullscreen
-        stage.setFullScreen(true);
-        stage.setFullScreenExitHint(""); // Hide the exit hint
+        if (scene == null) {
+            scene = back_button_step2.getParent().getScene(); // Get the scene from the parent if button's scene is null
+        }
+    
+        if (scene != null) {
+            // Set the new root to the current scene
+            scene.setRoot(backRoot);
+    
+            // Optionally, update the stage title if needed
+            Stage stage = (Stage) scene.getWindow();
+            stage.setTitle("Step 1");
+    
+            // Ensure the stage remains in fullscreen
+            stage.setFullScreen(true);
+            stage.setFullScreenExitHint(""); // Hide the exit hint
+        } else {
+            // Handle the case where the scene is null
+            System.err.println("Error: Scene not found. Could not navigate back to Step 1.");
+        }
     
     }
     

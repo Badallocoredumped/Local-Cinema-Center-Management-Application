@@ -1,8 +1,10 @@
 c:\Users\emiro\Desktop\me\src\main\java\help\Step4Controller.java
+c:\Users\emiro\Desktop\me\src\main\java\help\utilities\InvoiceDBO.java
 c:\Users\emiro\Desktop\me\src\main\java\help\utilities\DataBaseHandler.java
 c:\Users\emiro\Desktop\me\src\main\java\help\App.java
 c:\Users\emiro\Desktop\me\src\main\java\help\classes\Movie.java
 c:\Users\emiro\Desktop\me\src\main\java\help\classes\Session.java
+c:\Users\emiro\Desktop\me\src\main\java\help\classes\Tickets.java
 c:\Users\emiro\Desktop\me\src\main\java\help\utilities\PurchasesDBO.java
 c:\Users\emiro\Desktop\me\src\main\java\help\utilities\MovieDBO.java
 c:\Users\emiro\Desktop\me\src\main\java\help\utilities\ProductDBO.java
@@ -10,12 +12,14 @@ c:\Users\emiro\Desktop\me\src\main\java\help\classes\ShoppingCart.java
 c:\Users\emiro\Desktop\me\src\main\java\help\SessionConfirmationDialogController.java
 c:\Users\emiro\Desktop\me\src\main\java\help\Step3AController.java
 c:\Users\emiro\Desktop\me\src\main\java\help\NewConfirmationDialogController.java
+c:\Users\emiro\Desktop\me\src\main\java\help\utilities\SeatsDBO.java
 c:\Users\emiro\Desktop\me\src\main\java\help\utilities\PriceDBO.java
 c:\Users\emiro\Desktop\me\src\main\java\module-info.java
 c:\Users\emiro\Desktop\me\src\main\java\help\ErrorDialogController.java
 c:\Users\emiro\Desktop\me\src\main\java\help\FinalController.java
 c:\Users\emiro\Desktop\me\src\main\java\help\Step2Controller.java
 c:\Users\emiro\Desktop\me\src\main\java\help\utilities\TicketsDBO.java
+c:\Users\emiro\Desktop\me\src\main\java\help\utilities\PDFgenerator.java
 c:\Users\emiro\Desktop\me\src\main\java\help\classes\SelectedSession.java
 c:\Users\emiro\Desktop\me\src\main\java\help\Step3BController.java
 c:\Users\emiro\Desktop\me\src\main\java\help\classes\SelectedMovie.java
