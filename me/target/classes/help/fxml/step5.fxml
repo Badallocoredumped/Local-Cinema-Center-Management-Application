@@ -153,38 +153,38 @@
                            </font>
                         </Label>
                         <Line endX="242.0" layoutX="154.0" layoutY="73.0" startX="-129.0" strokeWidth="3.0" />
-                        <Label layoutX="339.0" layoutY="96.0" text="Movie Name...">
+                        <Label fx:id="MovieName" layoutX="339.0" layoutY="96.0" text="Movie Name...">
                            <font>
                               <Font name="SansSerif Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="339.0" layoutY="127.0" text="Session...">
+                        <Label fx:id="SessionName" layoutX="339.0" layoutY="127.0" text="Session...">
                            <font>
                               <Font name="SansSerif Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="343.0" layoutY="159.0" text="Hall..">
+                        <Label fx:id="HallName" layoutX="343.0" layoutY="159.0" text="Hall..">
                            <font>
                               <Font name="SansSerif Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="343.0" layoutY="186.0" text="Seat Number...">
+                        <Label fx:id="SeatsNumber" layoutX="343.0" layoutY="186.0" text="Seat Number...">
                            <font>
                               <Font name="SansSerif Bold" size="18.0" />
                            </font>
                         </Label>
                         <FontAwesomeIcon glyphName="FILM" layoutX="35.0" layoutY="56.0" size="4em" wrappingWidth="64.8571424484253" />
-                        <Label layoutX="23.0" layoutY="96.0" text="Customer Name...">
+                        <Label fx:id="CustomerName" layoutX="23.0" layoutY="96.0" text="Customer Name...">
                            <font>
                               <Font name="SansSerif Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="23.0" layoutY="159.0" prefHeight="21.0" prefWidth="263.0" text="non-discounted ticket num...">
+                        <Label fx:id="NonDiscNum" layoutX="23.0" layoutY="159.0" prefHeight="21.0" prefWidth="263.0" text="non-discounted ticket num...">
                            <font>
                               <Font name="SansSerif Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="23.0" layoutY="127.0" prefHeight="21.0" prefWidth="215.0" text="discounted ticket num...">
+                        <Label fx:id="DiscNum" layoutX="23.0" layoutY="127.0" prefHeight="21.0" prefWidth="215.0" text="discounted ticket num...">
                            <font>
                               <Font name="SansSerif Bold" size="18.0" />
                            </font>
@@ -200,53 +200,100 @@
                            </font>
                         </Label>
                         <Line endX="188.0" layoutX="95.0" layoutY="60.0" startX="-79.0" strokeWidth="3.0" />
-                        <Label layoutX="25.0" layoutY="90.0" text="Ticket1    Price...">
-                           <font>
-                              <Font name="SansSerif Bold" size="18.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="28.0" layoutY="183.0" text="Product3   Price...">
-                           <font>
-                              <Font name="SansSerif Bold" size="18.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="28.0" layoutY="150.0" text="Product2   Price...">
-                           <font>
-                              <Font name="SansSerif Bold" size="18.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="28.0" layoutY="120.0" text="Product1   Price...">
-                           <font>
-                              <Font name="SansSerif Bold" size="18.0" />
-                           </font>
-                        </Label>
                         <Line endX="188.0" layoutX="96.0" layoutY="327.0" startX="-79.0" strokeWidth="3.0" />
                         <Label layoutX="14.0" layoutY="336.0" text="TOTAL PRICE :">
                            <font>
                               <Font name="SansSerif Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="14.0" layoutY="357.0" text="TAXES :">
+                        <Label layoutX="16.0" layoutY="371.0" text="TAXES :">
                            <font>
                               <Font name="SansSerif Bold" size="18.0" />
                            </font>
                         </Label>
+                        <Label fx:id="MovieInvolveTotalPrice" layoutX="152.0" layoutY="333.0" text="Total Price:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="MovieInvolveTotalTax" layoutX="99.0" layoutY="368.0" text="Total Tax:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="SeatPrices" layoutX="21.0" layoutY="266.0" text="SeatPrices:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="selectedShoppingCart" layoutX="25.0" layoutY="76.0" text="Empty">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
-                  <Button layoutX="689.0" layoutY="721.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="193.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Save Ticket and Invoice" />
+                  <Button fx:id="SaveTicketInvoice" layoutX="689.0" layoutY="721.0" mnemonicParsing="false" onAction="#handleSaveTicketInvoice" prefHeight="31.0" prefWidth="193.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Save Ticket and Invoice" />
                </children>
             </AnchorPane>
          </center>
          <right>
             <AnchorPane prefHeight="767.0" prefWidth="226.0" style="-fx-background-color: #e4e4e4;" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="52.0" layoutY="47.0" text="Shopping Cart">
+                  <Label layoutX="72.0" layoutY="508.0" text="Shopping Cart">
                      <font>
-                        <Font name="System Bold" size="18.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <FontAwesomeIcon glyphName="SHOPPING_CART" layoutX="102.0" layoutY="35.0" size="2em" text="" />
-                  <Button layoutX="34.0" layoutY="700.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="159.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Accept Payment" />
+                  <FontAwesomeIcon glyphName="SHOPPING_CART" layoutX="109.0" layoutY="494.0" size="2em" text="" />
+                  <Label layoutX="63.0" layoutY="67.0" text="Selected Movie">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="53.0" layoutY="32.0" textFill="WHITE">
+                     <font>
+                        <Font name="SansSerif Bold" size="61.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIcon fill="#030303" glyphName="FILM" layoutX="100.0" layoutY="53.0" size="2em" />
+                  <Label layoutX="15.0" layoutY="140.0" textFill="WHITE">
+                     <font>
+                        <Font name="SansSerif Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="11.0" layoutY="215.0" text="Selecting Day, Seasion and Hall">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIcon fill="#252424" glyphName="CALENDAR" layoutX="100.0" layoutY="197.0" size="2em" />
+                  <Label layoutX="62.0" layoutY="339.0" textFill="WHITE">
+                     <font>
+                        <Font name="SansSerif Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="64.0" layoutY="385.0" text="Choosen Seat">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIcon fill="#0a0a0a" glyphName="USERS" layoutX="100.0" layoutY="367.0" size="2em" text="" />
+                  <Label fx:id="selectedMovieLabel" layoutX="88.0" layoutY="92.0" text="Empty">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="selectedSession" layoutX="90.0" layoutY="249.0" text="Empty">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="selectedSeat" layoutX="29.0" layoutY="405.0" minHeight="15.0" minWidth="50.0" prefHeight="59.0" prefWidth="171.0" text="Empty" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
          </right>

@@ -11,19 +11,23 @@ import java.util.List;
 public class DataBaseHandler
 {
     private static final String URL = "jdbc:mysql://localhost:3306/cinemacenter";
-    private static final String USER = "root";
-    private static final String PASSWORD = "Admin_123";
+    private static final String USER = "myuser";
+    private static final String PASSWORD = "1234";
 
     public static Connection getConnection() throws Exception
     {
+        System.out.println("Connecting to database...");
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
+    
 
     public static String authenticate(String username, String password)
     {
         String role = null;
         try (Connection conn = getConnection())
         {
+        
+
             String query = "SELECT role FROM Users WHERE username = ? AND password = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, username);

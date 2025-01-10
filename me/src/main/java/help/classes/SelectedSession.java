@@ -7,7 +7,7 @@ public class SelectedSession
 
     private SelectedSession() 
     {
-
+        this.session = null;
     }
 
     public static SelectedSession getInstance() 

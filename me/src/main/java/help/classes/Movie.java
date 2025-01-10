@@ -2,121 +2,117 @@ package help.classes;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.image.Image;
+import java.io.ByteArrayInputStream;
 
-public class Movie 
-{
+public class Movie {
     private int id;
     private StringProperty title;
-    private StringProperty posterUrl;
+    private byte[] posterImage; // BLOB data
+    private ObjectProperty<Image> posterImageView; // JavaFX Image
     private StringProperty genre;
     private StringProperty summary;
     private StringProperty duration;
-    private byte[] posterData;
 
-    public Movie(int id, String title, String posterUrl, String genre, String summary, String duration, byte[] posterData) 
+    // Constructor
+    public Movie(int id, String title, byte[] posterImage, String genre, String summary, String duration) 
     {
         this.id = id;
         this.title = new SimpleStringProperty(title);
-        this.posterUrl = new SimpleStringProperty(posterUrl);
+        this.posterImage = posterImage;
+        this.posterImageView = new SimpleObjectProperty<>(convertToImage(posterImage));
         this.genre = new SimpleStringProperty(genre);
         this.summary = new SimpleStringProperty(summary);
         this.duration = new SimpleStringProperty(duration);
-        this.posterData = posterData;
+    }
+
+
+    private Image convertToImage(byte[] imageData) {
+        if (imageData != null && imageData.length > 0) {
+            return new Image(new ByteArrayInputStream(imageData));
+        }
+        return null;
     }
 
     // Getters and setters
-    public int getId() 
-    {
+    public int getId() {
         return id;
     }
 
-    public void setId(int id) 
-    {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getTitle() 
-    {
+    public String getTitle() {
         return title.get();
     }
 
-    public void setTitle(String title) 
-    {
+    public void setTitle(String title) {
         this.title.set(title);
     }
 
-    public StringProperty titleProperty() 
-    {
+    public StringProperty titleProperty() {
         return title;
     }
 
-    public String getPosterUrl() 
+    public byte[] getPosterImage() 
     {
-        return posterUrl.get();
+        return posterImage;
     }
 
-    public void setPosterUrl(String posterUrl) 
+    /* public void setPosterImage(byte[] image) 
     {
-        this.posterUrl.set(posterUrl);
+        this.posterImage.set(image);
+        this.posterImageView.set(convertToImage(image));
+    } */
+
+    /* public ObjectProperty<byte[]> posterImageProperty() {
+        return posterImage;
+    } */
+
+    public Image getPosterImageView() {
+        return posterImageView.get();
     }
 
-    public StringProperty posterUrlProperty() 
-    {
-        return posterUrl;
+    public ObjectProperty<Image> posterImageViewProperty() {
+        return posterImageView;
     }
 
-    public String getGenre() 
-    {
+    public String getGenre() {
         return genre.get();
     }
 
-    public void setGenre(String genre) 
-    {
+    public void setGenre(String genre) {
         this.genre.set(genre);
     }
 
-    public StringProperty genreProperty() 
-    {
+    public StringProperty genreProperty() {
         return genre;
     }
 
-    public String getSummary() 
-    {
+    public String getSummary() {
         return summary.get();
     }
 
-    public void setSummary(String summary) 
-    {
+    public void setSummary(String summary) {
         this.summary.set(summary);
     }
 
-    public StringProperty summaryProperty() 
-    {
+    public StringProperty summaryProperty() {
         return summary;
     }
 
-    public String getDuration() 
-    {
+    public String getDuration() {
         return duration.get();
     }
 
-    public void setDuration(String duration) 
-    {
+    public void setDuration(String duration) {
         this.duration.set(duration);
     }
 
-    public StringProperty durationProperty() 
-    {
+    public StringProperty durationProperty() {
         return duration;
-    }
-
-    public byte[] getPosterData() 
-    {
-        return posterData;
-    }
-
-    public void setPosterData(byte[] posterData) 
-    {
-        this.posterData = posterData;
     }
 }
