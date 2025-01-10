@@ -2,7 +2,6 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -99,49 +98,36 @@
                            <children>
                               <AnchorPane layoutX="9.0" layoutY="17.0" prefHeight="679.0" prefWidth="272.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0.5, 5, 5);" styleClass="infocard-2" stylesheets="@styles.css">
                                  <children>
-                                    <Label alignment="CENTER" layoutX="22.0" layoutY="29.0" prefHeight="15.0" prefWidth="192.0" styleClass="insert-button" stylesheets="@styles.css" text="Filter Area">
-                                       <font>
-                                          <Font name="SansSerif Bold" size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField layoutX="22.0" layoutY="137.0" promptText="User Name" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="109.0" prefHeight="16.0" prefWidth="101.0" style="-fx-background-color: red; -fx-effect: null;" text="User Name" textFill="WHITE">
+                                    <TextField layoutX="22.0" layoutY="309.0" promptText="User Name" text="Product Name" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="96.0" prefHeight="16.0" prefWidth="101.0" style="-fx-background-color: red; -fx-effect: null;" text="Type of Refund" textFill="WHITE">
                                        <font>
                                           <Font name="SansSerif Regular" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="198.0" prefHeight="16.0" prefWidth="135.0" style="-fx-background-color: red; -fx-effect: null;" text="Transaction Number" textFill="WHITE">
+                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="198.0" prefHeight="16.0" prefWidth="135.0" style="-fx-background-color: red; -fx-effect: null;" text="Ticket Id" textFill="WHITE">
                                        <font>
                                           <Font name="SansSerif Regular" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField layoutX="22.0" layoutY="237.0" promptText="Transaction Number" />
-                                    <ComboBox layoutX="12.0" layoutY="359.0" prefHeight="24.0" prefWidth="121.0" />
-                                    <ComboBox layoutX="140.0" layoutY="359.0" prefHeight="24.0" prefWidth="121.0" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="324.0" prefHeight="16.0" prefWidth="135.0" style="-fx-background-color: red; -fx-effect: null;" text="Date Range" textFill="WHITE">
+                                    <TextField layoutX="21.0" layoutY="221.0" promptText="Transaction Number" text="Ticket ID" />
+                                    <ComboBox layoutX="23.0" layoutY="120.0" prefHeight="24.0" prefWidth="121.0" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="287.0" prefHeight="16.0" prefWidth="135.0" style="-fx-background-color: red; -fx-effect: null;" text="Product Name" textFill="WHITE">
                                        <font>
                                           <Font name="SansSerif Regular" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="421.0" prefHeight="16.0" prefWidth="135.0" style="-fx-background-color: red; -fx-effect: null;" text="Transaction Type" textFill="WHITE">
-                                       <font>
-                                          <Font name="SansSerif Regular" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <CheckBox layoutX="22.0" layoutY="455.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="92.0" style="-fx-background-color: #fff;" text="Cancellation" />
-                                    <CheckBox layoutX="22.0" layoutY="485.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="69.0" style="-fx-background-color: #fff;" text="Refund" />
-                                    <Button layoutX="148.0" layoutY="542.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Clear" />
+                                    <Button layoutX="148.0" layoutY="542.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Refund" />
                                     <Button layoutX="25.0" layoutY="542.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Search" />
                                  </children>
                               </AnchorPane>
-                              <TableView editable="true" layoutX="291.0" layoutY="18.0" prefHeight="389.0" prefWidth="637.0" styleClass="table.view" stylesheets="@styles.css" AnchorPane.bottomAnchor="305.0" AnchorPane.leftAnchor="291.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="18.0">
+                              <TableView editable="true" layoutX="291.0" layoutY="18.0" prefHeight="680.0" prefWidth="647.0" styleClass="table.view" stylesheets="@styles.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="291.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="18.0">
                                 <columns>
-                                  <TableColumn prefWidth="126.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Transaction Number" />
-                                  <TableColumn prefWidth="112.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Customer Name" />
-                                    <TableColumn prefWidth="118.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Transaction Date" />
-                                    <TableColumn minWidth="0.0" prefWidth="82.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Amount" />
-                                    <TableColumn minWidth="1.0" prefWidth="110.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Transaction Type" />
-                                    <TableColumn prefWidth="112.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Browse" />
+                                  <TableColumn prefWidth="44.79992598295212" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="ID" />
+                                  <TableColumn prefWidth="146.66669082641602" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Seat Cost" />
+                                    <TableColumn prefWidth="154.93333435058594" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Product" />
+                                    <TableColumn minWidth="0.0" prefWidth="82.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Quantity" />
+                                    <TableColumn minWidth="1.0" prefWidth="110.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Product price" />
+                                    <TableColumn prefWidth="112.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Total Cost" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

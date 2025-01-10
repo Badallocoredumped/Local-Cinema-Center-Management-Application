@@ -1,6 +1,5 @@
 package help;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -18,21 +17,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import help.classes.Movie;
 import help.utilities.AdminDBH;
 
 public class OMoviesController {
-
-    
 
     @FXML
     private TextField txtMovieTitle;
@@ -53,13 +46,11 @@ public class OMoviesController {
 
     private ObservableList<Movie> movieList = FXCollections.observableArrayList();
     private Movie selectedMovie = null;
-    private String posterPath = null;
-    private byte [] posterData = null;
+    private byte[] posterData = null;
     private AdminDBH dbHandler = new AdminDBH();
 
     @FXML
-    public void initialize() 
-    {
+    public void initialize() {
         cmbGenre.setItems(FXCollections.observableArrayList("Action", "Drama", "Comedy", "Horror", "Romance"));
 
         colTitle.setCellValueFactory(data -> data.getValue().titleProperty());
@@ -71,18 +62,9 @@ public class OMoviesController {
         tblMovies.setOnMouseClicked(this::onRowSelect);
 
         loadMoviesFromDatabase();
-        tblMovies.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> 
-        {
-            if (newSelection != null) 
-            {
-                try 
-                {
-                    displayPoster(newSelection);
-                }
-                finally
-                {
-                    moviePosterImageView.setImage(null);
-                }
+        tblMovies.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                displayPoster(newSelection);
             }
         });
     }
@@ -94,85 +76,52 @@ public class OMoviesController {
         String duration = txtDuration.getText();
         String summary = txtSummary.getText();
 
-        if (posterPath != null) {
-            File posterFile = new File(posterPath);
-            if (posterFile.exists()) {
-                try {
-                    posterData = Files.readAllBytes(posterFile.toPath());
-                } catch (IOException e) {
-                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to read the poster file.");
-                    e.printStackTrace();
-                    return;
-                }
-            } else {
-                showAlert(Alert.AlertType.WARNING, "Invalid Poster", "The specified poster file does not exist.");
-                return;
-            }
-        } else 
-        {
-            posterData = selectedMovie.getPosterData();
-            posterPath = selectedMovie.getPosterUrl();
-        }
-    
-        if (title.isEmpty() || genre == null || duration.isEmpty() || summary.isEmpty() || posterPath == null || posterData == null) {
-            showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields and import a poster.");
+        if (posterData == null) {
+            showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please import a poster.");
             return;
         }
-    
-        AdminDBH.AddMovie(title, posterPath, posterData, genre, summary, duration);
+
+        if (title.isEmpty() || genre == null || duration.isEmpty() || summary.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
+            return;
+        }
+
+        AdminDBH.AddMovie(title, posterData, genre, summary, duration);
         loadMoviesFromDatabase();
         showAlert(Alert.AlertType.INFORMATION, "Success", "Movie added successfully!");
         clearForm();
     }
 
     @FXML
-private void onUpdate(ActionEvent event) {
-    if (selectedMovie == null) {
-        showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a movie to update.");
-        return;
-    }
-
-    String newTitle = txtMovieTitle.getText();
-    String newGenre = cmbGenre.getValue();
-    String newDuration = txtDuration.getText();
-    String newSummary = txtSummary.getText();
-
-    // Check if a new poster has been imported, otherwise use the existing data
-    if (posterPath != null) {
-        File posterFile = new File(posterPath);
-        if (posterFile.exists()) {
-            try {
-                posterData = Files.readAllBytes(posterFile.toPath());
-            } catch (IOException e) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to read the poster file.");
-                e.printStackTrace();
-                return;
-            }
-        } else {
-            showAlert(Alert.AlertType.WARNING, "Invalid Poster", "The specified poster file does not exist.");
+    private void onUpdate(ActionEvent event) {
+        if (selectedMovie == null) {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a movie to update.");
             return;
         }
-    } else {
-        posterData = selectedMovie.getPosterData();
-        posterPath = selectedMovie.getPosterUrl();
+
+        String newTitle = txtMovieTitle.getText();
+        String newGenre = cmbGenre.getValue();
+        String newDuration = txtDuration.getText();
+        String newSummary = txtSummary.getText();
+
+        if (posterData == null) {
+            posterData = selectedMovie.getPosterImage();
+        }
+
+        if (newTitle.isEmpty() || newGenre == null || newDuration.isEmpty() || newSummary.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
+            return;
+        }
+
+        int movieId = AdminDBH.getMovieIdFromTitle(selectedMovie.getTitle());
+        dbHandler.FullUpdateMovie(movieId, newTitle, posterData, newGenre, newSummary, newDuration);
+        loadMoviesFromDatabase();
+        showAlert(Alert.AlertType.INFORMATION, "Success", "Movie updated successfully!");
+        clearForm();
     }
-
-    if (newTitle.isEmpty() || newGenre == null || newDuration.isEmpty() || newSummary.isEmpty() || posterPath == null || posterData == null) {
-        showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
-        return;
-    }
-
-    int movieId = dbHandler.getMovieIdFromTitle(selectedMovie.getTitle());
-    dbHandler.FullUpdateMovie(movieId, newTitle, posterPath, posterData, newGenre, newSummary, newDuration);
-    loadMoviesFromDatabase();
-    showAlert(Alert.AlertType.INFORMATION, "Success", "Movie updated successfully!");
-    clearForm();
-}
-
 
     @FXML
-    private void onClear(ActionEvent event) 
-    {
+    private void onClear(ActionEvent event) {
         clearForm();
     }
 
@@ -184,8 +133,7 @@ private void onUpdate(ActionEvent event) {
 
         File selectedFile = fileChooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
-            posterPath = selectedFile.getAbsolutePath(); // Get absolute path for database storage
-            byte[] posterData = Files.readAllBytes(selectedFile.toPath());
+            posterData = Files.readAllBytes(selectedFile.toPath());
             if (posterData.length > 0) {
                 moviePosterImageView.setImage(new Image(new ByteArrayInputStream(posterData)));
             } else {
@@ -202,38 +150,37 @@ private void onUpdate(ActionEvent event) {
             cmbGenre.setValue(selectedMovie.getGenre());
             txtDuration.setText(selectedMovie.getDuration());
             txtSummary.setText(selectedMovie.getSummary());
-            posterPath = selectedMovie.getPosterUrl();
+            posterData = selectedMovie.getPosterImage();
             displayPoster(selectedMovie);
         }
     }
 
     @FXML
-private void onDelete(ActionEvent event) {
-    if (selectedMovie == null) {
-        showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a movie to delete.");
-        return;
-    }
-
-    // Confirm deletion
-    Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-    confirmAlert.setTitle("Confirm Deletion");
-    confirmAlert.setHeaderText("Are you sure you want to delete this movie?");
-    confirmAlert.setContentText("Movie: " + selectedMovie.getTitle());
-
-    confirmAlert.showAndWait().ifPresent(response -> {
-        if (response == javafx.scene.control.ButtonType.OK) {
-            int movieId = dbHandler.getMovieIdFromTitle(selectedMovie.getTitle());
-            dbHandler.deleteMovie(movieId);
-            loadMoviesFromDatabase();
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Movie deleted successfully!");
-            clearForm();
+    private void onDelete(ActionEvent event) {
+        if (selectedMovie == null) {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a movie to delete.");
+            return;
         }
-    });
-}
+
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirm Deletion");
+        confirmAlert.setHeaderText("Are you sure you want to delete this movie?");
+        confirmAlert.setContentText("Movie: " + selectedMovie.getTitle());
+
+        confirmAlert.showAndWait().ifPresent(response -> {
+            if (response == javafx.scene.control.ButtonType.OK) {
+                int movieId = AdminDBH.getMovieIdFromTitle(selectedMovie.getTitle());
+                dbHandler.deleteMovie(movieId);
+                loadMoviesFromDatabase();
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Movie deleted successfully!");
+                clearForm();
+            }
+        });
+    }
 
     private void loadMoviesFromDatabase() {
         movieList.clear();
-        movieList.addAll(dbHandler.GetAllMovies()); // Assuming GetAllMovies returns a List<Movie>
+        movieList.addAll(dbHandler.GetAllMovies());
     }
 
     private void clearForm() {
@@ -241,8 +188,7 @@ private void onDelete(ActionEvent event) {
         cmbGenre.setValue(null);
         txtDuration.clear();
         txtSummary.clear();
-        cmbGenre.setValue(null);
-        posterPath = null;
+        posterData = null;
         selectedMovie = null;
         moviePosterImageView.setImage(null);
     }
@@ -254,17 +200,16 @@ private void onDelete(ActionEvent event) {
         alert.showAndWait();
     }
 
-    private void displayPoster(Movie movie) 
-    {
+    private void displayPoster(Movie movie) {
         if (movie == null) {
             moviePosterImageView.setImage(null);
             return;
         }
-        byte[] posterData = movie.getPosterData();
+        byte[] posterData = movie.getPosterImage();
         if (posterData != null && posterData.length > 0) {
             moviePosterImageView.setImage(new Image(new ByteArrayInputStream(posterData)));
         } else {
-            moviePosterImageView.setImage(null); // Clear the image if no data is provided
+            moviePosterImageView.setImage(null);
         }
     }
 }

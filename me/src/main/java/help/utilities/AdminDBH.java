@@ -49,7 +49,7 @@ public class AdminDBH
         }
     }
     
-    public static void AddMovie(String title, String poster, byte[] posterData, String genre, String summaryText, String duration) 
+    public static void AddMovie(String title, byte[] posterData, String genre, String summaryText, String duration) 
     {
         if (dbconnection == null) {
             System.err.println("Database connection failed!!");
@@ -65,14 +65,13 @@ public class AdminDBH
             writer.newLine();
     
             // Insert the movie into the database
-            String query = "INSERT INTO movies (title, poster_url, poster_image, genre, summary, duration) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO movies (title, poster_image, genre, summary, duration) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = dbconnection.prepareStatement(query)) {
                 stmt.setString(1, title);
-                stmt.setString(2, poster);  // URL or file path of the poster
-                stmt.setBytes(3, posterData);   // Byte array of the poster image
-                stmt.setString(4, genre);
-                stmt.setString(5, summaryPath); // File path of the summary
-                stmt.setString(6, duration);
+                stmt.setBytes(2, posterData);  // URL or file path of the poster
+                stmt.setString(3, genre);   // Byte array of the poster image
+                stmt.setString(4, summaryPath);
+                stmt.setString(5, duration); // File path of the summary
                 stmt.executeUpdate();  // Execute the insertion query
                 System.out.println("Movie added successfully.");
             }
@@ -86,7 +85,7 @@ public class AdminDBH
     }
     
 
-    public void FullUpdateMovie(int movieId, String newTitle, String newPoster, byte[] newPosterData, String newGenre, String newSummaryText, String newDuration) 
+    public void FullUpdateMovie(int movieId, String newTitle, byte[] newPosterData, String newGenre, String newSummaryText, String newDuration) 
     {
         if (dbconnection == null) 
         {
@@ -109,16 +108,15 @@ public class AdminDBH
 
                     writer.write(newSummaryText);
                     writer.newLine();  
-                    query = "UPDATE movies SET title = ?,  poster_url = ?, poster_image = ?, genre = ?, summary = ?, duration = ? WHERE movie_id = ?";
+                    query = "UPDATE movies SET title = ?, poster_image = ?, genre = ?, summary = ?, duration = ? WHERE movie_id = ?";
                     try(PreparedStatement stmt = dbconnection.prepareStatement(query))
                     {
                         stmt.setString(1, newTitle);
-                        stmt.setString(2, newPoster);
-                        stmt.setBytes(3, newPosterData);
-                        stmt.setString(4, newGenre);
-                        stmt.setString(5, newSummaryPath);
-                        stmt.setString(6, newDuration);
-                        stmt.setInt(7, movieId);
+                        stmt.setBytes(2, newPosterData);
+                        stmt.setString(3, newGenre);
+                        stmt.setString(4, newSummaryPath);
+                        stmt.setString(5, newDuration);
+                        stmt.setInt(6, movieId);
                         stmt.executeUpdate();
                         System.out.println("Movie updated successfully.");
                     } 
@@ -183,7 +181,7 @@ public class AdminDBH
             return movies;
         }
 
-        String query = "SELECT movie_id, title, poster_url, poster_image, genre, summary, duration FROM movies";
+        String query = "SELECT movie_id, title, genre, summary, duration, poster_image FROM movies";
 
         try (PreparedStatement stmt = dbconnection.prepareStatement(query);
              ResultSet infoSet = stmt.executeQuery()) 
@@ -192,14 +190,13 @@ public class AdminDBH
             while (infoSet.next()) {
                 int id = infoSet.getInt("movie_id");
                 String title = infoSet.getString("title");
-                String posterFile = infoSet.getString("poster_url");
                 String genre = infoSet.getString("genre");
                 String summaryPath = infoSet.getString("summary");
                 String duration = infoSet.getString("duration");
                 byte[] posterImage = infoSet.getBytes("poster_image");
                 String summary = ReadSummary(summaryPath);
 
-                Movie movie = new Movie(id, title, posterFile, genre, summary, duration, posterImage);
+                Movie movie = new Movie(id, title, posterImage, genre, summary, duration);
                 movies.add(movie);
             }
         } catch (SQLException e) {
@@ -240,102 +237,6 @@ public class AdminDBH
         {
             System.out.println("Poster file not found.");
             return null;
-        }
-    }
-
-    public void UpdateMovieTitle(int movieId, String newTitle) 
-    {
-        if (dbconnection == null) 
-        {
-            System.err.println("Database connection failed!!");
-            return;
-        }
-    
-        String query = "UPDATE movies SET title = ? WHERE movie_id = ?";
-        try (PreparedStatement stmt = dbconnection.prepareStatement(query)) 
-        {
-            stmt.setString(1, newTitle);
-            stmt.setInt(2, movieId);
-            stmt.executeUpdate();
-            System.out.println("Title updated successfully.");
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
-    }
-    
-    public void UpdateMoviePoster(int movieId, String newPoster) 
-    {
-        if (dbconnection == null) 
-        {
-            System.err.println("Database connection failed!!");
-            return;
-        }
-    
-        String query = "UPDATE movies SET  poster_url = ? WHERE movie_id = ?";
-        try (PreparedStatement stmt = dbconnection.prepareStatement(query)) 
-        {
-            stmt.setString(1, newPoster);
-            stmt.setInt(2, movieId);
-            stmt.executeUpdate();
-            System.out.println("Poster updated successfully.");
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
-    }
-    
-    public void UpdateMovieGenre(int movieId, String newGenre) 
-    {
-        if (dbconnection == null) 
-        {
-            System.err.println("Database connection failed!!");
-            return;
-        }
-    
-        String query = "UPDATE movies SET genre = ? WHERE movie_id = ?";
-        try (PreparedStatement stmt = dbconnection.prepareStatement(query)) 
-        {
-            stmt.setString(1, newGenre);
-            stmt.setInt(2, movieId);
-            stmt.executeUpdate();
-            System.out.println("Genre updated successfully.");
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
-    }
-    
-    public void UpdateMovieSummary(int movieId, String newTitle, String newSummaryText) 
-    {
-        if (dbconnection == null) 
-        {
-            System.err.println("Database connection failed!!");
-            return;
-        }
-    
-        String newSummaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/Movie/Summaries/"
-                + newTitle.replaceAll(" ", "_") + "_summary.txt";
-    
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(newSummaryPath))) 
-        {
-            writer.write(newSummaryText);
-            writer.newLine();
-    
-            String query = "UPDATE movies SET summary = ? WHERE movie_id = ?";
-            try (PreparedStatement stmt = dbconnection.prepareStatement(query)) {
-                stmt.setString(1, newSummaryPath);
-                stmt.setInt(2, movieId);
-                stmt.executeUpdate();
-                System.out.println("Summary updated successfully.");
-            }
-        } 
-        catch (IOException | SQLException e) 
-        {
-            e.printStackTrace();
         }
     }
     
@@ -396,6 +297,8 @@ public class AdminDBH
     // Add a new session
     public void AddSession(int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
     {
+        int vacantSeats = hallName.equalsIgnoreCase("Hall_A") ? 16 : 46;
+
         String checkOverlapQuery = "SELECT COUNT(*) FROM Sessions WHERE hall_name = ? AND session_date = ? AND (? BETWEEN start_time AND ADDTIME(start_time, '2:00:00') OR ADDTIME(?, '2:00:00') BETWEEN start_time AND ADDTIME(start_time, '2:00:00'))";
         try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkOverlapQuery)) 
         {
@@ -411,13 +314,14 @@ public class AdminDBH
             }
         }
 
-        String insertQuery = "INSERT INTO Sessions (movie_id, hall_name, session_date, start_time) VALUES (?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO Sessions (movie_id, hall_name, session_date, start_time, vacant_seats) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = dbconnection.prepareStatement(insertQuery)) 
         {
             stmt.setInt(1, movieId);
             stmt.setString(2, hallName);
             stmt.setDate(3, java.sql.Date.valueOf(sessionDate));
             stmt.setTime(4, startTime);
+            stmt.setInt(5, vacantSeats);
             stmt.executeUpdate();
         }
     }
@@ -524,101 +428,4 @@ public class AdminDBH
         }
         return sessions;
     }
-
-    public void TicketRefund(int ticketId) {
-        if (dbconnection == null) {
-            System.err.println("Database connection failed!");
-            return;
-        }
-
-        try 
-        {
-            String ticketQuery = "UPDATE Tickets SET refunded = TRUE WHERE ticket_id = ? AND refunded = FALSE";
-            String updateSeatsQuery = "UPDATE Schedules SET vacant_seats = vacant_seats + 1 " +
-                                      "WHERE schedule_id = (SELECT schedule_id FROM Tickets WHERE ticket_id = ?)";
-
-            try (PreparedStatement ticketStmt = dbconnection.prepareStatement(ticketQuery);
-                 PreparedStatement seatStmt = dbconnection.prepareStatement(updateSeatsQuery)) {
-
-                ticketStmt.setInt(1, ticketId);
-                seatStmt.setInt(1, ticketId);
-
-                int ticketUpdated = ticketStmt.executeUpdate();
-
-                if (ticketUpdated > 0) 
-                {
-                    seatStmt.executeUpdate();
-                    System.out.println("Ticket refunded successfully.");
-                } 
-                else 
-                {
-                    System.out.println("No ticket found or already refunded.");
-                }
-            }
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public void ProductRefund(int saleId, int refundQuantity) 
-    {
-        if (dbconnection == null) 
-        {
-            System.err.println("Database connection failed!");
-            return;
-        }
-
-        try 
-        {
-            String validationQuery = "SELECT quantity, refunded_quantity FROM ProductSales WHERE sale_id = ? AND is_refunded = FALSE";
-            int purchasedQuantity = 0;
-            int alreadyRefunded = 0;
-
-            try (PreparedStatement validationStmt = dbconnection.prepareStatement(validationQuery)) {
-                validationStmt.setInt(1, saleId);
-                ResultSet resultSet = validationStmt.executeQuery();
-
-                if (resultSet.next()) 
-                {
-                    purchasedQuantity = resultSet.getInt("quantity");
-                    alreadyRefunded = resultSet.getInt("refunded_quantity");
-                } 
-                else 
-                {
-                    System.out.println("Sale ID not found or already refunded.");
-                    return;
-                }
-
-                if (refundQuantity > (purchasedQuantity - alreadyRefunded)) 
-                {
-                    System.out.println("Refund quantity exceeds available quantity for refund.");
-                    return;
-                }
-            }
-
-            String updateSalesQuery = "UPDATE ProductSales SET refunded_quantity = refunded_quantity + ? WHERE sale_id = ?";
-            String updateInventoryQuery = "UPDATE Products SET inventory = inventory + ? " +
-                                           "WHERE product_id = (SELECT product_id FROM ProductSales WHERE sale_id = ?)";
-
-            try (PreparedStatement salesStmt = dbconnection.prepareStatement(updateSalesQuery);
-                 PreparedStatement inventoryStmt = dbconnection.prepareStatement(updateInventoryQuery)) {
-
-                salesStmt.setInt(1, refundQuantity);
-                salesStmt.setInt(2, saleId);
-                inventoryStmt.setInt(1, refundQuantity);
-                inventoryStmt.setInt(2, saleId);
-
-                salesStmt.executeUpdate();
-                inventoryStmt.executeUpdate();
-                System.out.println("Product refund processed successfully.");
-            }
-        } 
-        catch (SQLException e) 
-        {
-            System.err.println("Product refund process failed. Transaction rolled back.");
-            e.printStackTrace();
-        }        
-    } 
 }

@@ -23,8 +23,7 @@ CREATE TABLE Movies (
     duration INT NOT NULL
 );
 
-ALTER TABLE Movies
-DROP COLUMN poster_image;
+
 
 
 
@@ -60,7 +59,7 @@ CREATE TABLE Seats (
 SET SQL_SAFE_UPDATES = 0;
 
 UPDATE Movies
-SET poster_image = LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\titanic.jpg')
+SET poster_image = LOAD_FILE('C:\\Users\\ahmed\\Downloads\\Titanic.jpg')
 WHERE title = 'Titanic';
 
 
@@ -137,12 +136,12 @@ SELECT * FROM Users;
 -- allows duplicates but it shouldnt i think
 INSERT INTO Movies (title, poster_image, genre, summary, duration)
 VALUES
-('Inception', LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\inception.jpg'), 'Sci-Fi', 'A mind-bending thriller about dreams within dreams.', 148),
-('Titanic',LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\titanic.jpg') , 'Romance', 'A tragic love story aboard the ill-fated Titanic.', 195);
+('Inception', LOAD_FILE('C:\\Users\\ahmed\\Downloads\\Titanic.jpg'), 'Sci-Fi', 'A mind-bending thriller about dreams within dreams.', 148),
+('Titanic',LOAD_FILE('C:\\Users\\ahmed\\Downloads\\Titanic.jpg') , 'Romance', 'A tragic love story aboard the ill-fated Titanic.', 195);
 
 
 #TO MAKE IT BLOB
-#LOAD_FILE('C:\\Users\\emiro\\Desktop\\me\\images\\inception.jpg')
+#LOAD_FILE('C:\\Users\\ahmed\\Downloads\\Titanic.jpg')
 
 -- Halls
 INSERT INTO Halls (hall_name, seat_capacity)

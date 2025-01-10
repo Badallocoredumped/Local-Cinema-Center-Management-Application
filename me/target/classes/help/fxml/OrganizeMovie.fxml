@@ -136,8 +136,6 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <TextField layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="209.0" />
-                              <FontAwesomeIcon glyphName="SEARCH" layoutX="24.0" layoutY="31.0" />
                            </children>
                         </AnchorPane>
                      </children>
