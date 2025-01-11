@@ -3,7 +3,6 @@ package help.classes;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import help.classes.Movie;
 import help.utilities.MovieDBO;
 
 public class MovieService 
