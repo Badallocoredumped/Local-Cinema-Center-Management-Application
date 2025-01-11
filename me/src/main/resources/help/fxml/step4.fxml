@@ -192,13 +192,13 @@
                         <Font name="SansSerif Bold" size="36.0" />
                      </font>
                   </Label>
-                  <TreeTableView fx:id="AdditionalProductTable" layoutX="292.0" layoutY="284.0" pickOnBounds="false" prefHeight="434.0" prefWidth="846.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0.5, 2, 0); -fx-background-radius: 20px;">
+                  <TreeTableView fx:id="AdditionalProductTable" layoutX="36.0" layoutY="284.0" pickOnBounds="false" prefHeight="416.0" prefWidth="1112.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0.5, 2, 0); -fx-background-radius: 20px;">
                      <columns>
-                        <TreeTableColumn fx:id="imageColumn" prefWidth="195.0" text="Image" />
-                        <TreeTableColumn fx:id="nameColumn" prefWidth="160.0" text="Product Name" />
-                        <TreeTableColumn fx:id="priceColumn" prefWidth="126.0" text="Price" />
-                        <TreeTableColumn fx:id="CategoryColumn" prefWidth="223.0" text="Category" />
-                        <TreeTableColumn fx:id="stockAvailabilityColumn" prefWidth="138.0" text="Stock Availability" />
+                        <TreeTableColumn fx:id="imageColumn" prefWidth="291.0" text="Image" />
+                        <TreeTableColumn fx:id="nameColumn" prefWidth="175.0" text="Product Name" />
+                        <TreeTableColumn fx:id="priceColumn" prefWidth="101.0" text="Price" />
+                        <TreeTableColumn fx:id="CategoryColumn" prefWidth="219.0" text="Category" />
+                        <TreeTableColumn fx:id="stockAvailabilityColumn" prefWidth="184.0" text="Stock Availability" />
                      </columns>
                      <columnResizePolicy>
                         <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

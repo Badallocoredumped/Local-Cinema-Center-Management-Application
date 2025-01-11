@@ -210,6 +210,21 @@ public class ProductDBO
             return false;
         }
     }
+
+    
+    public boolean returnProductsToInventory(int ticketId) throws Exception {
+        String sql = "UPDATE Products p " +
+                    "JOIN Ticket_Products tp ON p.name = tp.product_name " +
+                    "SET p.stock_quantity = p.stock_quantity + tp.quantity " +
+                    "WHERE tp.ticket_id = ?";
+                    
+        try (Connection conn = DataBaseHandler.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, ticketId);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
     
     
 

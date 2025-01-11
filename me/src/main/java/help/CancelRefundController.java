@@ -24,6 +24,8 @@ import help.classes.Tickets;
 import help.classes.User;
 import help.utilities.BankDBO;
 import help.utilities.DataBaseHandler;
+import help.utilities.ProductDBO;
+import help.utilities.SeatsDBO;
 import help.utilities.TicketProductsDBO;
 import help.utilities.TicketsDBO;
 import javafx.fxml.FXML;
@@ -343,7 +345,11 @@ public class CancelRefundController
     }
 
     @FXML
-    private void handleRefundSelection(ActionEvent event) {
+    private void handleRefundSelection(ActionEvent event) 
+    {
+        ProductDBO productDBO = new ProductDBO();
+        SeatsDBO seatDBO = new SeatsDBO();
+
         Tickets selectedTicket = TicketTable.getSelectionModel().getSelectedItem();
         if (selectedTicket != null && !"CANCELLED".equals(selectedTicket.getStatus())) {
             String refundType = TypeOfRefund.getValue();
@@ -357,19 +363,31 @@ public class CancelRefundController
                             selectedTicket.getTotalSeatCost(), 
                             selectedTicket.getTotalProductCost()
                         );
+                        if (success) {
+                            productDBO.returnProductsToInventory(selectedTicket.getTicketId());
+                            seatDBO.updateSeatOccupancy(selectedTicket.getTicketId(), false);
+                        }
                         break;
                         
                     case "Product Refund":
                         success = bankDBO.processProductRefund(
                             selectedTicket.getTotalProductCost()
                         );
+                        if (success) {
+                            productDBO.returnProductsToInventory(selectedTicket.getTicketId());
+                        }
                         break;
+                        
                         
                     case "Seat Refund":
                         success = bankDBO.processSeatRefund(
                             selectedTicket.getTotalSeatCost()
                         );
+                        if (success) {
+                            seatDBO.updateSeatOccupancy(selectedTicket.getTicketId(), false);
+                        }
                         break;
+                        
                 }
                 
                 if (success) {
