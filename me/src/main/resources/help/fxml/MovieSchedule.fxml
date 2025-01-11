@@ -55,7 +55,7 @@
                         <Font name="SansSerif Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Button layoutX="38.0" layoutY="602.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="142.0" text="Sign Out">
+                  <Button layoutX="38.0" layoutY="602.0" mnemonicParsing="false" onAction="#onsignOut" prefHeight="24.0" prefWidth="142.0" text="Sign Out">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
@@ -72,7 +72,7 @@
                         <FontAwesomeIcon glyphName="LIST" text="" />
                      </graphic>
                   </Button>
-                  <Button layoutX="18.0" layoutY="227.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="183.0" styleClass="menu-card" stylesheets="@styles.css" text="Organize Movies">
+                  <Button layoutX="18.0" layoutY="227.0" mnemonicParsing="false" onAction="#onOrganizeMovie" prefHeight="25.0" prefWidth="183.0" styleClass="menu-card" stylesheets="@styles.css" text="Organize Movies">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
@@ -80,7 +80,7 @@
                         <FontAwesomeIcon glyphName="FILM" text="" wrappingWidth="13.928571701049805" />
                      </graphic>
                   </Button>
-                  <Button layoutX="2.0" layoutY="312.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="220.0" styleClass="menu-card" stylesheets="@styles.css" text="Cancellations and Refunds">
+                  <Button layoutX="2.0" layoutY="312.0" mnemonicParsing="false" onAction="#onCancellationsRefunds" prefHeight="25.0" prefWidth="220.0" styleClass="menu-card" stylesheets="@styles.css" text="Cancellations and Refunds">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>

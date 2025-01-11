@@ -56,7 +56,7 @@
                         <Font name="SansSerif Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Button layoutX="38.0" layoutY="602.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="142.0" text="Sign Out">
+                  <Button layoutX="38.0" layoutY="602.0" mnemonicParsing="false" onAction="#onsignOut" prefHeight="24.0" prefWidth="142.0" text="Sign Out">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
@@ -65,7 +65,7 @@
                      </graphic>
                   </Button>
                   <FontAwesomeIcon fill="WHITE" glyphName="USER" layoutX="66.0" layoutY="102.0" size="8em" text="" />
-                  <Button layoutX="21.0" layoutY="270.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" stylesheets="@styles.css" text="Monthly Schedule">
+                  <Button layoutX="21.0" layoutY="270.0" mnemonicParsing="false" onAction="#onSchedule" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" stylesheets="@styles.css" text="Monthly Schedule">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
@@ -81,7 +81,7 @@
                         <FontAwesomeIcon glyphName="FILM" text="" wrappingWidth="13.928571701049805" />
                      </graphic>
                   </Button>
-                  <Button layoutX="2.0" layoutY="312.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="220.0" styleClass="menu-card" stylesheets="@styles.css" text="Cancellations and Refunds">
+                  <Button layoutX="2.0" layoutY="312.0" mnemonicParsing="false" onAction="#onCancellationsRefunds" prefHeight="25.0" prefWidth="220.0" styleClass="menu-card" stylesheets="@styles.css" text="Cancellations and Refunds">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>

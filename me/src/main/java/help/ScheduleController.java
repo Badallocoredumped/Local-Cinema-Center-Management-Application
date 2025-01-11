@@ -5,10 +5,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
@@ -232,9 +237,48 @@ public class ScheduleController {
             timeField.setText(selectedSession.getStartTime().toString());
         }
     }
+
+    public void onOrganizeMovie(ActionEvent event) throws IOException 
+    {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        if (stage.getTitle().equals("Organize Movies")) 
+        {
+            return;
+        }
+        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/OrganizeMovie.fxml"));
+        changeScene(stage, root, "Organize Movies");
+    }
+
+    // Function to load Cancellations and Refunds screen
+    public void onCancellationsRefunds(ActionEvent event) throws IOException 
+    {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        if (stage.getTitle().equals("Cancellations and Refunds")) 
+        {
+            return;
+        }
+        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/CancelRefund.fxml"));
+        changeScene(stage, root, "Cancellations and Refunds");
+    }
+
+    // Function to sign out
+    public void onsignOut(ActionEvent event) throws IOException
+    {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/login.fxml"));
+        changeScene(stage, root, "Login");
+    }
+
+    // Helper function to change the scene
+    private void changeScene(Stage stage, Parent root, String newSceneTitle) {
+        Scene scene = stage.getScene();
+        scene.setRoot(root);
+        stage.setTitle(newSceneTitle);
+        stage.setFullScreen(true);
+        stage.setFullScreenExitHint("");
+    }
 }
 
 /* Todo:
     Add more Alerts for appropriate error
-    hamdle the vacant seats issue, I'm putting everything to 0 for now
 */
