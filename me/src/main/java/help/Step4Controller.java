@@ -590,6 +590,7 @@ public class Step4Controller {
             ticket.setTotalTax(getTotalTaxAmount());
             ticket.setTotalCost(getTotalSeatPrice() + getTotalProductPrice() + getTotalTaxAmount());
             ticket.setDiscountedSeatNumber(discountedSeatsCount);
+            ticket.setStatus("ACTIVE");
 
             // Debug prints
             System.out.println("Step4 - Before Scene Change:");

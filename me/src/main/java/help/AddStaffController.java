@@ -76,7 +76,8 @@ public class AddStaffController {
             lastNameField.getText().trim(),
             usernameField.getText().trim(),
             roleComboBox.getValue(),
-            passwordField.getText()
+            passwordField.getText(),
+            0
         );
         
         if (userDBO.insertUser(newUser, passwordField.getText())) {

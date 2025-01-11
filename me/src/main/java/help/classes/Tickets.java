@@ -16,12 +16,16 @@ public class Tickets
     private double totalTax;
     private double totalCost;
     private int discountedSeatNumber;
+    private String status;
+
 
     // Default constructor
     public Tickets() 
     {
         this.customerName = "";
         this.seatNumbers = new ArrayList<>();
+        this.status = "ACTIVE";  // Set default status
+
     }
 
     public static void resetInstance() {
@@ -37,6 +41,18 @@ public class Tickets
             instance = null;
         }
         System.out.println("Tickets instance reset");
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        if (status != null && (status.equals("ACTIVE") || status.equals("CANCELLED"))) {
+            this.status = status;
+        } else {
+            throw new IllegalArgumentException("Status must be either ACTIVE or CANCELLED");
+        }
     }
 
     public static Tickets getInstance() 
@@ -176,5 +192,6 @@ public class Tickets
         this.totalTax = 0;
         this.totalCost = 0;
         this.discountedSeatNumber = 0;
+        this.status = "ACTIVE";
     }
 }

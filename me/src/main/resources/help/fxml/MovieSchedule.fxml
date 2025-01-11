@@ -21,7 +21,7 @@
                <children>
                   <AnchorPane layoutX="154.0" layoutY="-61.0" prefHeight="139.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button layoutX="1136.0" layoutY="2.0" lineSpacing="1.2" mnemonicParsing="false" prefHeight="24.0" prefWidth="64.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="2.0">
+                        <Button fx:id="CloseButton" layoutX="1136.0" layoutY="2.0" lineSpacing="1.2" mnemonicParsing="false" onAction="#handleCloseButtonAction" prefHeight="24.0" prefWidth="64.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="2.0">
                            <graphic>
                               <FontAwesomeIcon glyphName="CLOSE" />
                            </graphic>
@@ -32,9 +32,9 @@
                            </font>
                         </Label>
                         <FontAwesomeIcon fill="#802476b8" glyphName="PLAY" layoutX="21.0" layoutY="31.0" />
-                        <Button layoutX="1072.0" layoutY="2.0" lineSpacing="1.2" mnemonicParsing="false" prefHeight="24.0" prefWidth="64.0" styleClass="minus-button" AnchorPane.rightAnchor="66.0">
+                        <Button fx:id="MinimizeButton" layoutX="1072.0" layoutY="2.0" lineSpacing="1.2" mnemonicParsing="false" onAction="#handleMinimizeButtonAction" prefHeight="24.0" prefWidth="64.0" styleClass="minus-button" AnchorPane.rightAnchor="66.0">
                            <graphic>
-                              <FontAwesomeIcon glyphName="MINUS" />
+                              <FontAwesomeIcon glyphName="MINUS" text="" />
                            </graphic>
                         </Button>
                      </children>
@@ -55,7 +55,7 @@
                         <Font name="SansSerif Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Button layoutX="38.0" layoutY="602.0" mnemonicParsing="false" onAction="#onsignOut" prefHeight="24.0" prefWidth="142.0" text="Sign Out">
+                  <Button fx:id="SignoutButton" layoutX="38.0" layoutY="602.0" mnemonicParsing="false" onAction="#handleSignOutButtonAction" prefHeight="24.0" prefWidth="142.0" text="Sign Out">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>

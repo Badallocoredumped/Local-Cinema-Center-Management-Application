@@ -16,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -42,7 +43,7 @@ public class OMoviesController {
     @FXML
     private ComboBox<String> cmbGenre;
     @FXML
-    private Button btnAdd, btnUpdate, btnClear, btnDelete, btnImport;
+    private Button btnAdd, btnUpdate, btnClear, btnDelete, btnImport , SignoutButton,MinimizeButton,CloseButton;
     @FXML
     private TableView<Movie> tblMovies;
     @FXML
@@ -54,6 +55,17 @@ public class OMoviesController {
     private Movie selectedMovie = null;
     private byte[] posterData = null;
     private AdminDBH dbHandler = new AdminDBH();
+    @FXML
+    private void handleCloseButtonAction(ActionEvent event) {
+        Stage stage = (Stage) CloseButton.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    private void handleMinimizeButtonAction(ActionEvent event) {
+        Stage stage = (Stage) MinimizeButton.getScene().getWindow();
+        stage.setIconified(true);
+    }
 
     @FXML
     public void initialize() {
@@ -278,6 +290,16 @@ public class OMoviesController {
         changeScene(stage, root, "Monthly Schedule");
     }
 
+    @FXML
+    public void onOrganizeMovies(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        if (stage.getTitle().equals("Organize Movies")) {
+            return;
+        }
+        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/OMovies.fxml"));
+        changeScene(stage, root, "Organize Movies");
+    }
+
     // Function to load Cancellations and Refunds screen
     public void onCancellationsRefunds(ActionEvent event) throws IOException 
     {
@@ -303,7 +325,55 @@ public class OMoviesController {
         Scene scene = stage.getScene();
         scene.setRoot(root);
         stage.setTitle(newSceneTitle);
-        stage.setFullScreen(true);
-        stage.setFullScreenExitHint("");
+        if(newSceneTitle.equals("Login"))
+        {
+            stage.setFullScreen(false);
+            stage.setFullScreenExitHint("");
+        }
+        else
+        {
+            stage.setFullScreen(true);
+            stage.setFullScreenExitHint("");
+
+        }
+    }
+    @FXML
+    private void handleSignOutButtonAction(ActionEvent event) 
+    {
+        try 
+        {
+            // Load 'login.fxml'
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/login.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage from the SignoutButton
+            Stage stage = (Stage) SignoutButton.getScene().getWindow();
+
+            // Create a new scene with specified size
+            Scene scene = new Scene(root, 600, 400);
+
+            // Set the new scene to the stage
+            stage.setScene(scene);
+
+            // Center the stage on the screen
+            stage.centerOnScreen();
+
+            // Optionally, disable fullscreen if it was enabled
+            stage.setFullScreen(false);
+
+            // Show the stage
+            stage.show();
+        } 
+        catch (IOException e) 
+        {
+            // Display an error alert if loading fails
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Sign Out Failed");
+            alert.setHeaderText("Unable to Sign Out");
+            alert.setContentText("There was an error signing out. Please try again.");
+            alert.showAndWait();
+
+            e.printStackTrace();
+        }
     }
 }

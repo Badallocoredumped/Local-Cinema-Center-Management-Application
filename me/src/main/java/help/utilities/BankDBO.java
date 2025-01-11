@@ -44,6 +44,49 @@ public class BankDBO {
         }
     }
 
+    public boolean processFullRefund(double ticketAmount, double productAmount) throws Exception 
+    {
+        double ticketTax = ticketAmount * 0.20; // 20% tax for tickets
+        double productTax = productAmount * 0.10; // 10% tax for products
+        double totalRefund = ticketAmount + productAmount;
+        double totalTax = ticketTax + productTax;
+        
+        String sql = "UPDATE bank SET total_revenue = total_revenue - ?, tax_to_be_paid = tax_to_be_paid - ? WHERE id = 1";
+        
+        try (Connection conn = DataBaseHandler.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDouble(1, totalRefund);
+            pstmt.setDouble(2, totalTax);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean processProductRefund(double productAmount) throws Exception {
+        double productTax = productAmount * 0.10; // 10% tax for products
+        
+        String sql = "UPDATE bank SET total_revenue = total_revenue - ?, tax_to_be_paid = tax_to_be_paid - ? WHERE id = 1";
+        
+        try (Connection conn = DataBaseHandler.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDouble(1, productAmount);
+            pstmt.setDouble(2, productTax);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+    
+    public boolean processSeatRefund(double seatAmount) throws Exception {
+        double ticketTax = seatAmount * 0.20; // 20% tax for tickets
+        
+        String sql = "UPDATE bank SET total_revenue = total_revenue - ?, tax_to_be_paid = tax_to_be_paid - ? WHERE id = 1";
+        
+        try (Connection conn = DataBaseHandler.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDouble(1, seatAmount);
+            pstmt.setDouble(2, ticketTax);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
     public double[] getBankTotals() throws Exception {
         String query = "SELECT total_revenue, tax_to_be_paid FROM bank WHERE id = 1";
         try (Connection conn = DataBaseHandler.getConnection();

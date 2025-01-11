@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="help.RefundController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@../css/manager_personel.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="help.CancelRefundController">
    <children>
       <BorderPane layoutX="179.0" layoutY="33.0" prefHeight="700.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -19,7 +19,7 @@
                <children>
                   <AnchorPane layoutX="154.0" layoutY="-61.0" prefHeight="139.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button layoutX="1136.0" layoutY="2.0" lineSpacing="1.2" mnemonicParsing="false" prefHeight="24.0" prefWidth="64.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="2.0">
+                        <Button fx:id="CloseButton" layoutX="1136.0" layoutY="2.0" lineSpacing="1.2" mnemonicParsing="false" onAction="#handleCloseButtonAction" prefHeight="24.0" prefWidth="64.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="2.0">
                            <graphic>
                               <FontAwesomeIcon glyphName="CLOSE" />
                            </graphic>
@@ -30,7 +30,7 @@
                            </font>
                         </Label>
                         <FontAwesomeIcon fill="#802476b8" glyphName="PLAY" layoutX="21.0" layoutY="31.0" />
-                        <Button layoutX="1072.0" layoutY="2.0" lineSpacing="1.2" mnemonicParsing="false" prefHeight="24.0" prefWidth="64.0" styleClass="minus-button" AnchorPane.rightAnchor="66.0">
+                        <Button fx:id="MinimizeButton" layoutX="1072.0" layoutY="2.0" lineSpacing="1.2" mnemonicParsing="false" onAction="#handleMinimizeButtonAction" prefHeight="24.0" prefWidth="64.0" styleClass="minus-button" AnchorPane.rightAnchor="66.0">
                            <graphic>
                               <FontAwesomeIcon glyphName="MINUS" />
                            </graphic>
@@ -53,7 +53,7 @@
                         <Font name="SansSerif Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Button layoutX="38.0" layoutY="602.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="142.0" text="Sign Out">
+                  <Button fx:id="SignoutButton" layoutX="38.0" layoutY="602.0" mnemonicParsing="false" onAction="#handleSignOutButtonAction" prefHeight="24.0" prefWidth="142.0" text="Sign Out">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
@@ -62,7 +62,7 @@
                      </graphic>
                   </Button>
                   <FontAwesomeIcon fill="WHITE" glyphName="USER" layoutX="66.0" layoutY="102.0" size="8em" text="" />
-                  <Button layoutX="21.0" layoutY="270.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" stylesheets="@styles.css" text="Monthly Schedule">
+                  <Button layoutX="21.0" layoutY="270.0" mnemonicParsing="false" onAction="#onSchedule" prefHeight="25.0" prefWidth="177.0" styleClass="menu-card" stylesheets="@styles.css" text="Monthly Schedule">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
@@ -70,7 +70,7 @@
                         <FontAwesomeIcon glyphName="LIST" text="" />
                      </graphic>
                   </Button>
-                  <Button layoutX="18.0" layoutY="227.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="183.0" styleClass="menu-card" stylesheets="@styles.css" text="Organize Movies">
+                  <Button layoutX="18.0" layoutY="227.0" mnemonicParsing="false" onAction="#onOrganizeMovie" prefHeight="25.0" prefWidth="183.0" styleClass="menu-card" stylesheets="@styles.css" text="Organize Movies">
                      <font>
                         <Font name="SansSerif Bold" size="14.0" />
                      </font>
@@ -98,7 +98,7 @@
                            <children>
                               <AnchorPane layoutX="9.0" layoutY="17.0" prefHeight="679.0" prefWidth="272.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0.5, 5, 5);" styleClass="infocard-2" stylesheets="@styles.css">
                                  <children>
-                                    <TextField layoutX="22.0" layoutY="309.0" promptText="User Name" text="Product Name" />
+                                    <TextField fx:id="ProductNameText" layoutX="22.0" layoutY="309.0" promptText="User Name" text="Product Name" />
                                     <Label alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="96.0" prefHeight="16.0" prefWidth="101.0" style="-fx-background-color: red; -fx-effect: null;" text="Type of Refund" textFill="WHITE">
                                        <font>
                                           <Font name="SansSerif Regular" size="14.0" />
@@ -109,25 +109,26 @@
                                           <Font name="SansSerif Regular" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField layoutX="21.0" layoutY="221.0" promptText="Transaction Number" text="Ticket ID" />
-                                    <ComboBox layoutX="23.0" layoutY="120.0" prefHeight="24.0" prefWidth="121.0" />
+                                    <TextField fx:id="TicketIdText" layoutX="21.0" layoutY="221.0" promptText="Transaction Number" text="Ticket ID" />
+                                    <ComboBox fx:id="TypeOfRefund" layoutX="23.0" layoutY="120.0" prefHeight="24.0" prefWidth="121.0" />
                                     <Label alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="287.0" prefHeight="16.0" prefWidth="135.0" style="-fx-background-color: red; -fx-effect: null;" text="Product Name" textFill="WHITE">
                                        <font>
                                           <Font name="SansSerif Regular" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Button layoutX="148.0" layoutY="542.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Refund" />
+                                    <Button fx:id="RefundButton" layoutX="148.0" layoutY="542.0" mnemonicParsing="false" onAction="#handleRefundSelection" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Refund" />
                                     <Button layoutX="25.0" layoutY="542.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Search" />
                                  </children>
                               </AnchorPane>
-                              <TableView editable="true" layoutX="291.0" layoutY="18.0" prefHeight="680.0" prefWidth="647.0" styleClass="table.view" stylesheets="@styles.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="291.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="18.0">
+                              <TableView fx:id="TicketTable" editable="true" layoutX="291.0" layoutY="18.0" prefHeight="680.0" prefWidth="647.0" styleClass="table.view" stylesheets="@styles.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="291.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="18.0">
                                 <columns>
-                                  <TableColumn prefWidth="44.79992598295212" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="ID" />
-                                  <TableColumn prefWidth="146.66669082641602" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Seat Cost" />
-                                    <TableColumn prefWidth="154.93333435058594" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Product" />
-                                    <TableColumn minWidth="0.0" prefWidth="82.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Quantity" />
-                                    <TableColumn minWidth="1.0" prefWidth="110.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Product price" />
-                                    <TableColumn prefWidth="112.0" style="-fx-background-color: linear-gradient(to bottom, #800000, #ff0000);" text="Total Cost" />
+                                  <TableColumn fx:id="IdColumn" prefWidth="44.79992598295212" text="ID" />
+                                  <TableColumn fx:id="SeatCostColumn" prefWidth="146.66669082641602" text="Seat Cost" />
+                                    <TableColumn fx:id="ProductColumns" prefWidth="154.93333435058594" text="Product" />
+                                    <TableColumn fx:id="QuantityColumn" minWidth="0.0" prefWidth="82.0" text="Quantity" />
+                                    <TableColumn fx:id="ProductPriceColumn" minWidth="1.0" prefWidth="110.0" text="Product price" />
+                                    <TableColumn fx:id="TotalCostColumn" prefWidth="112.0" text="Total Cost" />
+                                    <TableColumn fx:id="StatusColumn" prefWidth="75.0" text="Status" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

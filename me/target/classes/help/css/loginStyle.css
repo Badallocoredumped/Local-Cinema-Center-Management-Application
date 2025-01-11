@@ -1,295 +1,181 @@
+/* Anchor Pane Styling */
 .anchor-pane {
-    -fx-background-color: #ffffff; /* Beyaz arka plan */
-    -fx-background-radius: 15; /* Köşeleri yuvarlat */
-    -fx-effect: dropshadow(gaussian, rgba(128, 0, 0, 0.5), 10, 0.5, 2, 2); /* Bordo gölge */
-    -fx-padding: 10; /* İçerik dolgusu */
-    -fx-border-radius: 15; /* Köşe yuvarlamalarını kenarlara uygula */
-    -fx-border-color: #cccccc; /* Kenar çerçeve rengi */
-    -fx-border-width: 1; /* Çerçeve kalınlığı */
-    -fx-transition: 0.3s ease-in-out; /* Geçiş animasyonu */
+    -fx-background-color: #ffffff; /* White background */
+    -fx-background-radius: 15px;    /* Rounded corners */
+    -fx-effect: dropshadow(gaussian, rgba(128, 0, 0, 0.5), 10, 0.5, 2, 2); /* Maroon shadow */
+    -fx-padding: 15px;              /* Increased padding */
+    -fx-border-radius: 15px;       /* Apply rounded corners to the border */
+    -fx-border-color: #cccccc;     /* Light gray border */
+    -fx-border-width: 2px;         /* Slightly thicker border */
+    -fx-transition: 0.3s ease-in-out; /* Smooth transition */
 }
 
-
+/* Insert Button Styling */
 .insert-button {
-    -fx-background-color: #e74c3c; /* Kırmızı (arka plan rengi) */
-    -fx-text-fill: white;          /* Yazı rengi beyaz */
-    -fx-font-weight: bold;         /* Kalın yazı */
-    -fx-border-color: #c0392b;     /* Çerçeve rengi (koyu kırmızı) */
+    -fx-background-color: #e74c3c; /* Red background */
+    -fx-text-fill: white;          /* White text */
+    -fx-font-weight: bold;         /* Bold text */
+    -fx-border-color: #c0392b;     /* Darker red border */
     -fx-border-width: 2px;
-    -fx-background-radius: 5px;   /* Köşe yumuşatma */
-    -fx-border-radius: 5px;
-}
-
-/* TableView Başlıklarının Arka Plan Rengi */
-.table-view .column-header-background {
-    -fx-background-color: linear-gradient(to bottom, #800000, #ff0000); /* Bordodan kırmızıya geçiş */
+    -fx-background-radius: 10px;   /* Rounded corners */
+    -fx-border-radius: 10px;       /* Apply rounded corners to the border */
 }
 
 .insert-button:hover {
-    -fx-background-color: #c0392b; /* Daha koyu kırmızı */
-    -fx-scale-x: 1.1; /* Genişlik büyütme */
-    -fx-scale-y: 1.1; /* Yükseklik büyütme */
+    -fx-background-color: #c0392b; /* Darker red when hovered */
+    -fx-scale-x: 1.1;               /* Slightly increase width */
+    -fx-scale-y: 1.1;               /* Slightly increase height */
+    -fx-transition: all 0.3s ease;  /* Smooth hover transition */
 }
 
+/* Table View Header Background */
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #800000, #ff0000); /* Gradient from maroon to red */
+}
 
-/* Başlık Metni Stili */
+/* Table Header Text Style */
 .table-view .column-header .label {
-    -fx-text-fill: white; /* Metin rengini beyaz yap */
-    -fx-font-weight: bold; /* Kalın yazı */
-    -fx-alignment: center; /* Ortalanmış metin */
-    -fx-line-height: 50px;
+    -fx-text-fill: white;          /* White text */
+    -fx-font-weight: bold;         /* Bold text */
+    -fx-alignment: center;         /* Center-aligned text */
+    -fx-line-height: 50px;         /* Line height for spacing */
 }
 
-
-.infocard-2 {
-    -fx-background-color: transparent; /* Arka plan rengi şeffaf */
-    -fx-text-fill: white;              /* Yazı rengi beyaz */
-    -fx-font-weight: bold;             /* Kalın yazı */
-    -fx-border-color: #d35400;         /* Çerçeve rengi (koyu turuncu) */
+/* Info Cards */
+.infocard-1, .infocard-2 {
+    -fx-background-color: transparent;  /* Transparent background */
+    -fx-text-fill: white;               /* White text */
+    -fx-font-weight: bold;              /* Bold text */
+    -fx-border-color: #d35400;          /* Dark orange border */
     -fx-border-width: 2px;
-    -fx-background-radius: 5px;        /* Köşe yumuşatma */
-    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;         /* Rounded corners */
+    -fx-border-radius: 5px;             /* Apply rounded corners to the border */
 }
 
-.infocard-1 {
-    -fx-background-color: transparent; /* Arka plan rengi şeffaf */
-    -fx-text-fill: white;              /* Yazı rengi beyaz */
-    -fx-font-weight: bold;             /* Kalın yazı */
-    -fx-border-color: #d35400;         /* Çerçeve rengi (koyu turuncu) */
-    -fx-border-width: 2px;
-    -fx-background-radius: 5px;        /* Köşe yumuşatma */
-    -fx-border-radius: 5px;
+/* Insert Button Variants */
+.insert-button-1, .insert-button-2, .insert-button-3, .insert-button-4 {
+    -fx-font-weight: bold; /* Bold text */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Apply rounded corners to the background */
 }
-
-
 
 .insert-button-1 {
-    -fx-background-color: #2ecc71; /* Yeşil (arka plan rengi) */
-    -fx-text-fill: white;          /* Yazı rengi beyaz */
-    -fx-font-weight: bold;         /* Kalın yazı */
-    -fx-border-color: #27ae60;     /* Çerçeve rengi (daha koyu yeşil) */
-    -fx-border-width: 2px;
-    -fx-background-radius: 5px;    /* Köşe yumuşatma */
-    -fx-border-radius: 5px;
+    -fx-background-color: #2ecc71; /* Green background */
+    -fx-border-color: #27ae60;     /* Dark green border */
 }
-
-.anchor-pane {
-    -fx-border-color: maroon; /* Çerçeve rengi */
-    -fx-border-width: 3;     /* Çerçeve kalınlığı */
-    -fx-border-style: solid; /* Çerçeve çizgi tipi */
-}
-
-.movie-title {
-    -fx-border-color: maroon; /* Çerçeve rengi */
-    -fx-border-width: 1.5;     /* Çerçeve kalınlığı */
-    -fx-border-style: solid; /* Çerçeve çizgi tipi */
-}
-.movie-date {
-    -fx-border-color: maroon; /* Çerçeve rengi */
-    -fx-border-width: 1.5;     /* Çerçeve kalınlığı */
-    -fx-border-style: solid; /* Çerçeve çizgi tipi */
-}
-.movie-genre {
-    -fx-border-color: maroon; /* Çerçeve rengi */
-    -fx-border-width: 1.5;     /* Çerçeve kalınlığı */
-    -fx-border-style: solid; /* Çerçeve çizgi tipi */
-}
-
-
-.image-view {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0), 15, 0, 0, 0); /* Başlangıçta gölge yok */
-    -fx-scale-x: 1; /* Normal boyut */
-    -fx-scale-y: 1;
-    -fx-transition: all 0.3s ease; /* Yumuşak geçiş */
-}
-
-.image-view:hover {
-    -fx-effect: dropshadow(gaussian, rgba(128, 0, 0, 0.7), 15, 0.2, 0, 0); /* Bordo gölge */
-    -fx-scale-x: 1.1; /* Genişlik büyüt */
-    -fx-scale-y: 1.1; /* Yükseklik büyüt */
-}
-
-.anchor-pane1 {
-    -fx-border-color: maroon; /* Çerçeve rengi */
-    -fx-border-width: 3;     /* Çerçeve kalınlığı */
-    -fx-border-style: solid; /* Çerçeve çizgi tipi */
-    -fx-transition: all 0.3s ease; /* Geçiş efekti */
-}
-
-.anchor-pane1:hover {
-    -fx-scale-x: 1.1; /* Genişlik büyütme */
-    -fx-scale-y: 1.1; /* Yükseklik büyütme */
-}
-
 
 .insert-button-2 {
-    -fx-background-color: #3498db; /* Mavi (arka plan rengi) */
-    -fx-text-fill: white;          /* Yazı rengi beyaz */
-    -fx-font-weight: bold;         /* Kalın yazı */
-    -fx-border-color: #2980b9;     /* Çerçeve rengi (daha koyu mavi) */
-    -fx-border-width: 2px;
-    -fx-background-radius: 5px;    /* Köşe yumuşatma */
-    -fx-border-radius: 5px;
-} 
+    -fx-background-color: #3498db; /* Blue background */
+    -fx-border-color: #2980b9;     /* Dark blue border */
+}
+
 .insert-button-3 {
-    -fx-background-color: #f1c40f; /* Sarı (arka plan rengi) */
-    -fx-text-fill: white;          /* Yazı rengi beyaz */
-    -fx-font-weight: bold;         /* Kalın yazı */
-    -fx-border-color: #f39c12;     /* Çerçeve rengi (daha koyu sarı) */
-    -fx-border-width: 2px;
-    -fx-background-radius: 5px;    /* Köşe yumuşatma */
-    -fx-border-radius: 5px;
-} 
+    -fx-background-color: #f1c40f; /* Yellow background */
+    -fx-border-color: #f39c12;     /* Dark yellow border */
+}
+
 .insert-button-4 {
-    -fx-background-color: #9b59b6; /* Lila (arka plan rengi) */
-    -fx-text-fill: white;          /* Yazı rengi beyaz */
-    -fx-font-weight: bold;         /* Kalın yazı */
-    -fx-border-color: #8e44ad;     /* Çerçeve rengi (daha koyu lila) */
-    -fx-border-width: 2px;
-    -fx-background-radius: 5px;    /* Köşe yumuşatma */
-    -fx-border-radius: 5px;
+    -fx-background-color: #9b59b6; /* Purple background */
+    -fx-border-color: #8e44ad;     /* Dark purple border */
 }
 
 .insert-button-2:hover,
 .insert-button-3:hover,
 .insert-button-4:hover {
-    -fx-scale-x: 1.1; /* Genişlik büyütme */
-    -fx-scale-y: 1.1; /* Yükseklik büyütme */
+    -fx-scale-x: 1.1; /* Slightly increase width */
+    -fx-scale-y: 1.1; /* Slightly increase height */
+    -fx-transition: all 0.3s ease; /* Smooth hover transition */
 }
 
+/* Search Field Styling */
 .text-field-search {
-    -fx-prompt-text-fill: gray; /* Placeholder metin rengi */
-    -fx-alignment: center; /* Metni yatay ve dikey olarak ortalar */
-    -fx-padding: 5; /* İç kenar boşlukları */
-    -fx-border-color: gray; /* Kenarlık rengi */
-    -fx-border-width: 1; /* Kenarlık genişliği */
-    -fx-border-radius: 5; /* Kenar yuvarlatma */
+    -fx-prompt-text-fill: gray;  /* Gray placeholder text */
+    -fx-alignment: center;       /* Center-align text */
+    -fx-padding: 8px;            /* Increased padding */
+    -fx-border-color: gray;     /* Gray border */
+    -fx-border-width: 1px;      /* Thin border */
+    -fx-border-radius: 5px;     /* Rounded corners */
 }
 
-
-
+/* Delete Button Styling */
 .insert-button-delete {
-    -fx-background-color: #e42222; /* Yeşil (arka plan rengi) */
-    -fx-text-fill: white;          /* Yazı rengi beyaz */
-    -fx-font-weight: bold;         /* Kalın yazı */
-    -fx-border-color: #e42222;     /* Çerçeve rengi (daha koyu yeşil) */
+    -fx-background-color: #e42222; /* Red background */
+    -fx-text-fill: white;          /* White text */
+    -fx-font-weight: bold;         /* Bold text */
+    -fx-border-color: #e42222;     /* Darker red border */
     -fx-border-width: 2px;
-    -fx-background-radius: 5px;    /* Köşe yumuşatma */
-    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;    /* Rounded corners */
+    -fx-border-radius: 5px;       /* Apply rounded corners to the border */
 }
 
-
-/* styles.css */
-
-/* ... diğer CSS kurallarınız ... */
-
+/* Minus Button */
 .minus-button {
-    -fx-pref-width: 62px; /* Butonun tercih edilen genişliği */
-    -fx-pref-height: 24px; /* Butonun tercih edilen yüksekliği */
-    -fx-font-size: 14px; /* Buton içindeki ikonun boyutu */
+    -fx-pref-width: 70px; /* Wider button */
+    -fx-pref-height: 30px; /* Taller button */
+    -fx-font-size: 16px;   /* Larger font */
 }
 
-/* Küçük ekranlar için (örneğin, 768px'den küçük ekranlar) */
 @media (max-width: 768px) {
     .minus-button {
-        -fx-pref-width: 40px; /* Butonun genişliği küçültülür */
-        -fx-pref-height: 20px; /* Butonun yüksekliği küçültülür */
-        -fx-font-size: 12px; /* İkon boyutu küçültülür */
+        -fx-pref-width: 50px; /* Smaller button for mobile */
+        -fx-pref-height: 25px;
+        -fx-font-size: 14px;
     }
 }
 
-/* Büyük ekranlar için (örneğin, 1200px'den büyük ekranlar) */
 @media (min-width: 1200px) {
     .minus-button {
-        -fx-pref-width: 70px; /* Butonun genişliği büyütülür */
-        -fx-pref-height: 28px; /* Butonun yüksekliği büyütülür */
-        -fx-font-size: 16px; /* İkon boyutu büyütülür */
+        -fx-pref-width: 80px; /* Larger button for larger screens */
+        -fx-pref-height: 35px;
+        -fx-font-size: 18px;
     }
 }
 
-
-
+/* Menu Card Styling */
 .menu-card {
-    -fx-text-fill: #fff;          /* Yazı rengi beyaz */
-    -fx-font-weight: bold;         /* Kalın yazı */
-    -ff-cursor: hand;
-    -fx-background-color:  linear-gradient(to right, #800000, #4b0000)
+    -fx-text-fill: #fff; /* White text */
+    -fx-font-weight: bold; /* Bold text */
+    -fx-cursor: hand; /* Hand cursor */
+    -fx-background-color: linear-gradient(to right, #800000, #4b0000); /* Gradient background */
 }
 
-
-
-/* CSS dosyası: styles.css */
-.rectangle {
-    -fx-background-color: linear-gradient(from 0% 100% to 0% 0%, #800000, #FF0000); /* Bordodan kırmızıya geçiş */
-    -fx-background-radius: 5px; /* Kenar yumuşatma, opsiyonel */
-    -fx-background-insets: 0;
-}
-.rectangle {
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #800000, #FF0000); /* Bordodan kırmızıya geçiş */
-    -fx-background-radius: 5px; /* Kenar yumuşatma, opsiyonel */
-    -fx-background-insets: 0;
-    -fx-transition: background-color 0.3s ease; /* Geçiş animasyonu */
+/* Rectangle Styling */
+.rectangle, .rectangle1 {
+    -fx-background-color: linear-gradient(from 0% 100% to 0% 0%, #800000, #FF0000); /* Gradient background */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-transition: background-color 0.3s ease; /* Smooth transition */
 }
 
-.rectangle:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #FF0000, #800000); /* Kırmızıdan bordoya geçiş */
+.rectangle:hover, .rectangle1:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #FF0000, #800000); /* Hover transition */
 }
 
+/* Header Label Styling */
 .head-label {
-    -fx-border-color: #800000; /* Çerçeve rengi */
-    -fx-border-wdth: 0 0 0 5px; /* Çerçeve kalınlığı (sağ hariç) */
-    -fx-border-padding: 0 0 0 5px; /* Çerçeve iç boşluğu (sağ hariç) */
-    -fx-text-fill: white; /* Yazı rengi beyaz */
-
+    -fx-border-color: #800000; /* Maroon border */
+    -fx-border-width: 0 0 0 5px; /* Border on left */
+    -fx-border-padding: 0 0 0 5px; /* Padding for border */
+    -fx-text-fill: white; /* White text */
 }
 
+/* Login Button Styling */
 .login-button1 {
-    -fx-background-color: #3498db; /* Mavi (arka plan rengi) */
-    -fx-text-fill: white;          /* Yazı rengi beyaz */
-    -fx-font-weight: bold;         /* Kalın yazı */
-    -fx-border-color: #2980b9;     /* Çerçeve rengi (daha koyu mavi) */
+    -fx-background-color: linear-gradient(to bottom, #800000, #ff0000); /* Gradient from maroon to red */
+    -fx-background-radius: 5px;  /* Rounded corners */
+    -fx-border-radius: 5px;      /* Apply rounded corners to the border */
+    -fx-text-fill: white;        /* White text */
+    -fx-font-weight: bold;       /* Bold text */
+    -fx-border-color: #2980b9;   /* Blue border */
     -fx-border-width: 2px;
-    -fx-background-color: linear-gradient(to bottom, #800000, #ff0000); /* Bordodan kırmızıya geçiş */
-    -fx-background-radius: 5px;    /* Köşe yumuşatma */
-    -fx-border-radius: 5px;
-    -fx-scale-x: 1.1; /* Genişlik büyütme */
-    -fx-scale-y: 1.1; /* Yükseklik büyütme */
-    -fx-padding: 10px 20px;        /* İçerik dolgusu */
-    -fx-cursor: hand;              /* El işareti */
-    -fx-transition: background-color 0.3s ease; /* Geçiş animasyonu */
+    -fx-scale-x: 1.1;            /* Slightly enlarge on hover */
+    -fx-scale-y: 1.1;
+    -fx-padding: 10px 20px;      /* Padding for button content */
+    -fx-cursor: hand;            /* Hand cursor on hover */
+    -fx-transition: background-color 0.3s ease; /* Smooth transition on hover */
 }
 
 .login-button1:hover {
-    -fx-background-color: linear-gradient(to bottom, #2980b9, #1c5980, #800000); /* Daha koyu maviye ve bordoya geçiş */
-    -fx-scale-x: 1.2; /* Genişlik daha fazla büyütme */
-    -fx-scale-y: 1.2; /* Yükseklik daha fazla büyütme */
-}
-
-
-
-.rectangle1 {
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #FF0000, #800000); /* Kırmızıdan bordoya geçiş */
-    -fx-background-radius: 5px; /* Kenar yumuşatma, opsiyonel */
-    -fx-background-insets: 0;
-    -fx-transition: background-color 0.3s ease; /* Geçiş animasyonu */
-}
-.rectangle1 {
-    -fx-background-color: linear-gradient(from 0% 100% to 0% 0%, #FF0000, #800000); /* Kırmızıdan bordoya geçiş */
-    -fx-background-radius: 5px; /* Kenar yumuşatma, opsiyonel */
-    -fx-background-insets: 0;
-    -fx-transition: background-color 0.3s ease; /* Geçiş animasyonu */
-}
-.rectangle1:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #FF0000, #800000); /* Kırmızıdan bordoya geçiş */
-}
-
-.background-transition {
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #FF0000, #800000); /* Üst kırmızıdan alt bordoya geçiş */
-    -fx-background-radius: 5px; /* Kenar yumuşatma, opsiyonel */
-    -fx-background-insets: 0;
-    -fx-transition: background-color 0.3s ease; /* Geçiş animasyonu */
-}
-
-.background-transition:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #800000, #FF0000); /* Üst bordodan alt kırmızıya geçiş */
+    -fx-background-color: linear-gradient(to bottom, #2980b9, #1c5980, #800000); /* Darker colors on hover */
+    -fx-scale-x: 1.2; /* Larger scale on hover */
+    -fx-scale-y: 1.2;
 }
