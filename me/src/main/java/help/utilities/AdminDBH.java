@@ -20,12 +20,13 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import help.classes.Movie;
+import help.classes.Schedule;
 import help.classes.Session;
 import javafx.beans.property.StringProperty;
 
 public class AdminDBH 
 {
-    private static final String URL = "jdbc:mysql://localhost:3306/CinemaCenter";
+    private static final String URL = "jdbc:mysql://localhost:3306/cinemacenter";
     private static final String USER = "myuser";
     private static final String PASSWORD = "1234";
     private static Connection dbconnection;
@@ -56,7 +57,7 @@ public class AdminDBH
             return;
         }
     
-        String summaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/me/src/main/resources/help/summaries/"
+        String summaryPath = "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\"
                              + title.replaceAll(" ", "_") + "_summary.txt";
     
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(summaryPath))) {
@@ -102,7 +103,7 @@ public class AdminDBH
 
             if (infoSet.next()) 
             {
-                String newSummaryPath = "C:/Users/ahmed/OneDrive - Kadir Has University/Belgeler/GitHub/Local-Cinema-Center-Management-Application/me/src/main/resources/help/summaries/" + newTitle.replaceAll(" ", "_") + "_summary.txt";
+                String newSummaryPath = "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\" + newTitle.replaceAll(" ", "_") + "_summary.txt";
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(newSummaryPath))) 
                 {
 
@@ -139,7 +140,20 @@ public class AdminDBH
             return;
         }
     
-        String query = "SELECT summary FROM movies WHERE movie_id = ?";
+        //if session exists, do not delete
+        String query = "DELETE FROM movies WHERE movie_id = ?";
+        try (PreparedStatement deleteStmt = dbconnection.prepareStatement(query)) {
+            deleteStmt.setInt(1, movieId);
+            int rowsAffected = deleteStmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Movie deleted successfully.");
+            } else {
+                System.out.println("No movie found with the given ID.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        query = "SELECT summary FROM movies WHERE movie_id = ?";
         try (PreparedStatement selectStmt = dbconnection.prepareStatement(query)) {
             selectStmt.setInt(1, movieId);
             ResultSet resultSet = selectStmt.executeQuery();
@@ -150,19 +164,6 @@ public class AdminDBH
                 if (summaryFile.exists() && !summaryFile.delete()) {
                     System.err.println("Failed to delete summary file: " + summaryPath);
                 }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    
-        query = "DELETE FROM movies WHERE movie_id = ?";
-        try (PreparedStatement deleteStmt = dbconnection.prepareStatement(query)) {
-            deleteStmt.setInt(1, movieId);
-            int rowsAffected = deleteStmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Movie deleted successfully.");
-            } else {
-                System.out.println("No movie found with the given ID.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -297,7 +298,7 @@ public class AdminDBH
     // Add a new session
     public void AddSession(int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
     {
-        int vacantSeats = hallName.equalsIgnoreCase("Hall_A") ? 16 : 46;
+        int vacantSeats = hallName.equalsIgnoreCase("Hall_A") ? 16 : 48;
 
         String checkOverlapQuery = "SELECT COUNT(*) FROM Sessions WHERE hall_name = ? AND session_date = ? AND (? BETWEEN start_time AND ADDTIME(start_time, '2:00:00') OR ADDTIME(?, '2:00:00') BETWEEN start_time AND ADDTIME(start_time, '2:00:00'))";
         try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkOverlapQuery)) 
@@ -393,14 +394,14 @@ public class AdminDBH
     }
 
     // Get all sessions
-    public List<Session> GetAllSessions() throws SQLException 
+    public List<Schedule> GetAllSessions() throws SQLException 
     {
-        List<Session> sessions = new ArrayList<>();
+        List<Schedule> schedules = new ArrayList<>();
 
         if (dbconnection == null) 
         {
             System.err.println("Database connection failed!!");
-            return sessions;
+            return schedules;
         }
 
         String query = "SELECT * FROM Sessions";
@@ -417,8 +418,8 @@ public class AdminDBH
                 Time starTime = rs.getTime("start_time");
                 int vacantSeats = rs.getInt("vacant_seats");
 
-                Session session = new Session(sessionid, movieId, hallName, sessionDate, starTime, vacantSeats);
-                sessions.add(session);
+                Schedule schedule = new Schedule(sessionid, movieId, hallName, sessionDate, starTime, vacantSeats);
+                schedules.add(schedule);
             }
         }
         catch (SQLException e) 
@@ -426,6 +427,6 @@ public class AdminDBH
         System.out.println("Error occurred: " + e.getMessage());
         e.printStackTrace();
         }
-        return sessions;
+        return schedules;
     }
 }

@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 
 import help.classes.Movie;
+import help.classes.Schedule;
 import help.classes.Session;
 import help.utilities.AdminDBH;
 
@@ -34,42 +36,50 @@ public class ScheduleController {
     private DatePicker datePicker;
 
     @FXML
-    private TextField timeField;
+    private ComboBox<String> timeField;
 
     @FXML
-    private TableView<Session> sessionTable;
+    private TableView<Schedule> sessionTable;
 
     @FXML
-    private TableColumn<Session, Integer> idColumn;
+    private TableColumn<Schedule, Integer> idColumn;
 
     @FXML
-    private TableColumn<Session, String> titleColumn; // This column might be referencing the wrong class (Movie)
+    private TableColumn<Schedule, String> titleColumn; // This column might be referencing the wrong class (Movie)
 
     @FXML
-    private TableColumn<Session, LocalDate> dateColumn;
+    private TableColumn<Schedule, LocalDate> dateColumn;
 
     @FXML
-    private TableColumn<Session, Time> timeColumn;
+    private TableColumn<Schedule, Time> timeColumn;
 
     @FXML
-    private TableColumn<Session, String> hallColumn;
+    private TableColumn<Schedule, String> hallColumn;
 
-    private ObservableList<Session> sessionList = FXCollections.observableArrayList();
+    private ObservableList<Schedule> sessionList = FXCollections.observableArrayList();
 
     private AdminDBH dbhandler = new AdminDBH();
-    private Session selectedSession = null;
+    private Schedule selectedSession = null;
 
     public void initialize() 
     {
+
+            timeField.getItems().addAll(
+            "14:00",
+            "16:00",
+            "18:00",
+            "20:00"
+        );
+        timeField.setValue("14:00");
         idColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getSessionId()));
 
         titleColumn.setCellValueFactory(cellData -> 
         {
-            Session session = cellData.getValue();
-            if (session != null) 
+            Schedule schedule = cellData.getValue();
+            if (schedule != null) 
             {
                 try {
-                    String title = dbhandler.getMovieTitleFromId(session.getMovieId());
+                    String title = dbhandler.getMovieTitleFromId(schedule.getMovieId());
                     return new ReadOnlyObjectWrapper<>(title != null ? title : "Unknown Movie"); // Handle null case
                 } catch (SQLException e) {
                     e.printStackTrace(); // Handle the exception appropriately (e.g., show an alert)
@@ -106,14 +116,15 @@ public class ScheduleController {
         String title = movieTitleField.getText();
         String hall = hallComboBox.getValue();
         LocalDate date = datePicker.getValue();
-        String timeF = timeField.getText();
+        String timeF = timeField.getValue();
 
         if (title.isEmpty() || hall == null || date == null || timeF.isEmpty()) 
         {
             showAlert(Alert.AlertType.WARNING, "Missing information", "Please fill in all fields before updating the schedule.");
             return;
         }
-        Time time = Time.valueOf(timeF);
+        String formattedTime = timeF + ":00";
+        Time time = Time.valueOf(formattedTime);
 
         int movieId = AdminDBH.getMovieIdFromTitle(title);
 
@@ -140,7 +151,9 @@ public class ScheduleController {
         String newTitle = movieTitleField.getText();
         String newHall = hallComboBox.getValue();
         LocalDate newDate = datePicker.getValue();
-        String time = timeField.getText();
+        String time = timeField.getValue();
+
+        
 
         if (newTitle.isEmpty() || newHall == null || newDate == null || time.isEmpty()) 
         {
@@ -148,10 +161,11 @@ public class ScheduleController {
             return;
         }
 
-        
-        Time newTime = Time.valueOf(time);
+        String formattedTime = time + ":00";
+        Time newTime = Time.valueOf(formattedTime);
         int sessionId = selectedSession.getSessionId();
         int movieId = AdminDBH.getMovieIdFromTitle(newTitle);
+
         try {
             dbhandler.UpdateSession(sessionId, movieId, newHall, newDate, newTime);
         } catch (SQLException e) {
@@ -196,11 +210,23 @@ public class ScheduleController {
         });
     }
 
-    private void showAlert(Alert.AlertType type, String title, String message) 
+    private void showAlert(Alert.AlertType alertType, String title, String content) 
     {
-        Alert alert = new Alert(type);
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
-        alert.setContentText(message);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        
+        // Get the primary stage that contains this controller's scene
+        Stage primaryStage = (Stage) sessionTable.getScene().getWindow();
+        
+        // Set the alert's owner to the primary stage
+        alert.initOwner(primaryStage);
+        
+        // Keep alert within fullscreen window
+        alert.initModality(Modality.WINDOW_MODAL);
+        
+        // Show and wait for user response
         alert.showAndWait();
     }
 
@@ -209,7 +235,7 @@ public class ScheduleController {
         movieTitleField.clear();
         hallComboBox.getSelectionModel().clearSelection();
         datePicker.setValue(null);
-        timeField.clear();
+        timeField.setValue(null);
     }
 
     private void loadSessionsFromDatabase() {
@@ -234,7 +260,7 @@ public class ScheduleController {
             }
             hallComboBox.setValue(selectedSession.getHallName());
             datePicker.setValue(selectedSession.getSessionDate());
-            timeField.setText(selectedSession.getStartTime().toString());
+            timeField.setValue(selectedSession.getStartTime().toString());
         }
     }
 

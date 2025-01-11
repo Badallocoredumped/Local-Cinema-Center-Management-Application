@@ -1,50 +1,87 @@
 package help.classes;
 
-import java.sql.Time;
-import java.time.LocalDate;
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
-public class Session {
+public class Session 
+{
+    private final StringProperty day;
+    private final StringProperty session;
+    private  String hall;
+    private final StringProperty vacantSeats;
+    private int sessionId;
 
-    private final IntegerProperty sessionId;
-    private final IntegerProperty movieId;
-    private final StringProperty hallName;
-    private final ObjectProperty<LocalDate> sessionDate; // Use ObjectProperty for LocalDate
-    private final ObjectProperty<Time> startTime; // Use ObjectProperty for Time
-    private final IntegerProperty vacantSeats;
 
-    public Session(int sessionId, int movieId, String hallName, LocalDate sessionDate, Time startTime, int vacantSeats) {
-        this.sessionId = new SimpleIntegerProperty(sessionId);
-        this.movieId = new SimpleIntegerProperty(movieId);
-        this.hallName = new SimpleStringProperty(hallName);
-        this.sessionDate = new SimpleObjectProperty<>(sessionDate);
-        this.startTime = new SimpleObjectProperty<>(startTime);
-        this.vacantSeats = new SimpleIntegerProperty(vacantSeats);
+    public Session(String day, String session, String hall, String vacantSeats,int sessionId) 
+    {
+        this.day = new SimpleStringProperty(day);
+        this.session = new SimpleStringProperty(session);
+        this.hall = hall;
+        this.vacantSeats = new SimpleStringProperty(vacantSeats);
+        this.sessionId = sessionId;
     }
 
-    // Getters for properties (important!)
-    public IntegerProperty sessionIdProperty() { return sessionId; }
-    public IntegerProperty movieIdProperty() { return movieId; }
-    public StringProperty hallNameProperty() { return hallName; }
-    public ObjectProperty<LocalDate> sessionDateProperty() { return sessionDate; }
-    public ObjectProperty<Time> startTimeProperty() { return startTime; }
-    public IntegerProperty vacantSeatsProperty() { return vacantSeats; }
+    public int getSessionId() 
+    {
+        return sessionId;
+    }
 
-    // Regular getters (optional, but good practice)
-    public int getSessionId() { return sessionId.get(); }
-    public int getMovieId() { return movieId.get(); }
-    public String getHallName() { return hallName.get(); }
-    public LocalDate getSessionDate() { return sessionDate.get(); }
-    public Time getStartTime() { return startTime.get(); }
-    public int getVacantSeats() { return vacantSeats.get(); }
+    public void setSessionId(int sessionId) 
+    {
+        this.sessionId = sessionId;
+    }
 
-    // Regular setters (optional)
-    public void setSessionId(int sessionId) { this.sessionId.set(sessionId); }
-    public void setMovieId(int movieId) { this.movieId.set(movieId); }
-    public void setHallName(String hallName) { this.hallName.set(hallName); }
-    public void setSessionDate(LocalDate sessionDate) { this.sessionDate.set(sessionDate); }
-    public void setStartTime(Time startTime) { this.startTime.set(startTime); }
-    public void setVacantSeats(int vacantSeats) { this.vacantSeats.set(vacantSeats); }
+    public StringProperty dayProperty() 
+    {
+        return day;
+    }
 
-    public int getID(){ return getSessionId();}
+    public StringProperty sessionProperty() 
+    {
+        return session;
+    }
+
+    public StringProperty hallProperty() 
+    {
+        return new SimpleStringProperty(hall);
+    }
+
+    public StringProperty vacantSeatsProperty() 
+    {
+        return vacantSeats;
+    }
+
+    public String getDay() 
+    {
+        return day.get();
+    }
+
+    public String getSession() 
+    {
+        if(session == null)
+        {
+            return null;
+        }
+        return session.get();
+    }
+
+    public String getHall()
+    {
+        if(hall == null)
+        {
+            return null;
+        }
+        return hall;
+    }
+
+    public void setHall(String hall) 
+    {
+        this.hall = hall;
+    }
+
+    @Override
+    public String toString() 
+    {
+        return "Date: " + day + ", Time: " + session + ", Hall: " + hall + ", Vacant Seats: " + vacantSeats;
+    }
 }
