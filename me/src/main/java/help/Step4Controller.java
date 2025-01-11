@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.TableColumn;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import help.classes.Movie;
@@ -112,6 +113,11 @@ public class Step4Controller {
 
     @FXML
     private TreeTableColumn<Product, String> stockAvailabilityColumn;
+
+    @FXML
+    private TreeTableColumn<Product, String> CategoryColumn;
+
+
 
     private final ProductDBO productDBO = new ProductDBO();
     private PriceDBO priceDBO = new PriceDBO();
@@ -755,7 +761,8 @@ public class Step4Controller {
         nameColumn.setCellValueFactory(param -> param.getValue().getValue().nameProperty());
         priceColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getPrice().toString()));  // Convert BigDecimal to String
         stockAvailabilityColumn.setCellValueFactory(param -> new SimpleStringProperty(Integer.toString(param.getValue().getValue().getStockAvailability())));  // Convert int to String
-    
+        CategoryColumn.setCellValueFactory(param -> param.getValue().getValue().categoryProperty());
+
         // Custom cell factory to display images
         // Custom cell factory for image column
         imageColumn.setCellFactory(column -> new TreeTableCell<Product, String>() {
@@ -795,6 +802,8 @@ public class Step4Controller {
 
     // Set cell value factory for image column
     imageColumn.setCellValueFactory(param -> new SimpleStringProperty(""));  // Dummy value, actual image is handled in cell factory
+
+    
  
     }
     

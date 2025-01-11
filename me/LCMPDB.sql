@@ -12,6 +12,7 @@ CREATE TABLE Users (
     password VARCHAR(255) NOT NULL,
     role ENUM('cashier', 'admin', 'manager') NOT NULL
 );
+
 -- Movies table
 CREATE TABLE Movies (
     movie_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -22,11 +23,6 @@ CREATE TABLE Movies (
     summary TEXT,
     duration INT NOT NULL
 );
-
-ALTER TABLE Movies
-DROP COLUMN poster_image;
-
-
 
 -- Halls table
 CREATE TABLE Halls (
@@ -45,7 +41,6 @@ CREATE TABLE Sessions (
     FOREIGN KEY (movie_id) REFERENCES Movies(movie_id),
     FOREIGN KEY (hall_name) REFERENCES Halls(hall_name)
 );
-
 -- Create the Seats table
 CREATE TABLE Seats (
     seat_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -57,16 +52,8 @@ CREATE TABLE Seats (
     FOREIGN KEY (session_id) REFERENCES Sessions(session_id)
 );
 
-SET SQL_SAFE_UPDATES = 0;
-
-UPDATE Movies
-SET poster_image = LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\titanic.jpg')
-WHERE title = 'Titanic';
 
 
-SET SQL_SAFE_UPDATES = 1;
-
-SHOW VARIABLES LIKE 'secure_file_priv';
 
 -- Tickets table
 CREATE TABLE Tickets (
@@ -91,12 +78,6 @@ CREATE TABLE Invoices (
     FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE -- Linking to Tickets table
 );
 
-
-
-
-
-
-
 -- Products table
 CREATE TABLE Products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -104,10 +85,9 @@ CREATE TABLE Products (
     price DECIMAL(10, 2) NOT NULL,
     stock_quantity INT NOT NULL,
     tax_rate DECIMAL(5, 2) NOT NULL,
-    image BLOB
-    
+    image BLOB,
+    category VARCHAR(50) NOT NULL  -- Added category column
 );
-
 
 
 
@@ -121,8 +101,7 @@ CREATE TABLE TicketPricing (
 INSERT INTO TicketPricing (hall_name, base_price, discount_rate)
 VALUES 
     ('Hall_A', 100.00, 50.00), 
-    ('Hall_B', 120.00, 40.00);
-
+    ('Hall_B', 120.00, 50.00);
 
 
 -- Sample data
@@ -133,6 +112,7 @@ VALUES
 ('Teca', 'Kanadji', 'manager1', 'manager1', 'manager'),
 ('Taha', 'Özkan', 'cashier1', 'cashier1', 'cashier');
 SELECT * FROM Users;
+
 -- Movies
 -- allows duplicates but it shouldnt i think
 INSERT INTO Movies (title, poster_image, genre, summary, duration)
@@ -242,12 +222,20 @@ VALUES
 ('Hall_B', 'H5', 4, FALSE),
 ('Hall_B', 'H6', 4, FALSE);
 
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE Products
+SET category = 'Toys'
+WHERE name = 'Toy';
+SET SQL_SAFE_UPDATES = 1;
+SELECT * FROM Products
+
 -- Products
-INSERT INTO Products (name, price, stock_quantity, tax_rate, image)
+INSERT INTO Products (name, price, stock_quantity, tax_rate, image, category)
 VALUES
-('Beverage', 5.00, 100, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\beverage.jpg')),
-('Biscuit', 3.00, 200, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\biscuit.jpg')),
-('Toy', 10.00, 50, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\toy.jpg'));
+('Beverage', 5.00, 100, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\beverage.jpg'), 'Drinks'),
+('Biscuit', 3.00, 200, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\biscuit.jpg'), 'Snacks'),
+('Toy', 10.00, 50, 0.10, LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\toy.jpg'), 'Toys');
 
 SET SQL_SAFE_UPDATES = 0;
 
@@ -260,18 +248,43 @@ SELECT * FROM Tickets;
 
 SET SQL_SAFE_UPDATES = 1;
 
-
+#This might cause an issue will try tomorrow
+-- Create Ticket_Products table
 CREATE TABLE Ticket_Products (
-    ticket_id INT NOT NULL,           -- Reference to the Tickets table
-    product_name VARCHAR(255) NOT NULL, -- Product name instead of product_id
-    quantity INT NOT NULL,            -- Quantity of the product purchased
-    price DECIMAL(10, 2) NOT NULL,    -- Price of the product at the time of purchase
-    PRIMARY KEY (ticket_id, product_name),  -- Primary key on ticket_id and product_name
-    FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE,  -- Foreign key reference to Tickets
-    FOREIGN KEY (product_name) REFERENCES Products(name) ON DELETE CASCADE  -- Foreign key reference to Products
+    ticket_id INT NOT NULL,                -- Reference to the Tickets table
+    product_name VARCHAR(255) NOT NULL,     -- Product name (references Products table)
+    quantity INT NOT NULL,                 -- Quantity of the product purchased
+    price DECIMAL(10, 2) NOT NULL,         -- Price of the product at the time of purchase
+    PRIMARY KEY (ticket_id, product_name), -- Primary key on ticket_id and product_name
+    FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id) ON DELETE CASCADE,  -- Foreign key to Tickets table
+    FOREIGN KEY (product_name) REFERENCES Products(name) ON DELETE CASCADE  -- Foreign key to Products table
 );
 
-SELECT * FROM Ticket_Products
+DESCRIBE ticket_products
+
+
+SET SQL_SAFE_UPDATES = 0;
+-- Step 2: Update product_id based on product_name
+
+
+--
+
+
+-- Verify schema changes
+SHOW CREATE TABLE Ticket_Products;
+
+-- Verify data integrity
+SELECT * FROM Ticket_Products;
+
+
+SET SQL_SAFE_UPDATES = 1;
+
+CREATE TABLE bank (
+    id INT AUTO_INCREMENT PRIMARY KEY,        -- Unique identifier for each record
+    total_revenue DECIMAL(15, 2),             -- Column for total revenue
+    tax_to_be_paid DECIMAL(15, 2)             -- Column for tax to be paid
+);
+
 
 
 

@@ -192,13 +192,17 @@
                         <Font name="SansSerif Bold" size="36.0" />
                      </font>
                   </Label>
-                  <TreeTableView fx:id="AdditionalProductTable" layoutX="292.0" layoutY="284.0" prefHeight="434.0" prefWidth="846.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0.5, 2, 0); -fx-background-radius: 20px;">
+                  <TreeTableView fx:id="AdditionalProductTable" layoutX="292.0" layoutY="284.0" pickOnBounds="false" prefHeight="434.0" prefWidth="846.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0.5, 2, 0); -fx-background-radius: 20px;">
                      <columns>
                         <TreeTableColumn fx:id="imageColumn" prefWidth="195.0" text="Image" />
-                        <TreeTableColumn fx:id="nameColumn" prefWidth="174.0" text="Product Name" />
-                        <TreeTableColumn fx:id="priceColumn" prefWidth="195.0" text="Price" />
-                        <TreeTableColumn fx:id="stockAvailabilityColumn" prefWidth="216.0" text="Stock Availability" />
+                        <TreeTableColumn fx:id="nameColumn" prefWidth="160.0" text="Product Name" />
+                        <TreeTableColumn fx:id="priceColumn" prefWidth="126.0" text="Price" />
+                        <TreeTableColumn fx:id="CategoryColumn" prefWidth="223.0" text="Category" />
+                        <TreeTableColumn fx:id="stockAvailabilityColumn" prefWidth="138.0" text="Stock Availability" />
                      </columns>
+                     <columnResizePolicy>
+                        <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
                   </TreeTableView>
                   <Button fx:id="AddProductToCart" layoutX="549.0" layoutY="729.0" mnemonicParsing="false" onAction="#handleAddProductToCartAction" prefHeight="31.0" prefWidth="259.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Add additional products to cart" />
                   <Button fx:id="EmptyCartButton" layoutX="821.0" layoutY="729.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="259.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Empty Cart" />

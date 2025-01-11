@@ -75,38 +75,42 @@ public class LoginController {
      *
      * @param role The role of the authenticated user.
      */
-    private void loadUIForRole(String role) 
-    {
-        String fxmlFile = "";
-
-        switch (role.toLowerCase()) 
-        {
-            case "cashier":
-                fxmlFile = "/help/fxml/step1.fxml";
-                break;
-            case "admin":
-                fxmlFile = "/help/fxml/admin.fxml";
-                break;
-            case "manager":
-                fxmlFile = "/help/fxml/manager.fxml";
-                break;
-            default:
-                showAlert(AlertType.ERROR, "Role Error", "Unrecognized user role.");
-                return;
-        }
-
-        try 
-        {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+    private void loadUIForRole(String role) {
+        try {
+            String fxmlFile = "";
+            switch (role.toLowerCase()) {
+                case "cashier":
+                    fxmlFile = "step1";
+                    break;
+                case "admin":
+                    fxmlFile = "admin";
+                    break;
+                case "manager":
+                    fxmlFile = "manager_personel"; // Changed to match actual filename
+                    break;
+                default:
+                    showAlert(AlertType.ERROR, "Role Error", "Unrecognized user role.");
+                    return;
+            }
+    
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/" + fxmlFile + ".fxml"));
             Parent root = loader.load();
+    
+            // Pass username to controller if it's manager
+            if (role.toLowerCase().equals("manager")) {
+                Manager_PersonnelController controller = loader.getController();
+                controller.setCurrentUsername(usernameField.getText());
+            }
+    
+            // Set new scene
             Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } 
-        catch (IOException e) 
-        {
-            showAlert(AlertType.ERROR, "Error", "Cannot load the appropriate UI for the role.");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setFullScreen(true);
+    
+        } catch (IOException e) {
             e.printStackTrace();
+            showAlert(AlertType.ERROR, "Error", "Could not load " + role + " interface.");
         }
     }
 

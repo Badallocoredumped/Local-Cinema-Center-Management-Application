@@ -266,16 +266,33 @@ public class Step5Controller {
             PDPage page = new PDPage();
             document.addPage(page);
             
-            // Load Arial font which supports Turkish characters
-            PDType0Font font;
-            try {
-                font = PDType0Font.load(document, new File("C:/Windows/Fonts/arial.ttf"));
-            } catch (IOException e) {
-                // Fallback to built-in font if Arial not found
-                font = PDType0Font.load(document, new File("C:/Windows/Fonts/segoeui.ttf"));
-            }
+            // Try multiple font paths for better compatibility
+            // Try multiple font paths for better compatibility
+                PDType0Font font = null;
+                String[] fontPaths = {
+                    "C:/Windows/Fonts/ARIALUNI.TTF",  // Arial Unicode
+                    "C:/Windows/Fonts/arial.ttf",      // Regular Arial
+                    "C:/Windows/Fonts/segoeui.ttf"     // Segoe UI
+                };
+
+                for (String path : fontPaths) {
+                    try {
+                        font = PDType0Font.load(document, new File(path));
+                        break;
+                    } catch (IOException e) {
+                        continue;
+                    }
+                }
+
+                if (font == null) {
+                    // Fallback to default embedded font
+                    font = PDType0Font.load(document, getClass().getResourceAsStream("/fonts/DejaVuSans.ttf"));
+                }
+
             
+            // Continue with PDF creation using the loaded font
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                contentStream.setFont(font, 12);
                 // Title
                 contentStream.beginText();
                 contentStream.setFont(font, 16);
@@ -308,50 +325,83 @@ public class Step5Controller {
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();
             document.addPage(page);
+    
+            PDType0Font font = PDType0Font.load(document, new File("C:/Windows/Fonts/arial.ttf"));
             
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-                // Title
+                float margin = 50;
+                float yStart = page.getMediaBox().getHeight() - margin;
+                float tableWidth = page.getMediaBox().getWidth() - 2 * margin;
+                float yPosition = yStart;
+                
+                // Header
                 contentStream.beginText();
-                contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
-                contentStream.newLineAtOffset(50, 750);
-                contentStream.showText("Invoice");
+                contentStream.setFont(font, 16);
+                contentStream.newLineAtOffset(margin, yPosition);
+                contentStream.showText("INVOICE");
                 contentStream.endText();
                 
-                // Invoice Details
-                float yPosition = 700;
+                yPosition -= 30;
+                
+                // Customer Details
                 contentStream.beginText();
-                contentStream.setFont(PDType1Font.HELVETICA, 12);
-                contentStream.newLineAtOffset(50, yPosition);
-                contentStream.showText("Invoice for Ticket ID: " + ticket.getTicketId());
-                contentStream.newLineAtOffset(0, -20);
-                contentStream.showText("Products:");
+                contentStream.setFont(font, 12);
+                contentStream.newLineAtOffset(margin, yPosition);
+                contentStream.showText("Customer: " + ticket.getCustomerName());
                 contentStream.endText();
+                
+                yPosition -= 20;
+                
+                // Products Section
+                contentStream.beginText();
+                contentStream.newLineAtOffset(margin, yPosition);
+                contentStream.showText("Products Purchased:");
+                contentStream.endText();
+                
+                yPosition -= 20;
                 
                 // Product List
-                yPosition -= 40;
                 for (Map.Entry<Product, Integer> entry : cart.getItemsBought().entrySet()) {
+                    Product product = entry.getKey();
+                    int quantity = entry.getValue();
+                    double totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity)).doubleValue();
+                    
                     contentStream.beginText();
-                    contentStream.setFont(PDType1Font.HELVETICA, 12);
-                    contentStream.newLineAtOffset(70, yPosition);
-                    contentStream.showText(entry.getKey().getName() + " x " + entry.getValue() + 
-                                        " = $" + String.format("%.2f", entry.getKey().getPrice().multiply(BigDecimal.valueOf(entry.getValue()))));
+                    contentStream.newLineAtOffset(margin, yPosition);
+                    contentStream.showText(String.format("%s - $%.2f x %d = $%.2f", 
+                        product.getName(), product.getPrice(), quantity, totalPrice));
                     contentStream.endText();
-                    yPosition -= 20;
+                    
+                    yPosition -= 15;
                 }
+                
+                yPosition -= 20;
                 
                 // Totals
                 contentStream.beginText();
-                contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
-                contentStream.newLineAtOffset(50, yPosition - 20);
-                contentStream.showText("Total: $" + String.format("%.2f", ticket.getTotalCost()));
-                contentStream.newLineAtOffset(0, -20);
-                contentStream.showText("Tax: $" + String.format("%.2f", ticket.getTotalTax()));
+                contentStream.newLineAtOffset(margin, yPosition);
+                contentStream.showText(String.format("Subtotal: $%.2f", ticket.getTotalCost()));
+                contentStream.endText();
+                
+                yPosition -= 15;
+                
+                contentStream.beginText();
+                contentStream.newLineAtOffset(margin, yPosition);
+                contentStream.showText(String.format("Tax: $%.2f", ticket.getTotalTax()));
+                contentStream.endText();
+                
+                yPosition -= 15;
+                
+                contentStream.beginText();
+                contentStream.newLineAtOffset(margin, yPosition);
+                contentStream.showText(String.format("Total: $%.2f", (ticket.getTotalCost() + ticket.getTotalTax())));
                 contentStream.endText();
             }
             
             document.save(filepath);
         }
     }
+    
 
     private void showAlert(String title, String header, String content, Alert.AlertType type) 
     {

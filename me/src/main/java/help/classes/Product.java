@@ -9,6 +9,7 @@ public class Product {
     private final ObjectProperty<BigDecimal> price;
     private final IntegerProperty stockAvailability;
     private final ObjectProperty<BigDecimal> taxRate;
+    private final StringProperty category; // New field
 
     // Default constructor
     public Product() {
@@ -17,15 +18,17 @@ public class Product {
         this.price = new SimpleObjectProperty<>(BigDecimal.ZERO);
         this.stockAvailability = new SimpleIntegerProperty(0);
         this.taxRate = new SimpleObjectProperty<>(BigDecimal.ZERO);
+        this.category = new SimpleStringProperty(""); // Initialize category
     }
 
     // Constructor with parameters
-    public Product(byte[] imageData, String name, BigDecimal price, int stockAvailability, BigDecimal taxRate) {
+    public Product(byte[] imageData, String name, BigDecimal price, int stockAvailability, BigDecimal taxRate, String category) {
         this.imageData = new SimpleObjectProperty<>(imageData);
         this.name = new SimpleStringProperty(name);
         this.price = new SimpleObjectProperty<>(price);
         this.stockAvailability = new SimpleIntegerProperty(stockAvailability);
         this.taxRate = new SimpleObjectProperty<>(taxRate);
+        this.category = new SimpleStringProperty(category);
     }
 
     // Getters for JavaFX properties
@@ -49,6 +52,11 @@ public class Product {
         return taxRate;
     }
 
+    // Add category property getter
+    public StringProperty categoryProperty() {
+        return category;
+    }
+
     // Getter methods
     public byte[] getImageData() {
         return imageData.get();
@@ -68,6 +76,15 @@ public class Product {
 
     public BigDecimal getTaxRate() {
         return taxRate.get();
+    }
+
+    // Add category getter/setter
+    public String getCategory() {
+        return category.get();
+    }
+
+    public void setCategory(String category) {
+        this.category.set(category);
     }
 
     // Setter methods

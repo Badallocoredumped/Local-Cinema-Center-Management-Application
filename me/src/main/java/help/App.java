@@ -10,8 +10,22 @@ import java.io.IOException;
 
 /**
  * JavaFX App
+ * 
+ * Product_Inventory_Go
+ * Personnel_Go
+ * Price_Management_Go
+ * Revenue_Tax_Go
+ * 
+ * SignoutButton
+ * 
+ * 
+ * MinimizeButton
+ * CloseButton
+ * 
+ * 
  */
-public class App extends Application {
+public class App extends Application 
+{
 
     private static Scene scene;
 
@@ -19,7 +33,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException 
     {
         // Correctly load 'login.fxml' without duplicating the path
-        Parent root = loadFXML("step1"); // Pass only the FXML name without path
+        Parent root = loadFXML("manager_revenue"); // Pass only the FXML name without path
         scene = new Scene(root, 600, 400); // Adjust size as needed
         stage.setScene(scene);
         //stage.setFullScreen(true);

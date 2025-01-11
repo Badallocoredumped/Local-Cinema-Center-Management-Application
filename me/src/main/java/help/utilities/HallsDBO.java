@@ -12,7 +12,7 @@ public class HallsDBO {
      * @param hallId The ID of the hall whose capacity is to be reduced.
           * @throws Exception 
           */
-         public void reduceHallCapacity(int hallId) throws Exception {
+         /* public void reduceHallCapacity(int hallId) throws Exception {
         String query = "UPDATE Halls SET capacity = capacity - 1 WHERE hall_id = ?";
 
         try (Connection conn = DataBaseHandler.getConnection();
@@ -25,5 +25,5 @@ public class HallsDBO {
                 throw new SQLException("No hall found with ID: " + hallId);
             }
         }
-    }
+    } */
 }
