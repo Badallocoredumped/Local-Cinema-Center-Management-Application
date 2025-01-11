@@ -29,21 +29,5 @@ public class SelectedSession
         this.session = session;
     }
 
-    public String getDay() 
-    {
-        if (session != null) 
-        {
-            return session.getDay();
-        }
-        return null;
-    }
-
-    public String getSessionTime() 
-    {
-        if (session != null) 
-        {
-            return session.getSession();
-        }
-        return null;
-    }
+    
 }

@@ -33,7 +33,7 @@ public class App extends Application
     public void start(Stage stage) throws IOException 
     {
         // Correctly load 'login.fxml' without duplicating the path
-        Parent root = loadFXML("manager_price"); // Pass only the FXML name without path
+        Parent root = loadFXML("login"); // Pass only the FXML name without path
         scene = new Scene(root, 600, 400); // Adjust size as needed
         stage.setScene(scene);
         //stage.setFullScreen(true);
