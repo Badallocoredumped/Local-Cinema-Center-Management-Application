@@ -26,6 +26,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import help.classes.Movie;
 import help.utilities.AdminDBH;
@@ -74,55 +75,90 @@ public class OMoviesController {
         });
     }
 
+    //ADD UPDATE FUNCTIONALITY, IF A SESSION HAS BOUGHT TICKETS, THEN THE SESSION CANNOT BE DELETED/MODIFIED
+
+
+
+    
     @FXML
-    private void onAdd(ActionEvent event) {
+    private void onAdd(ActionEvent event) throws SQLException 
+    {
         String title = txtMovieTitle.getText();
-        String genre = cmbGenre.getValue();
-        String duration = txtDuration.getText();
-        String summary = txtSummary.getText();
-
-        if (posterData == null) {
-            showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please import a poster.");
+        if (title.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Missing Title", "Please enter a movie title.");
             return;
         }
 
-        if (title.isEmpty() || genre == null || duration.isEmpty() || summary.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
-            return;
-        }
+        try {
+            if (dbHandler.movieExists(title)) {
+                showAlert(Alert.AlertType.WARNING, "Duplicate Movie", "A movie with this title already exists.");
+                return;
+            }
+            String genre = cmbGenre.getValue();
+            String duration = txtDuration.getText();
+            String summary = txtSummary.getText();
 
-        AdminDBH.AddMovie(title, posterData, genre, summary, duration);
-        loadMoviesFromDatabase();
-        showAlert(Alert.AlertType.INFORMATION, "Success", "Movie added successfully!");
-        clearForm();
+            if (posterData == null) {
+                showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please import a poster.");
+                return;
+            }
+
+            if (title.isEmpty() || genre == null || duration.isEmpty() || summary.isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
+                return;
+            }
+
+            AdminDBH.AddMovie(title, posterData, genre, summary, duration);
+
+            loadMoviesFromDatabase();
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Movie added successfully!");
+            clearForm();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to add movie: " + e.getMessage());
+        }
     }
 
     @FXML
-    private void onUpdate(ActionEvent event) {
+    private void onUpdate(ActionEvent event) throws SQLException {
         if (selectedMovie == null) {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a movie to update.");
             return;
         }
 
         String newTitle = txtMovieTitle.getText();
-        String newGenre = cmbGenre.getValue();
-        String newDuration = txtDuration.getText();
-        String newSummary = txtSummary.getText();
-
-        if (posterData == null) {
-            posterData = selectedMovie.getPosterImage();
-        }
-
-        if (newTitle.isEmpty() || newGenre == null || newDuration.isEmpty() || newSummary.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
+        if (newTitle.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Missing Title", "Please enter a movie title.");
             return;
         }
 
-        int movieId = AdminDBH.getMovieIdFromTitle(selectedMovie.getTitle());
-        dbHandler.FullUpdateMovie(movieId, newTitle, posterData, newGenre, newSummary, newDuration);
-        loadMoviesFromDatabase();
-        showAlert(Alert.AlertType.INFORMATION, "Success", "Movie updated successfully!");
-        clearForm();
+        try {
+            if (!newTitle.equals(selectedMovie.getTitle()) && dbHandler.movieExists(newTitle)) {
+                showAlert(Alert.AlertType.WARNING, "Duplicate Movie", "A movie with this title already exists.");
+                return;
+            }
+            String newGenre = cmbGenre.getValue();
+            String newDuration = txtDuration.getText();
+            String newSummary = txtSummary.getText();
+
+            if (posterData == null) {
+                posterData = selectedMovie.getPosterImage();
+            }
+
+            if (newTitle.isEmpty() || newGenre == null || newDuration.isEmpty() || newSummary.isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
+                return;
+            }
+
+            int movieId = AdminDBH.getMovieIdFromTitle(selectedMovie.getTitle());
+            dbHandler.FullUpdateMovie(movieId, newTitle, posterData, newGenre, newSummary, newDuration);
+            loadMoviesFromDatabase();
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Movie updated successfully!");
+            clearForm();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to update movie: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -198,10 +234,22 @@ public class OMoviesController {
         moviePosterImageView.setImage(null);
     }
 
-    private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
+    private void showAlert(Alert.AlertType alertType, String title, String content) 
+    {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
-        alert.setContentText(message);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        
+        // Get the primary stage
+        Stage primaryStage = (Stage) tblMovies.getScene().getWindow();
+        
+        // Set the alert's owner to the primary stage
+        alert.initOwner(primaryStage);
+        
+        // Set modality to keep alert within the window
+        alert.initModality(Modality.WINDOW_MODAL);
+        
         alert.showAndWait();
     }
 

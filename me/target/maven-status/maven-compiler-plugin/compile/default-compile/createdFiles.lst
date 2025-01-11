@@ -18,7 +18,6 @@ help\NewConfirmationDialogController.class
 help\Step2Controller.class
 help\Step5Controller.class
 help\Step4Controller$1.class
-help\utilities\SessionDBO.class
 help\Manager_PersonnelController.class
 help\utilities\InvoiceDBO.class
 help\utilities\UserDBO.class

@@ -83,7 +83,7 @@ public class LoginController {
                     fxmlFile = "step1";
                     break;
                 case "admin":
-                    fxmlFile = "admin";
+                    fxmlFile = "OrganizeMovie";
                     break;
                 case "manager":
                     fxmlFile = "manager_personel"; // Changed to match actual filename

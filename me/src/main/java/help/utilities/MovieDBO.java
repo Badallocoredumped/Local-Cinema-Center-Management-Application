@@ -2,6 +2,8 @@ package help.utilities;
 
 import java.sql.*;
 import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,24 @@ public class MovieDBO {
                 }
             }
         }
+    }
+
+     public String ReadSummary(String summaryPath) 
+    {
+        StringBuilder summary = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(summaryPath))) 
+        {
+            String line;
+            while ((line = reader.readLine()) != null) 
+            {
+                summary.append(line).append("\n");
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+        return summary.toString();
     }
 
     public List<Movie> findAll() throws Exception 
