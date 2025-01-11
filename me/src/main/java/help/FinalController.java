@@ -1,6 +1,8 @@
 package help;
 
 import java.io.IOException;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,8 +16,25 @@ public class FinalController {
     @FXML
     private Button back_button_final;
 
+    @FXML private Button CloseButton;
+    @FXML private Button MinimizeButton; 
+
     @FXML
     private Label thankYouLabel;
+
+    @FXML
+    private void handleCloseButtonAction(ActionEvent event) 
+    {
+        Stage stage = (Stage) CloseButton.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    private void handleMinimizeButtonAction(ActionEvent event) 
+    {
+        Stage stage = (Stage) MinimizeButton.getScene().getWindow();
+        stage.setIconified(true);
+    }
 
     @FXML
     private void initialize() {

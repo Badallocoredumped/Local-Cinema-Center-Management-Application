@@ -260,15 +260,15 @@ CREATE TABLE Ticket_Products (
     FOREIGN KEY (product_name) REFERENCES Products(name) ON DELETE CASCADE  -- Foreign key to Products table
 );
 
-DESCRIBE ticket_products
+DESCRIBE ticket_products;
 
 
 SET SQL_SAFE_UPDATES = 0;
 -- Step 2: Update product_id based on product_name
 
 
---
-
+SELECT * FROM Products
+SELECT * From Seats
 
 -- Verify schema changes
 SHOW CREATE TABLE Ticket_Products;
@@ -285,6 +285,9 @@ CREATE TABLE bank (
     tax_to_be_paid DECIMAL(15, 2)             -- Column for tax to be paid
 );
 
+INSERT INTO bank (total_revenue, tax_to_be_paid)
+VALUES (0, 0);
 
+SELECT * FROM bank
 
 

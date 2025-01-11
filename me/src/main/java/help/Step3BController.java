@@ -7,12 +7,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import help.classes.Movie;
+import help.classes.Product;
 import help.classes.SelectedSession;
 import help.classes.Session;
 import help.classes.ShoppingCart;
+import help.classes.Tickets;
 import help.utilities.DataBaseHandler;
+import help.utilities.ProductDBO;
+import help.utilities.SeatsDBO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -493,41 +498,79 @@ public class Step3BController
     }
 
     @FXML
-    private void handleSignOutButtonAction(ActionEvent event) 
-    {
-        try 
-        {
-            // Load 'login.fxml'
+    private void handleSignOutButtonAction(ActionEvent event) {
+        try {
+            // Get instances
+            ShoppingCart cart = ShoppingCart.getInstance();
+            Tickets ticket = Tickets.getInstance();
+            
+            // Return seats to available pool
+            SeatsDBO seatsDBO = new SeatsDBO();
+            Session session = cart.getSelectedDaySessionAndHall();
+
+            List<String> seatsToUnmark = cart.getSelectedSeats();
+            // Unmark seats in database if there are any selected seats
+            if (!seatsToUnmark.isEmpty()) 
+            {
+                try 
+                {
+                    // Create SQL queries
+                    String unmarkSeatQuery = "UPDATE Seats SET is_occupied = FALSE WHERE seat_label = ? AND session_id = ?";
+                    String updateVacantSeatsQuery = "UPDATE Sessions SET vacant_seats = vacant_seats + ? WHERE session_id = ?";
+        
+                    try (Connection conn = DataBaseHandler.getConnection();
+                        PreparedStatement unmarkSeatStmt = conn.prepareStatement(unmarkSeatQuery);
+                        PreparedStatement updateVacantSeatsStmt = conn.prepareStatement(updateVacantSeatsQuery)) {
+                        
+                        int sessionId = cart.getSelectedDaySessionAndHall().getSessionId();
+        
+                        // Unmark each seat as available
+                        for (String seatLabel : seatsToUnmark) 
+                        {
+                            unmarkSeatStmt.setString(1, seatLabel);
+                            unmarkSeatStmt.setInt(2, sessionId);
+                            unmarkSeatStmt.addBatch();
+                        }
+        
+                        // Execute batch to update all seats
+                        unmarkSeatStmt.executeBatch();
+        
+                        // Update vacant seats count
+                        updateVacantSeatsStmt.setInt(1, seatsToUnmark.size());
+                        updateVacantSeatsStmt.setInt(2, sessionId);
+                        updateVacantSeatsStmt.executeUpdate();
+                    }
+                } 
+                catch (SQLException e) 
+                {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
+
+            
+
+            // Reset instances
+            cart.clear();
+            Tickets.resetInstance();
+
+            // Navigate to login
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/login.fxml"));
             Parent root = loader.load();
-
-            // Get the current stage from the SignoutButton
             Stage stage = (Stage) SignoutButton.getScene().getWindow();
-
-            // Create a new scene with specified size
-            Scene scene = new Scene(root, 600, 400);
-
-            // Set the new scene to the stage
+            Scene scene = new Scene(root);
             stage.setScene(scene);
-
-            // Center the stage on the screen
-            stage.centerOnScreen();
-
-            // Optionally, disable fullscreen if it was enabled
-            stage.setFullScreen(false);
-
-            // Show the stage
+            stage.setFullScreen(false); // Ensure full screen
             stage.show();
-        } 
-        catch (IOException e) 
-        {
-            // Display an error alert if loading fails
+
+
+
+        } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Sign Out Failed");
-            alert.setHeaderText("Unable to Sign Out");
-            alert.setContentText("There was an error signing out. Please try again.");
+            alert.setHeaderText("Error During Sign Out");
+            alert.setContentText("Failed to properly sign out: " + e.getMessage());
             alert.showAndWait();
-
             e.printStackTrace();
         }
     }

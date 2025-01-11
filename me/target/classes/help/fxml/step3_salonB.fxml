@@ -53,7 +53,7 @@
                         <Font name="SansSerif Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Button fx:id="SignoutButton" layoutX="52.0" layoutY="710.0" text="Sign Out">
+                  <Button fx:id="SignoutButton" layoutX="52.0" layoutY="710.0" onAction="#handleSignOutButtonAction" text="Sign Out">
                      <graphic>
                         <FontAwesomeIcon glyphName="SIGN_OUT" wrappingWidth="12.0" />
                      </graphic>

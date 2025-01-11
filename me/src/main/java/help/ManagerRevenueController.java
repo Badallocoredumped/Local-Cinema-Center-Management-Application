@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import help.utilities.BankDBO;
 import help.utilities.DataBaseHandler;
 
 public class ManagerRevenueController {
@@ -37,6 +38,24 @@ public class ManagerRevenueController {
     
     @FXML private AreaChart<String, Number> RevenueChart;
     @FXML private AreaChart<String, Number> TaxChart;
+
+    
+
+    private BankDBO bankDBO = new BankDBO();
+
+    @FXML
+    private void handleCloseButtonAction(ActionEvent event) {
+        Stage stage = (Stage) CloseButton.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    private void handleMinimizeButtonAction(ActionEvent event) {
+        Stage stage = (Stage) MinimizeButton.getScene().getWindow();
+        stage.setIconified(true);
+    }
+    
+
 
     @FXML
     public void initialize() {
@@ -88,43 +107,24 @@ public class ManagerRevenueController {
         }
     }
 
-    private void updateRevenueAndTaxLabels() {
+    
+    private void updateRevenueAndTaxLabels() 
+    {
         try {
-            double totalRevenue = calculateTotalRevenue();
-            double totalTax = calculateTotalTax();
+            double[] totals = bankDBO.getBankTotals();
+            double totalRevenue = totals[0];
+            double totalTax = totals[1];
             
             TotalRevenue.setText(String.format("$%.2f", totalRevenue));
             TaxAmount.setText(String.format("$%.2f", totalTax));
         } catch (Exception e) {
             System.err.println("Error updating revenue and tax labels: " + e.getMessage());
+            showAlert("Error", "Failed to load bank totals: " + e.getMessage());
         }
     }
+  
 
-    private double calculateTotalRevenue() throws Exception {
-        String query = "SELECT SUM(total_cost) FROM tickets";
-        try (Connection conn = DataBaseHandler.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getDouble(1);
-            }
-            return 0.0;
-        }
-    }
 
-    private double calculateTotalTax() throws Exception {
-        String query = "SELECT SUM(total_tax) FROM tickets";
-        try (Connection conn = DataBaseHandler.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getDouble(1);
-            }
-            return 0.0;
-        }
-    }
 
     
 

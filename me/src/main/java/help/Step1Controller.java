@@ -308,6 +308,8 @@ public class Step1Controller
     {
         try 
         {
+            ShoppingCart cart = ShoppingCart.getInstance();
+            cart.clear();
             // Load 'login.fxml'
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/login.fxml"));
             Parent root = loader.load();

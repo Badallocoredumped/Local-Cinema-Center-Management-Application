@@ -24,6 +24,21 @@ public class Tickets
         this.seatNumbers = new ArrayList<>();
     }
 
+    public static void resetInstance() {
+        if (instance != null) {
+            instance.sessionId = 0;
+            instance.seatNumbers.clear();
+            instance.customerName = "";
+            instance.totalSeatCost = 0.0;
+            instance.totalProductCost = 0.0;
+            instance.totalTax = 0.0;
+            instance.totalCost = 0.0;
+            instance.discountedSeatNumber = 0;
+            instance = null;
+        }
+        System.out.println("Tickets instance reset");
+    }
+
     public static Tickets getInstance() 
     {
         if (instance == null) 

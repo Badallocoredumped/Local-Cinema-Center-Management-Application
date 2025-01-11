@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 
 import help.classes.ShoppingCart;
 import help.classes.Tickets;
+import help.utilities.BankDBO;
 import help.utilities.DataBaseHandler;
 import help.utilities.InvoiceDBO;
 import help.utilities.ProductDBO;
@@ -40,6 +41,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
@@ -51,6 +53,11 @@ public class Step5Controller {
     @FXML private Button next_button_step5;
     @FXML private Button back_button_step5;
     @FXML private Button SaveTicketInvoice;
+
+    @FXML private Button SignoutButton;
+    @FXML private Button CloseButton;
+    @FXML private Button MinimizeButton; 
+     
     
     // Movie Ticket Labels
     @FXML private Label MovieName;
@@ -80,6 +87,66 @@ public class Step5Controller {
     @FXML private Label TotalPrice;
     @FXML private Label TotalTax;
     @FXML private Label SeatPrices;
+
+
+    @FXML
+    private void handleCloseButtonAction(ActionEvent event) 
+    {
+        Stage stage = (Stage) CloseButton.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    private void handleMinimizeButtonAction(ActionEvent event) 
+    {
+        Stage stage = (Stage) MinimizeButton.getScene().getWindow();
+        stage.setIconified(true);
+    }
+
+    @FXML
+    private void handleSignOutButtonAction(ActionEvent event) {
+        try {
+            // Get instances
+            ShoppingCart cart = ShoppingCart.getInstance();
+            Tickets ticket = Tickets.getInstance();
+            
+            // Return products to inventory
+            ProductDBO productDBO = new ProductDBO();
+            for (Map.Entry<Product, Integer> entry : cart.getItemsBought().entrySet()) {
+                Product product = entry.getKey();
+                int quantity = entry.getValue();
+                productDBO.returnProductStock(product.getName(), quantity);
+            }
+            
+            // Delete ticket if it exists
+            if (ticket != null && ticket.getTicketId() > 0) {
+                TicketsDBO ticketsDBO = new TicketsDBO();
+                ticketsDBO.deleteTicket(ticket.getTicketId());
+            }
+            
+            // Reset instances
+            cart.clear();
+            Tickets.resetInstance();
+            
+            // Navigate to login
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/login.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 600, 400);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.setFullScreen(false);
+            stage.show();
+            
+        } catch (Exception e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Sign Out Failed");
+            alert.setHeaderText("Error During Sign Out");
+            alert.setContentText("Failed to properly sign out: " + e.getMessage());
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void initialize() throws Exception {
@@ -213,7 +280,13 @@ public class Step5Controller {
         @FXML
         private void handleSaveTicketInvoice(ActionEvent event) 
         {
-            try {
+            try 
+            {
+                Tickets ticket = Tickets.getInstance();
+
+                BankDBO bankDBO = new BankDBO();
+                bankDBO.updateBankTotals(ticket.getTotalCost(), ticket.getTotalTax());
+                bankDBO.updateBankTotalsFromTickets();
                 // Get user's Documents folder path
                 String documentsPath = System.getProperty("user.home") + "\\Documents\\MovieTickets\\";
                 File directory = new File(documentsPath);
@@ -222,7 +295,6 @@ public class Step5Controller {
                 }
         
                 ShoppingCart cart = ShoppingCart.getInstance();
-                Tickets ticket = Tickets.getInstance();
                 String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
                 
                 // Create full file paths

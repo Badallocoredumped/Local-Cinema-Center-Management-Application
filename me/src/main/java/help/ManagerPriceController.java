@@ -43,6 +43,18 @@ public class ManagerPriceController
     private PriceDBO priceDBO = new PriceDBO();
 
     @FXML
+    private void handleCloseButtonAction(ActionEvent event) {
+        Stage stage = (Stage) CloseButton.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    private void handleMinimizeButtonAction(ActionEvent event) {
+        Stage stage = (Stage) MinimizeButton.getScene().getWindow();
+        stage.setIconified(true);
+    }
+
+    @FXML
     private void initialize() 
     {
         System.out.println("ManagerPriceController initialized");

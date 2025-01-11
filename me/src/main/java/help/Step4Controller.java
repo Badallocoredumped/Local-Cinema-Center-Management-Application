@@ -35,6 +35,7 @@ import help.classes.Product;
 import help.utilities.DataBaseHandler;
 import help.utilities.PriceDBO;
 import help.utilities.ProductDBO;
+import help.utilities.SeatsDBO;
 import help.utilities.TicketProductsDBO;
 import help.utilities.TicketsDBO;
 import javafx.scene.control.TreeItem;
@@ -702,55 +703,91 @@ public class Step4Controller {
         stage.show();
     }
     @FXML
-    private void handleSignOutButtonAction(ActionEvent event) 
-    {
-        try 
-        {
-            // Load 'login.fxml'
+    private void handleSignOutButtonAction(ActionEvent event) {
+        try {
+            // Get instances
+            ShoppingCart cart = ShoppingCart.getInstance();
+            Tickets ticket = Tickets.getInstance();
+            
+            // Return seats to available pool
+            SeatsDBO seatsDBO = new SeatsDBO();
+            Session session = cart.getSelectedDaySessionAndHall();
+
+            List<String> seatsToUnmark = cart.getSelectedSeats();
+            // Unmark seats in database if there are any selected seats
+            if (!seatsToUnmark.isEmpty()) 
+            {
+                try 
+                {
+                    // Create SQL queries
+                    String unmarkSeatQuery = "UPDATE Seats SET is_occupied = FALSE WHERE seat_label = ? AND session_id = ?";
+                    String updateVacantSeatsQuery = "UPDATE Sessions SET vacant_seats = vacant_seats + ? WHERE session_id = ?";
+        
+                    try (Connection conn = DataBaseHandler.getConnection();
+                        PreparedStatement unmarkSeatStmt = conn.prepareStatement(unmarkSeatQuery);
+                        PreparedStatement updateVacantSeatsStmt = conn.prepareStatement(updateVacantSeatsQuery)) {
+                        
+                        int sessionId = cart.getSelectedDaySessionAndHall().getSessionId();
+        
+                        // Unmark each seat as available
+                        for (String seatLabel : seatsToUnmark) 
+                        {
+                            unmarkSeatStmt.setString(1, seatLabel);
+                            unmarkSeatStmt.setInt(2, sessionId);
+                            unmarkSeatStmt.addBatch();
+                        }
+        
+                        // Execute batch to update all seats
+                        unmarkSeatStmt.executeBatch();
+        
+                        // Update vacant seats count
+                        updateVacantSeatsStmt.setInt(1, seatsToUnmark.size());
+                        updateVacantSeatsStmt.setInt(2, sessionId);
+                        updateVacantSeatsStmt.executeUpdate();
+                    }
+                } 
+                catch (SQLException e) 
+                {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
+
+            // Return products to inventory
+            ProductDBO productDBO = new ProductDBO();
+            for (Map.Entry<Product, Integer> entry : cart.getItemsBought().entrySet()) 
+            {
+                Product product = entry.getKey();
+                Integer quantity = entry.getValue();
+                productDBO.returnProductStock(product.getName(), quantity);
+            }
+
+            // Reset instances
+            cart.clear();
+            Tickets.resetInstance();
+
+            // Navigate to login
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/login.fxml"));
             Parent root = loader.load();
-
-            // Get the current stage from the SignoutButton
             Stage stage = (Stage) SignoutButton.getScene().getWindow();
-
-            // Create a new scene with specified size
-            Scene scene = new Scene(root, 600, 400);
-
-            // Set the new scene to the stage
+            Scene scene = new Scene(root);
             stage.setScene(scene);
-
-            // Center the stage on the screen
-            stage.centerOnScreen();
-
-            // Optionally, disable fullscreen if it was enabled
-            stage.setFullScreen(false);
-
-            // Show the stage
+            stage.setFullScreen(false); 
             stage.show();
-        } 
-        catch (IOException e) 
-        {
-            // Display an error alert if loading fails
+
+
+
+        } catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Sign Out Failed");
-            alert.setHeaderText("Unable to Sign Out");
-            alert.setContentText("There was an error signing out. Please try again.");
+            alert.setHeaderText("Error During Sign Out");
+            alert.setContentText("Failed to properly sign out: " + e.getMessage());
             alert.showAndWait();
-
             e.printStackTrace();
         }
     }
 
-    private Image byteArrayToImage(byte[] imageData) 
-    {
-        if (imageData == null || imageData.length == 0) return null;
-        try {
-            return new Image(new ByteArrayInputStream(imageData));
-        } catch (Exception e) {
-            System.err.println("Error converting image data: " + e.getMessage());
-            return null;
-        }
-    }
+    
 
     /**
      * Sets up the product table columns.

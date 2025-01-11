@@ -1,18 +1,22 @@
 package help;
 
 import help.classes.Product;
+import help.classes.ShoppingCart;
 import help.utilities.ProductDBO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigDecimal;
@@ -39,6 +43,61 @@ public class ManagerProductController
     @FXML private ComboBox<String> ProductTypeComboBox;
     @FXML private ImageView ProductImage;
     @FXML private Button importImageButton;
+
+    @FXML
+    private void handleCloseButtonAction(ActionEvent event) {
+        Stage stage = (Stage) CloseButton.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    private void handleMinimizeButtonAction(ActionEvent event) {
+        Stage stage = (Stage) MinimizeButton.getScene().getWindow();
+        stage.setIconified(true);
+    }
+
+
+    @FXML
+    private void handleSignOutButtonAction(ActionEvent event) 
+    {
+        try 
+        {
+            ShoppingCart cart = ShoppingCart.getInstance();
+            cart.clear();
+            // Load 'login.fxml'
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/login.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage from the SignoutButton
+            Stage stage = (Stage) SignoutButton.getScene().getWindow();
+
+            // Create a new scene with specified size
+            Scene scene = new Scene(root, 600, 400);
+
+            // Set the new scene to the stage
+            stage.setScene(scene);
+
+            // Center the stage on the screen
+            stage.centerOnScreen();
+
+            // Optionally, disable fullscreen if it was enabled
+            stage.setFullScreen(false);
+
+            // Show the stage
+            stage.show();
+        } 
+        catch (IOException e) 
+        {
+            // Display an error alert if loading fails
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Sign Out Failed");
+            alert.setHeaderText("Unable to Sign Out");
+            alert.setContentText("There was an error signing out. Please try again.");
+            alert.showAndWait();
+
+            e.printStackTrace();
+        }
+    }
     
     private ProductDBO productDBO = new ProductDBO();
     private byte[] selectedImageData;
@@ -52,6 +111,8 @@ public class ManagerProductController
         ImportButton.getStyleClass().add("insert-button-2");
         ProductImage.getStyleClass().add("anchor-pane1");
         MinimizeButton.getStyleClass().add("minus-button");
+        ProductImage.setFitWidth(200);
+        ProductImage.setFitHeight(200);
 
         setupTableColumns();
         setupComboBox();
