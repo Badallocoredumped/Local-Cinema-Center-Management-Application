@@ -290,12 +290,23 @@ public class CancelRefundController
     }
     
 
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
+    private void showAlert(Alert.AlertType alertType, String title, String message) 
+    {
+        Stage ownerStage = (Stage) TicketTable.getScene().getWindow();
+        boolean wasFullScreen = ownerStage.isFullScreen();
+        
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        
+        alert.initOwner(ownerStage);
+        alert.initModality(Modality.WINDOW_MODAL);
+        
         alert.showAndWait();
+        if (wasFullScreen) {
+            ownerStage.setFullScreen(true);
+        }
     }
 
 
@@ -417,41 +428,71 @@ public class CancelRefundController
     }
 
     @FXML
-    private void handleSignOutButtonAction(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/login.fxml"));
+    private void handleSignOutButtonAction(ActionEvent event) 
+    {
+        try 
+        {
+            // Load 'login.fxml'
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/help/fxml/login.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage from the SignoutButton
+            Stage stage = (Stage) SignoutButton.getScene().getWindow();
+
+            // Create a new scene with specified size
             Scene scene = new Scene(root, 600, 400);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+
+            // Set the new scene to the stage
             stage.setScene(scene);
+
+            // Center the stage on the screen
+            stage.centerOnScreen();
+
+            // Optionally, disable fullscreen if it was enabled
+            stage.setFullScreen(false);
+
+            // Show the stage
             stage.show();
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
+            // Display an error alert if loading fails
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Sign Out Failed");
+            alert.setHeaderText("Unable to Sign Out");
+            alert.setContentText("There was an error signing out. Please try again.");
+            alert.showAndWait();
+
             e.printStackTrace();
         }
     }
 
     @FXML
-    private void onSchedule(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/Schedule.fxml"));
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void onSchedule(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        if (stage.getTitle().equals("Organize Movies")) {
+            return;
         }
+        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/MovieSchedule.fxml"));
+        changeScene(stage, root, "Organize Movies");
     }
 
     @FXML
-    private void onOrganizeMovie(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/OrganizeMovie.fxml"));
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void onOrganizeMovie(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        if (stage.getTitle().equals("Organize Movies")) {
+            return;
         }
+        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/OrganizeMovie.fxml"));
+        changeScene(stage, root, "Organize Movies");
+    }
+
+    private void changeScene(Stage stage, Parent root, String newSceneTitle) {
+        Scene scene = stage.getScene();
+        scene.setRoot(root);
+        stage.setTitle(newSceneTitle);
+        stage.setFullScreen(true);
+        stage.setFullScreenExitHint("");
+        
     }
 }

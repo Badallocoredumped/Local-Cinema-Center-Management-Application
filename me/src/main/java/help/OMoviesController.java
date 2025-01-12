@@ -296,7 +296,7 @@ public class OMoviesController {
         if (stage.getTitle().equals("Organize Movies")) {
             return;
         }
-        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/OMovies.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/OrganizeMovie.fxml"));
         changeScene(stage, root, "Organize Movies");
     }
 
@@ -313,30 +313,6 @@ public class OMoviesController {
     }
 
     // Function to sign out
-    public void onsignOut(ActionEvent event) throws IOException
-    {
-        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/login.fxml"));
-        changeScene(stage, root, "Login");
-    }
-
-    // Helper function to change the scene
-    private void changeScene(Stage stage, Parent root, String newSceneTitle) {
-        Scene scene = stage.getScene();
-        scene.setRoot(root);
-        stage.setTitle(newSceneTitle);
-        if(newSceneTitle.equals("Login"))
-        {
-            stage.setFullScreen(false);
-            stage.setFullScreenExitHint("");
-        }
-        else
-        {
-            stage.setFullScreen(true);
-            stage.setFullScreenExitHint("");
-
-        }
-    }
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
@@ -376,4 +352,23 @@ public class OMoviesController {
             e.printStackTrace();
         }
     }
+
+    // Helper function to change the scene
+    private void changeScene(Stage stage, Parent root, String newSceneTitle) {
+        Scene scene = stage.getScene();
+        scene.setRoot(root);
+        stage.setTitle(newSceneTitle);
+        if(newSceneTitle.equals("Login"))
+        {
+            stage.setFullScreen(false);
+            stage.setFullScreenExitHint("");
+        }
+        else
+        {
+            stage.setFullScreen(true);
+            stage.setFullScreenExitHint("");
+
+        }
+    }
+    
 }

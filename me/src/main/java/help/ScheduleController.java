@@ -331,11 +331,11 @@ public class ScheduleController {
         if (stage.getTitle().equals("Organize Movies")) {
             return;
         }
-        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/OMovies.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/OrganizeMovie.fxml"));
         changeScene(stage, root, "Organize Movies");
     }
 
-     @FXML
+    @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
         try 
