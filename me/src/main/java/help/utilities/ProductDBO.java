@@ -13,9 +13,18 @@ import java.math.BigDecimal;
 
 public class ProductDBO 
 {
-
-
-
+    /**
+     * Converts a BLOB (Binary Large Object) from the database into a byte array.
+     * 
+     * <p>This method reads the binary stream from the given BLOB object and returns it as a byte array.</p>
+     * 
+     * @param blob The BLOB object to be converted into a byte array.
+     * 
+     * @return A byte array containing the BLOB data. Returns {@code null} if the BLOB is {@code null}.
+     * 
+     * @throws SQLException If there is an error reading the BLOB data or accessing the database.
+     * @throws IOException If an I/O error occurs while reading the BLOB's binary stream.
+     */
     private byte[] getBlobData(Blob blob) throws SQLException 
     {
         if (blob == null) return null;
@@ -57,6 +66,20 @@ public class ProductDBO
     }
 
 
+    /**
+     * Inserts a new product into the Products table in the database.
+     * 
+     * <p>This method adds a new product, including its image, name, price, stock quantity, tax rate, and category, 
+     * into the Products table. If the product has image data, it is stored as a BLOB.</p>
+     *
+     * @param product The product to be inserted into the database. It contains the product's image, name, price, 
+     *                stock quantity, tax rate, and category.
+     * 
+     * @return {@code true} if the product was successfully inserted into the database; 
+     *         {@code false} otherwise.
+     * 
+     * @throws SQLException If there is an error while interacting with the database.
+     */
     public boolean insertProduct(Product product) throws Exception 
     {
         String query = "INSERT INTO Products (image, name, price, stock_quantity, tax_rate, category) VALUES (?, ?, ?, ?, ?, ?)";
@@ -88,6 +111,22 @@ public class ProductDBO
     }
 
 
+    /**
+     * Deletes a product from the Products table in the database if it is not associated with any tickets.
+     * 
+     * <p>This method first checks if the product is associated with any tickets. If so, it throws an exception. 
+     * If the product is not associated with tickets, it proceeds to delete the product from the Products table.</p>
+     * 
+     * <p>Foreign key checks are temporarily disabled during the operation to avoid any constraint violations.</p>
+     * 
+     * @param productName The name of the product to be deleted.
+     * 
+     * @return {@code true} if the product was successfully deleted from the database; 
+     *         {@code false} otherwise.
+     * 
+     * @throws SQLException If there is an error while interacting with the database, 
+     *                      or if the product is associated with existing tickets.
+     */
     public boolean deleteProduct(String productName) throws Exception {
         // Queries
         String checkQuery = "SELECT COUNT(*) FROM ticket_products WHERE product_name = ?";
@@ -168,6 +207,21 @@ public class ProductDBO
         System.out.println("Stock successfully updated. Quantity subtracted: " + quantity);
     }
 
+    /**
+     * Updates the details of an existing product in the Products table.
+     * <p>
+     * This method updates the product's information, such as its image, name, price, stock quantity, tax rate,
+     * and category. The update is performed by matching the product's old name with the `oldName` parameter.
+     * Foreign key checks are temporarily disabled to ensure the update proceeds without constraints, and re-enabled
+     * afterward.
+     * </p>
+     * 
+     * @param oldName The current name of the product to be updated.
+     * @param product The new product object containing the updated information.
+     * 
+     * @return {@code true} if the product was successfully updated, {@code false} otherwise.
+     * @throws Exception If there is an error during the update process or database interaction.
+     */
     public boolean updateProduct(String oldName, Product product) throws Exception {
         String disableFKChecks = "SET foreign_key_checks = 0";
         String enableFKChecks = "SET foreign_key_checks = 1";
@@ -211,7 +265,19 @@ public class ProductDBO
         }
     }
 
-    
+    /**
+     * Returns the products associated with a ticket to the inventory by updating the stock quantity.
+     * <p>
+     * This method increases the stock quantity of products in the Products table that were originally 
+     * associated with the specified ticket ID in the Ticket_Products table. The stock quantity is updated
+     * based on the quantity of each product associated with the ticket.
+     * </p>
+     *
+     * @param ticketId The ID of the ticket whose associated products will be returned to inventory.
+     *
+     * @return {@code true} if the products were successfully returned to inventory, {@code false} otherwise.
+     * @throws Exception If there is an error during the update process or database interaction.
+     */
     public boolean returnProductsToInventory(int ticketId) throws Exception {
         String sql = "UPDATE Products p " +
                     "JOIN Ticket_Products tp ON p.name = tp.product_name " +
@@ -232,6 +298,15 @@ public class ProductDBO
 
 
 
+    /**
+     * Retrieves and prints the tax rate for products in the inventory.
+     * <p>
+     * This method executes a query to fetch the tax rate from the Products table and prints the value 
+     * to the console. It assumes that the table contains at least one product record.
+     * </p>
+     *
+     * @throws Exception If there is an error during the database query or while processing the result.
+     */
     public void getTaxRate() throws Exception 
     {
         String query = "SELECT tax_rate FROM Products";
@@ -248,6 +323,17 @@ public class ProductDBO
         }   
     }
 
+    /**
+     * Returns the specified quantity of a product to the inventory.
+     * <p>
+     * This method updates the stock quantity of a product in the Products table by adding the specified 
+     * quantity to the existing stock. If the product is not found in the inventory, an exception is thrown.
+     * </p>
+     *
+     * @param productName The name of the product to which stock is being returned.
+     * @param quantity The quantity of the product to be added to the stock.
+     * @throws Exception If there is an error during the update or if the product is not found in the inventory.
+     */
     public void returnProductStock(String productName, int quantity) throws Exception 
         {
         System.out.println("Returning stock for product: " + productName);

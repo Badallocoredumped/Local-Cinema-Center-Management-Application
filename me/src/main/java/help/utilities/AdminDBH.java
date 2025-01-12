@@ -31,12 +31,26 @@ public class AdminDBH
     private static final String PASSWORD = "1234";
     private static Connection dbconnection;
     
-    
+    /**
+     * Establishes and returns a connection to the database.
+     * 
+     * This method uses the provided URL, username, and password to connect to the database. 
+     * If the connection cannot be established, it throws an exception.
+     * 
+     * @return A {@link Connection} object representing the connection to the database.
+     * @throws Exception If the database connection cannot be established.
+     */
     public static Connection getConnection() throws Exception
     {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
     
+    /**
+     * Constructor for the {@link AdminDBH} class.
+     * 
+     * This constructor attempts to establish a connection to the database using the provided URL, username, and password.
+     * If the connection fails, an error message is printed to the console.
+     */
     public AdminDBH()
     {
         try 
@@ -50,6 +64,13 @@ public class AdminDBH
         }
     }
 
+    /**
+     * Checks if a movie with the given title exists in the database.
+     *
+     * @param title The title of the movie to check.
+     * @return {@code true} if the movie exists in the database, {@code false} otherwise.
+     * @throws SQLException If there is an error executing the SQL query or accessing the database.
+     */
     public boolean movieExists(String title) throws SQLException {
         String query = "SELECT COUNT(*) FROM movies WHERE title = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -63,7 +84,18 @@ public class AdminDBH
         return false;
     }
     
-    
+    /**
+     * Adds a new movie to the database with the specified details.
+     * 
+     * This method inserts a movie's title, poster image, genre, summary text, and a fixed duration into the "movies" table.
+     * It checks if the database connection is valid before attempting to add the movie.
+     *
+     * @param title The title of the movie to be added.
+     * @param posterData The byte array representing the movie's poster image.
+     * @param genre The genre of the movie.
+     * @param summaryText The summary of the movie.
+     * @throws SQLException If there is an error executing the SQL query or accessing the database.
+     */
     public static void AddMovie(String title, byte[] posterData, String genre, String summaryText) throws SQLException 
     {
         if (dbconnection == null) {
@@ -90,7 +122,20 @@ public class AdminDBH
         }    
     }
     
-
+    /**
+     * Updates the details of an existing movie in the database.
+     * 
+     * This method checks if there are any sold tickets for the movie before proceeding with the update. 
+     * It updates the movie's title, poster image, genre, summary, and a fixed duration for the specified movie ID.
+     * If there are sold tickets associated with the movie, the update will not be allowed.
+     *
+     * @param movieId The ID of the movie to be updated.
+     * @param newTitle The new title for the movie.
+     * @param newPosterData The byte array representing the new poster image.
+     * @param newGenre The new genre for the movie.
+     * @param newSummaryText The new summary text for the movie.
+     * @throws SQLException If there is an error executing the SQL queries or accessing the database.
+     */
     public void FullUpdateMovie(int movieId, String newTitle, byte[] newPosterData, String newGenre, String newSummaryText) throws SQLException 
     {
         if (dbconnection == null) 
@@ -137,7 +182,18 @@ public class AdminDBH
         
     }
 
-    public void deleteMovie(int movieId) throws SQLException {
+    /**
+     * Deletes a movie from the database if no tickets have been sold for it.
+     * 
+     * This method first checks if there are any sold tickets associated with the movie.
+     * If there are sold tickets, the movie cannot be deleted. If no tickets are sold,
+     * the movie and its associated summary file are deleted from the database.
+     *
+     * @param movieId The ID of the movie to be deleted.
+     * @throws SQLException If there is an error executing the SQL queries or accessing the database.
+     */
+    public void deleteMovie(int movieId) throws SQLException 
+    {
         if (dbconnection == null) {
             System.err.println("Database connection failed!!");
             return;
@@ -185,8 +241,15 @@ public class AdminDBH
         }
     }
     
-    
-    //Gott fix the errors related to Get All Movies and Get Movie by ID
+    /**
+     * Retrieves all movies from the database.
+     * 
+     * This method fetches the details of all movies from the "movies" table, including the movie ID, title, genre,
+     * summary, duration, and poster image. Each movie is then added to a list of {@code Movie} objects.
+     * If the database connection fails, an empty list is returned.
+     *
+     * @return A list of {@code Movie} objects representing all movies in the database.
+     */
     public List<Movie> GetAllMovies() 
     {
         List<Movie> movies = new ArrayList<>();
@@ -241,7 +304,7 @@ public class AdminDBH
         return summary.toString();
     } */
 
-    public ImageIcon readPoster(String posterFilePath) 
+    /*public ImageIcon readPoster(String posterFilePath) 
     {
         File posterFile = new File(posterFilePath);
         if (posterFile.exists()) 
@@ -253,8 +316,18 @@ public class AdminDBH
             System.out.println("Poster file not found.");
             return null;
         }
-    }
+    }*/
     
+    /**
+     * Retrieves the movie ID associated with the given movie title.
+     * 
+     * This method queries the database to find the movie ID corresponding to the provided title.
+     * If the movie is found, its ID is returned. If the movie is not found, the method returns 0.
+     * If the database connection fails, the method returns -1.
+     *
+     * @param title The title of the movie whose ID is to be retrieved.
+     * @return The movie ID if found, 0 if the movie is not found, or -1 if the database connection fails.
+     */
     public static int getMovieIdFromTitle(String title) 
     {
         if (dbconnection == null) 
@@ -284,6 +357,16 @@ public class AdminDBH
         }
     }
 
+    /**
+     * Retrieves the title of a movie based on its ID.
+     * 
+     * This method queries the database to find the title of the movie with the specified movie ID.
+     * If the movie is found, its title is returned. If the movie is not found, the method returns {@code null}.
+     * 
+     * @param movieId The ID of the movie whose title is to be retrieved.
+     * @return The title of the movie if found, or {@code null} if the movie is not found.
+     * @throws SQLException If there is an error executing the SQL query or accessing the database.
+     */
     public String getMovieTitleFromId(int movieId) throws SQLException 
     {
         if (dbconnection == null) 
@@ -309,10 +392,21 @@ public class AdminDBH
         return title;
     }
 
-    // Add a new session
-    //    public void AddSession(int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
-
-    public void AddSession(int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException {
+    /**
+     * Adds a new session for a movie in the specified hall at a specific time and date.
+     * 
+     * This method first checks for any overlapping sessions in the specified hall and time slot. 
+     * If no overlap is found, it inserts a new session and populates the seat information for the session.
+     * The method also ensures that all database changes are committed as part of a single transaction.
+     *
+     * @param movieId The ID of the movie for which the session is being added.
+     * @param hallName The name of the hall where the session will take place.
+     * @param sessionDate The date of the session.
+     * @param startTime The start time of the session.
+     * @throws SQLException If there is an error executing the SQL queries or accessing the database.
+     */
+    public void AddSession(int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
+    {
         String insertSession = "INSERT INTO Sessions (movie_id, hall_name, session_date, start_time, vacant_seats) VALUES (?, ?, ?, ?, ?)";
         String insertSeat = "INSERT INTO seats (session_id, hall_name,seat_label, is_occupied) VALUES (?, ?, ?, ?)";
         int hallCapacity = getHallCapacity(hallName);
@@ -378,19 +472,41 @@ public class AdminDBH
         }
         
     }
+
+    /**
+     * Retrieves the seating capacity of a specified hall.
+     * 
+     * This method returns the number of seats available in the given hall. If the hall name is not recognized,
+     * it returns 0 to indicate an unknown hall.
+     *
+     * @param hallName The name of the hall for which the capacity is being requested.
+     * @return The seating capacity of the specified hall. Returns 0 if the hall name is not recognized.
+     */
     private int getHallCapacity(String hallName) 
     {
-        switch (hallName) {
+        switch (hallName) 
+        {
             case "Hall_A":
                 return 16;
                 case "Hall_B":
                     return 48;
                 default:
                     return 0;
-            }
-            
+        }     
     }
-    private List<String> generateSeatLabels(String hallName) {
+
+    /**
+     * Generates a list of seat labels for the specified hall.
+     * 
+     * This method generates seat labels based on the hall's configuration. It supports "Hall_A" with a 4x4 seating arrangement
+     * and "Hall_B" with a 6x8 seating arrangement. If the hall name is invalid or empty, an {@code IllegalArgumentException} is thrown.
+     *
+     * @param hallName The name of the hall for which seat labels are being generated.
+     * @return A list of seat labels for the specified hall.
+     * @throws IllegalArgumentException If the hall name is null, empty, or invalid.
+     */
+    private List<String> generateSeatLabels(String hallName) 
+    {
         if (hallName == null || hallName.isBlank()) {
             throw new IllegalArgumentException("Hall name cannot be null or empty");
         }
@@ -418,7 +534,20 @@ public class AdminDBH
     
         
 
-    // Update an existing session
+    /**
+     * Updates an existing session in the database.
+     * 
+     * This method first checks if any tickets have been sold for the session; if tickets exist, the session cannot be updated. 
+     * It then verifies if the new session time overlaps with existing sessions in the specified hall. 
+     * If no conflicts are found, the session details (movie ID, hall name, session date, and start time) are updated.
+     *
+     * @param sessionId The ID of the session to be updated.
+     * @param movieId The new movie ID for the session.
+     * @param hallName The new hall name for the session.
+     * @param sessionDate The new date for the session.
+     * @param startTime The new start time for the session.
+     * @throws SQLException If there is an error executing the SQL queries or accessing the database.
+     */
     public void UpdateSession(int sessionId, int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
     {
         String checkTicketsQuery = "SELECT COUNT(*) FROM Tickets WHERE session_id = ?";
@@ -461,7 +590,15 @@ public class AdminDBH
         }
     }
 
-    // Delete a session
+    /**
+     * Deletes an existing session from the database.
+     * 
+     * This method first checks if any tickets have been sold for the session; if tickets exist, the session cannot be deleted. 
+     * If no tickets are sold, the session is deleted from the database.
+     *
+     * @param sessionId The ID of the session to be deleted.
+     * @throws SQLException If there is an error executing the SQL queries or accessing the database.
+     */                                                                         
     public void DeleteSession(int sessionId) throws SQLException 
     {
         String checkTicketsQuery = "SELECT COUNT(*) FROM Tickets WHERE session_id = ?";
@@ -485,7 +622,15 @@ public class AdminDBH
         }
     }
 
-    // Get all sessions
+    /**
+     * Retrieves all sessions from the database.
+     * 
+     * This method queries the database for all sessions and constructs a list of {@link Schedule} objects containing session details.
+     * If the database connection fails, an empty list is returned.
+     * 
+     * @return A list of {@link Schedule} objects representing all sessions in the database.
+     * @throws SQLException If there is an error executing the SQL query or accessing the database.
+     */
     public List<Schedule> GetAllSessions() throws SQLException 
     {
         List<Schedule> schedules = new ArrayList<>();

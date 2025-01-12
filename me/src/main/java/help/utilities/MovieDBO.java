@@ -11,7 +11,16 @@ import java.util.Arrays;
 import help.classes.Movie;
 
 public class MovieDBO {
-    
+    /**
+     * Retrieves the binary data from a BLOB (Binary Large Object) as a byte array.
+     * 
+     * <p>This method reads the binary data stored in a BLOB object and returns it as a byte array. If the BLOB is null, it returns null.</p>
+     * 
+     * @param blob The BLOB object from which the data will be extracted.
+     * @return A byte array containing the binary data of the BLOB, or null if the BLOB is null.
+     * 
+     * @throws SQLException If an error occurs while reading the BLOB data.
+     */
     private byte[] getBlobData(Blob blob) throws SQLException 
     {
         if (blob == null) return null;
@@ -25,6 +34,15 @@ public class MovieDBO {
         }
     }
 
+    /**
+     * Retrieves and prints the poster image data for a specific movie.
+     * 
+     * <p>This method queries the database for the poster image associated with a movie and prints the details, including the movie ID, the length of the image data, and the first few bytes of the image.</p>
+     * 
+     * @param movieId The ID of the movie whose poster image data is to be retrieved.
+     * 
+     * @throws Exception If a database access error occurs or any other exception is thrown during execution.
+     */
     public void debugPosterImage(int movieId) throws Exception {
         String query = "SELECT poster_image FROM Movies WHERE movie_id = ?";
         
@@ -48,7 +66,18 @@ public class MovieDBO {
         }
     }
 
-     public String ReadSummary(String summaryPath) 
+    /**
+     * Reads the content of a summary file and returns it as a string.
+     * 
+     * <p>This method opens the file specified by the provided path, reads its contents line by line, and appends each line to a string. The entire file content is returned as a string.</p>
+     * 
+     * @param summaryPath The path to the summary file to be read.
+     * 
+     * @return A string containing the contents of the summary file.
+     * 
+     * @throws IOException If an I/O error occurs while reading the file.
+     */
+    public String ReadSummary(String summaryPath) 
     {
         StringBuilder summary = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(summaryPath))) 
@@ -66,6 +95,16 @@ public class MovieDBO {
         return summary.toString();
     }
 
+    /**
+     * Retrieves all movies from the database and returns them as a list of {@link Movie} objects.
+     * 
+     * <p>This method queries the "Movies" table in the database to fetch all movie details including the movie ID, title, poster image, genre, summary, and duration.
+     * It then creates {@link Movie} objects and adds them to a list, which is returned to the caller.</p>
+     * 
+     * @return A list of {@link Movie} objects representing all the movies in the database.
+     * 
+     * @throws Exception If an error occurs while accessing the database.
+     */
     public List<Movie> findAll() throws Exception 
     {
         System.out.println("Finding all movies...");

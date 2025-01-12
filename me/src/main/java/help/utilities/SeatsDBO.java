@@ -9,7 +9,18 @@ import java.util.stream.Collectors;
 
 public class SeatsDBO 
 {
-    
+    /**
+     * Unmarks the specified seats as available for the given session.
+     * <p>
+     * This method updates the seats in the Seats table to set their status as available (not occupied) 
+     * and vacant for the given session. It processes a list of seat numbers and updates each seat's 
+     * availability status.
+     * </p>
+     *
+     * @param seats A list of seat numbers to be marked as available.
+     * @param sessionId The session ID for which the seats are being unmarked.
+     * @throws Exception If there is an error during the update.
+     */
     public void unmarkSeatsAsAvailable(List<String> seats, int sessionId) throws Exception 
     {
         String query = "UPDATE Seats SET is_occupied = 0, vacant = 1 WHERE seat_number = ? AND session_id = ?";
@@ -28,6 +39,17 @@ public class SeatsDBO
         }
     }
 
+    /**
+     * Updates the vacant status of all seats for a given session based on their occupancy.
+     * <p>
+     * This method updates the vacant status for seats in the Seats table. If a seat is not occupied 
+     * (i.e., `is_occupied` is 0), it is marked as vacant (i.e., `vacant` is set to 1). If the seat is 
+     * occupied, the `vacant` status is set to 0. This update is applied for the specified session.
+     * </p>
+     *
+     * @param sessionId The session ID for which the vacant status of seats needs to be updated.
+     * @throws Exception If there is an error during the update.
+     */
     public void updateVacantSeats(int sessionId) throws Exception 
     {
         String query = "UPDATE Seats SET vacant = CASE WHEN is_occupied = 0 THEN 1 ELSE 0 END WHERE session_id = ?";
@@ -41,7 +63,21 @@ public class SeatsDBO
         }
     }
 
-    
+    /**
+     * Updates the occupancy status of seats for a given ticket.
+     * <p>
+     * This method updates the `is_occupied` status of seats associated with an active ticket. 
+     * It first retrieves the session ID and the list of seat numbers from the ticket, and then 
+     * updates the occupancy status of those seats. Additionally, the method adjusts the vacant 
+     * seat count for the session accordingly.
+     * </p>
+     *
+     * @param ticketId The ID of the ticket for which the seat occupancy status needs to be updated.
+     * @param isOccupied A boolean indicating whether the seats are occupied (true) or unoccupied (false).
+     * @return true if the seat occupancy was successfully updated, false otherwise.
+     * @throws Exception If there is an error during the update, such as when the ticket is not found or 
+     *                   when a database operation fails.
+     */
     public boolean updateSeatOccupancy(int ticketId, boolean isOccupied) throws Exception 
     {
         Connection conn = null;

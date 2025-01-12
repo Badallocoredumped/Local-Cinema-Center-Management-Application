@@ -13,6 +13,17 @@ public class UserDBO {
     private static final String UPDATE_USER = "UPDATE Users SET first_name=?, last_name=?, username=?, password=?, role=? WHERE user_id=?";
     private static final String DELETE_USER = "DELETE FROM Users WHERE username = ?";
 
+
+    /**
+     * Retrieves a user from the database by their username.
+     * <p>
+     * This method queries the database for a user with the specified username. If the user is found,
+     * a `User` object is created and populated with the user's details from the database.
+     * </p>
+     *
+     * @param username The username of the user to retrieve.
+     * @return The `User` object corresponding to the specified username, or `null` if no user is found.
+     */
     public User getUser(String username) 
     {
         try (Connection conn = DataBaseHandler.getConnection();
@@ -38,6 +49,17 @@ public class UserDBO {
     }
 
 
+    /**
+     * Retrieves the user ID from the database by the specified username.
+     * <p>
+     * This method queries the database for the user ID associated with the given username. 
+     * If a matching user is found, the user ID is returned. Otherwise, it returns -1 to indicate 
+     * that no user with the specified username was found.
+     * </p>
+     *
+     * @param username The username of the user whose ID is to be retrieved.
+     * @return The user ID of the specified username, or -1 if the user is not found.
+     */
     public int getUserIdByUsername(String username) {
         try (Connection conn = DataBaseHandler.getConnection();
              PreparedStatement stmt = conn.prepareStatement(GET_USER_ID)) {
@@ -53,6 +75,15 @@ public class UserDBO {
         return -1;
     }
 
+    /**
+     * Retrieves all users from the database.
+     * <p>
+     * This method executes a query to retrieve all users from the database, including their first name, 
+     * last name, username, role, password, and user ID. The results are returned as a list of {@link User} objects.
+     * </p>
+     *
+     * @return A list of {@link User} objects representing all users in the database.
+     */
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         try (Connection conn = DataBaseHandler.getConnection();
@@ -74,6 +105,17 @@ public class UserDBO {
         return users;
     }
 
+    /**
+     * Inserts a new user into the database.
+     * <p>
+     * This method inserts a new user into the database with the provided first name, last name, username, password,
+     * and role. The password will be stored as provided, so it should be hashed before calling this method.
+     * </p>
+     *
+     * @param user The {@link User} object containing the user details.
+     * @param password The plain-text password for the user.
+     * @return {@code true} if the user was successfully inserted into the database, {@code false} otherwise.
+     */
     public boolean insertUser(User user, String password) {
         try (Connection conn = DataBaseHandler.getConnection();
              PreparedStatement stmt = conn.prepareStatement(INSERT_USER)) {
@@ -89,6 +131,19 @@ public class UserDBO {
         }
     }
 
+    /**
+     * Updates the details of an existing user in the database.
+     * <p>
+     * This method updates the first name, last name, username, password, and role of a user in the database based on
+     * the provided {@link User} object. The user is identified by their current username, and their user ID is fetched
+     * before updating the user details. If the username has changed, the {@code oldString} parameter is used to handle
+     * the username change.
+     * </p>
+     *
+     * @param user The {@link User} object containing the updated user details.
+     * @param oldString The old username (if the username is being changed), or an empty string if the username is not changed.
+     * @return {@code true} if the user details were successfully updated, {@code false} otherwise.
+     */
     public boolean updateUser(User user,String oldString) 
     {
         System.out.println("Updating user: " + user.getUsername());
@@ -130,6 +185,16 @@ public class UserDBO {
         return false;
     }
 
+    /**
+     * Deletes a user from the database.
+     * <p>
+     * This method deletes a user identified by their username from the database. It performs the deletion by executing
+     * the {@code DELETE} SQL statement.
+     * </p>
+     *
+     * @param username The username of the user to be deleted.
+     * @return {@code true} if the user was successfully deleted, {@code false} otherwise.
+     */
     public boolean deleteUser(String username) {
         try (Connection conn = DataBaseHandler.getConnection();
              PreparedStatement stmt = conn.prepareStatement(DELETE_USER)) {
