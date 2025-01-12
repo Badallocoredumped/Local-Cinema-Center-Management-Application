@@ -19,7 +19,12 @@ public class ShoppingCart {
         itemsBought = new HashMap<>();
     }
 
-    // Singleton instance
+    /**
+     * Returns the singleton instance of the ShoppingCart.
+     * If the instance is null, it creates a new instance of the ShoppingCart.
+     * 
+     * @return the singleton instance of the ShoppingCart.
+     */
     public static ShoppingCart getInstance() 
     {
         if (instance == null) 
@@ -29,26 +34,55 @@ public class ShoppingCart {
         return instance;
     }
 
+    /**
+     * Adds a list of selected seats to the shopping cart.
+     * The provided seats are added to the existing list of selected seats.
+     *
+     * @param seats the list of seats to add to the shopping cart.
+     */
     public void addSeats(List<String> seats) 
     {
         selectedSeats.addAll(seats);
     }
 
+    /**
+     * Returns a new list containing all selected seats.
+     * This method provides a copy of the selected seats.
+     *
+     * @return a list of selected seats.
+     */
     public List<String> getSelectedSeats() 
     {
         return new ArrayList<>(selectedSeats);
     }
 
+    /**
+     * Returns the currently selected movie.
+     * 
+     * @return the selected Movie object, or null if no movie is selected.
+     */
     public Movie getSelectedMovie() 
     {
         return selectedMovie;
     }
 
+    /**
+     * Sets the selected movie.
+     * This method updates the selected movie in the shopping cart.
+     * 
+     * @param selectedMovie the Movie object to set as the selected movie.
+     */
     public void setSelectedMovie(Movie selectedMovie) 
     {
         this.selectedMovie = selectedMovie;
     }
 
+    /**
+     * Returns the selected session, day, and hall.
+     * If no session is selected, it prints a message and returns null.
+     * 
+     * @return the selected Session object, or null if no session is selected.
+     */
     public Session getSelectedDaySessionAndHall() 
     {
         if (selectedDaySessionAndHall == null) 
@@ -59,6 +93,12 @@ public class ShoppingCart {
         return selectedDaySessionAndHall;
     }
 
+    /**
+     * Sets the selected session, day, and hall.
+     * This method updates the selected session in the shopping cart.
+     * 
+     * @param selectedDaySessionAndHall the Session object to set as the selected session.
+     */
     public void setSelectedDaySessionAndHall(Session selectedDaySessionAndHall) 
     {
         this.selectedDaySessionAndHall = selectedDaySessionAndHall;
@@ -101,6 +141,10 @@ public class ShoppingCart {
         selectedDaySessionAndHall = null;
     }
 
+    /**
+     * Clears the selected seats, movie, day/session/hall, and items bought.
+     * This method resets all selections to their initial empty or null state.
+     */
     public void clear() 
     {
         selectedSeats.clear();
@@ -109,15 +153,25 @@ public class ShoppingCart {
         itemsBought.clear();
     }
 
+    /**
+    * Clears the selected seats, removing all previously selected seats.
+     */
     public void clearSeats() 
     {
         selectedSeats.clear();
     }
 
+    /**
+    * Clears the items bought, removing all items from the purchase list.
+    */
     public void clearItemsBought() 
     {
         itemsBought.clear();
     }
+
+    /**
+     * Clears the selected movie, setting it to null.
+     */
     public void clearSelectedMovie() 
     {
         selectedMovie = null;
