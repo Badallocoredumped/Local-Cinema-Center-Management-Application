@@ -8,6 +8,7 @@ import help.classes.Movie;
 import help.classes.MovieService;
 import help.classes.SelectedMovie;
 import help.classes.ShoppingCart;
+import help.utilities.MovieDBO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,11 +22,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 
 public class Step1Controller 
@@ -80,32 +83,52 @@ public class Step1Controller
     }
     private MovieService movieService = new MovieService();
 
+    @FXML
+    private void loadAllMovies() throws Exception
+    {
+        // Create root item first
+        TreeItem<Movie> root = new TreeItem<>(new Movie(0, "Movies", null, "", "", ""));
+        resultsTableView.setRoot(root);
+        
+        // Set up column
+        movies.setCellValueFactory(
+            (TreeTableColumn.CellDataFeatures<Movie, String> param) -> 
+                new SimpleStringProperty(param.getValue().getValue().getTitle())
+        );
+        
+        // Load movies from database
+        MovieDBO movieDBO = new MovieDBO();
+        List<Movie> movies = movieDBO.findAll();
+        
+        // Add movies to tree
+        for (Movie movie : movies) {
+            TreeItem<Movie> movieItem = new TreeItem<>(movie);
+            root.getChildren().add(movieItem);
+        }
+        
+        // Expand root by default
+        root.setExpanded(true);
 
-    
+    }
     
     @FXML
-    private void initialize() 
+    private void initialize() throws Exception 
     {
-        TreeItem<Movie> root = new TreeItem<>();
 
-        Label placeholder = new Label("No movies available");
-        placeholder.setStyle("-fx-font-size: 14px; -fx-text-fill: #666666;");
         
-        // Set placeholder for empty table
-        resultsTableView.setPlaceholder(placeholder);
 
+        loadAllMovies();
         searchComboBox.getItems().addAll("Genre", "Partial Title", "Full Title");
         searchComboBox.setValue("Genre"); // Set default value to "Genre"
 
         // Bind the TreeTableColumn to the movie title property
 
        
-        movies.setCellValueFactory(cellData -> cellData.getValue().getValue().titleProperty());
+        
         // Set up the root node and hide it
-        resultsTableView.setRoot(new TreeItem<Movie>(new Movie(0, "Hidden Root", null, "", "", "")));
         resultsTableView.setShowRoot(false);
         // Disable selection for the TreeTableView itself
-        resultsTableView.getSelectionModel().setCellSelectionEnabled(false);
+        //resultsTableView.getSelectionModel().setCellSelectionEnabled(false);
 
         // Add listener for row selection
         resultsTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> handleMovieSelection());

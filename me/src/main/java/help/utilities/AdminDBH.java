@@ -428,6 +428,7 @@ public class AdminDBH
                     if (rs.next() && rs.getInt(1) > 0) 
                     {
                         System.out.println("Error: Overlapping session detected.");
+                        return;
                     }
                 }
 
@@ -559,6 +560,7 @@ public class AdminDBH
             if (rs.next() && rs.getInt(1) > 0) 
             {
                 System.out.println("Error: Cannot update a session with sold tickets.");
+                return;
             }
         }
 
@@ -573,6 +575,7 @@ public class AdminDBH
                     if (rs.next() && rs.getInt(1) > 0) 
                     {
                         System.out.println("Error: Overlapping session detected.");
+                        return;
                     }
                 }
         String updateQuery = "UPDATE Sessions SET movie_id = ?, hall_name = ?, session_date = ?, start_time = ? WHERE session_id = ?";

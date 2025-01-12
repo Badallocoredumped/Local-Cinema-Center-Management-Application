@@ -146,7 +146,6 @@ public class ScheduleController {
         Time time = Time.valueOf(formattedTime);
 
         int movieId = AdminDBH.getMovieIdFromTitle(title);
-        boolean diditwork = false;
 
         try {
             dbhandler.AddSession(movieId, hall, date, time);
@@ -221,6 +220,14 @@ void OnDelete(ActionEvent event)
     confirmAlert.setHeaderText("Are you sure you want to delete this movie?");
     confirmAlert.setContentText("Session: " + selectedSession.getSessionId());
 
+    // Get main stage and configure alert
+    Stage mainStage = (Stage) MinimizeButton.getScene().getWindow();
+    confirmAlert.initOwner(mainStage);
+    confirmAlert.initModality(Modality.APPLICATION_MODAL);
+
+    // Configure alert stage
+    Stage alertStage = (Stage) confirmAlert.getDialogPane().getScene().getWindow();
+    alertStage.setAlwaysOnTop(true);
     confirmAlert.showAndWait().ifPresent(response -> 
     {
         if (response == javafx.scene.control.ButtonType.OK) 
