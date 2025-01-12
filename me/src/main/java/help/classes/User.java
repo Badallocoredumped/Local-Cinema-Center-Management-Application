@@ -6,14 +6,16 @@ public class User
     private String username;
     private String role;
     private String password; // Add this field
+    private int userId;
 
     public User(String firstName, String lastName, String username, String role) 
     {
-        this(firstName, lastName, username, role, "");
+        this(firstName, lastName, username, role, "", 0);
     }
 
-    public User(String firstName, String lastName, String username, String role, String password) 
+    public User(String firstName, String lastName, String username, String role, String password, int userId) 
     {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -26,6 +28,8 @@ public class User
     public void setPassword(String password) { this.password = password; }
     
     // Getters and setters
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public String getLastName() { return lastName; }

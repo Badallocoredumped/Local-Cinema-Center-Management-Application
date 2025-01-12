@@ -207,18 +207,9 @@ public class Step4Controller {
         if (next_button_step4 != null) next_button_step4.setDisable(true);
         if (AddProductToCart != null) AddProductToCart.setDisable(true);
         if (EmptyCartButton != null) EmptyCartButton.setDisable(true);
-        if (ApplyDiscount != null) ApplyDiscount.setDisable(true);
+        //if (ApplyDiscount != null) ApplyDiscount.setDisable(true);
         
-        // Add listeners to text fields
-        if (NameEnter != null && SurnameEnter != null) {
-            NameEnter.textProperty().addListener((observable, oldValue, newValue) -> {
-                validateNameSurnameFields();
-            });
-            
-            SurnameEnter.textProperty().addListener((observable, oldValue, newValue) -> {
-                validateNameSurnameFields();
-            });
-        }
+
 
         updateShoppingCartLabels();
         setupProductTable();
@@ -429,6 +420,9 @@ public class Step4Controller {
     {
         customerName = NameEnter.getText().trim();
         customerSurname = SurnameEnter.getText().trim();
+        if (!validateCustomerName(customerName, customerSurname)) {
+            return;
+        }
 
         if (isDiscountApplied) 
         {
@@ -590,6 +584,7 @@ public class Step4Controller {
             ticket.setTotalTax(getTotalTaxAmount());
             ticket.setTotalCost(getTotalSeatPrice() + getTotalProductPrice() + getTotalTaxAmount());
             ticket.setDiscountedSeatNumber(discountedSeatsCount);
+            ticket.setStatus("ACTIVE");
 
             // Debug prints
             System.out.println("Step4 - Before Scene Change:");
@@ -702,6 +697,40 @@ public class Step4Controller {
         stage.setFullScreen(true); // Ensure full screen
         stage.show();
     }
+
+    private boolean isValidName(String name, String fieldName) {
+        if (name == null || name.trim().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error", fieldName + " cannot be empty");
+            return false;
+        }
+    
+        if (name.trim().length() < 2) {
+            showAlert(Alert.AlertType.ERROR, "Error", fieldName + " must be at least 2 characters long");
+            return false;
+        }
+    
+        if (name.trim().length() > 50) {
+            showAlert(Alert.AlertType.ERROR, "Error", fieldName + " cannot exceed 50 characters");
+            return false;
+        }
+    
+        if (!name.matches("^[A-Za-z\\s-]+$")) {
+            showAlert(Alert.AlertType.ERROR, "Error", fieldName + " can only contain letters, spaces, and hyphens");
+            return false;
+        }
+    
+        return true;
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) {
         try {
@@ -964,18 +993,33 @@ public class Step4Controller {
             e.printStackTrace();
         }
     }
-    private void validateNameSurnameFields() 
+    private boolean validateCustomerName(String name, String surname) 
     {
-        // Check if both name and surname fields have valid input
-        boolean hasValidInput = !NameEnter.getText().trim().isEmpty() 
-                              && !SurnameEnter.getText().trim().isEmpty();
-        
-        // Enable/disable buttons based on input validity
-        ApplyDiscount.setDisable(!hasValidInput);
-        
-        // Keep other buttons disabled until discount is applied
-        next_button_step4.setDisable(true);
-        AddProductToCart.setDisable(true);
-        EmptyCartButton.setDisable(true);
+        // Empty check
+        if (name == null || name.trim().isEmpty() || 
+            surname == null || surname.trim().isEmpty()) {
+                showErrorDialog("Error Invalid Input");
+            return false;
+        }
+    
+        // Length check
+        if (name.trim().length() < 2 || surname.trim().length() < 2) {
+            showErrorDialog("Error Invalid Input");
+            return false;
+        }
+    
+        if (name.trim().length() > 50 || surname.trim().length() > 50) {
+            showErrorDialog("Error Invalid Input");
+            return false;
+        }
+    
+        // Turkish character validation pattern
+        String namePattern = "^[A-Za-zğĞıİöÖüÜşŞçÇ\\s-]+$";
+        if (!name.matches(namePattern) || !surname.matches(namePattern)) {
+            showErrorDialog("Name and surname can only contain letters (including Turkish characters), spaces, and hyphens");
+            return false;
+        }
+    
+        return true;
     }
 }

@@ -114,8 +114,8 @@ public class Manager_PersonnelController
         Revenue_Tax_Go.setDisable(false);
         Price_Management_Go.setDisable(false);
 
-        setupEditableColumns();
         Personnel_Table.setEditable(true);
+        setupEditableColumns();
     }
 
     private void loadUsers() 
@@ -274,6 +274,8 @@ public class Manager_PersonnelController
         alert.showAndWait();
     }
 
+    
+
     // Method to be called from AddStaffController
     public void refreshTable() {
         loadUsers();
@@ -361,27 +363,29 @@ public class Manager_PersonnelController
         }
     }
 
-    private void setupEditableColumns() {
-        First_Name_Column.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+    private void setupEditableColumns() 
+    {
+            First_Name_Column.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
         First_Name_Column.setOnEditCommit(event -> {
             User user = event.getRowValue().getValue();
             user.setFirstName(event.getNewValue());
-            updateUser(user);
+            updateUser(user,"");
         });
 
         Last_Name_Column.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
         Last_Name_Column.setOnEditCommit(event -> {
             User user = event.getRowValue().getValue();
             user.setLastName(event.getNewValue());
-            updateUser(user);
+            updateUser(user,"");
         });
 
         Username_Column.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
         Username_Column.setOnEditCommit(event -> {
             User user = event.getRowValue().getValue();
-            if (validateUsername(event.getNewValue())) {
-                user.setUsername(event.getNewValue());
-                updateUser(user);
+            if (validateUsername(event.getNewValue())) 
+            {
+                String oldUsername = event.getNewValue();
+                updateUser(user,oldUsername);
             }
         });
 
@@ -390,21 +394,31 @@ public class Manager_PersonnelController
             User user = event.getRowValue().getValue();
             if (validatePassword(event.getNewValue())) {
                 user.setPassword(event.getNewValue());
-                updateUser(user);
+                updateUser(user,"");
             }
         });
 
-        Role_Column.setCellFactory(ComboBoxTreeTableCell.forTreeTableColumn("Manager", "Staff"));
+        Role_Column.setCellFactory(ComboBoxTreeTableCell.forTreeTableColumn(
+            FXCollections.observableArrayList("manager", "admin", "cashier")
+        ));
         Role_Column.setOnEditCommit(event -> {
             User user = event.getRowValue().getValue();
             user.setRole(event.getNewValue());
-            updateUser(user);
+            updateUser(user,"");
         });
+
+        // Make columns editable
+        First_Name_Column.setEditable(true);
+        Last_Name_Column.setEditable(true);
+        Username_Column.setEditable(true);
+        Password_Column.setEditable(true);
+        Role_Column.setEditable(true);
     }
 
-    private void updateUser(User user) {
+    private void updateUser(User user,String oldUsername) {
         try {
-            if (userDBO.updateUser(user)) {
+            if (userDBO.updateUser(user,oldUsername)) 
+            {
                 showAlert(AlertType.INFORMATION, "Success", "User information updated successfully!");
                 loadUsers(); // Refresh table
             } else {

@@ -2,10 +2,14 @@ package help.utilities;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
 import help.classes.Product;
+import help.classes.TicketProduct;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class TicketProductsDBO {
 
@@ -41,6 +45,33 @@ public class TicketProductsDBO {
             throw new SQLException("Error saving ticket products to the database", e);
         }
     }
+
+    public ObservableList<TicketProduct> getTicketProducts(int ticketId) throws Exception {
+    ObservableList<TicketProduct> products = FXCollections.observableArrayList();
+    String sql = "SELECT ticket_id, product_name, quantity, price FROM Ticket_Products WHERE ticket_id = ?";
+    
+    try (Connection conn = DataBaseHandler.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        pstmt.setInt(1, ticketId);
+        ResultSet rs = pstmt.executeQuery();
+        
+        while (rs.next()) {
+            TicketProduct product = new TicketProduct(
+                rs.getInt("ticket_id"),
+                rs.getString("product_name"),
+                rs.getInt("quantity"),
+                rs.getBigDecimal("price")
+            );
+            products.add(product);
+        }
+    }
+    return products;
+}
+
+    
+    
+    
 
 
     public void deleteTicketProducts(int ticketId) throws Exception 

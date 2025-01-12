@@ -88,6 +88,12 @@ public class Step1Controller
     {
         TreeItem<Movie> root = new TreeItem<>();
 
+        Label placeholder = new Label("No movies available");
+        placeholder.setStyle("-fx-font-size: 14px; -fx-text-fill: #666666;");
+        
+        // Set placeholder for empty table
+        resultsTableView.setPlaceholder(placeholder);
+
         searchComboBox.getItems().addAll("Genre", "Partial Title", "Full Title");
         searchComboBox.setValue("Genre"); // Set default value to "Genre"
 
