@@ -9,20 +9,27 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * JavaFX App
+ * Main Application class for the Cinema Center Management System.
+ * This class serves as the entry point for the JavaFX application and handles
+ * the primary stage initialization.
  * 
- * Product_Inventory_Go
- * Personnel_Go
- * Price_Management_Go
- * Revenue_Tax_Go
+ * Key Features:
+ * <ul>
+ *   <li>Product Inventory Management</li>
+ *   <li>Personnel Management</li>
+ *   <li>Price Management</li>
+ *   <li>Revenue and Tax Management</li>
+ * </ul>
  * 
- * SignoutButton
+ * Navigation Controls:
+ * <ul>
+ *   <li>SignoutButton - Returns to login screen</li>
+ *   <li>MinimizeButton - Minimizes application window</li>
+ *   <li>CloseButton - Exits application</li>
+ * </ul>
  * 
  * 
- * MinimizeButton
- * CloseButton
- * 
- * 
+ * @version 1.0
  */
 public class App extends Application 
 {
