@@ -215,6 +215,17 @@ public class OMoviesController {
         confirmAlert.setHeaderText("Are you sure you want to delete this movie?");
         confirmAlert.setContentText("Movie: " + selectedMovie.getTitle());
 
+        // Get the window owner
+        Stage stage = (Stage) cmbGenre.getScene().getWindow();
+                
+        // Configure alert
+        confirmAlert.initOwner(stage);
+        confirmAlert.initModality(Modality.APPLICATION_MODAL);
+
+        // Position alert
+        Stage alertStage = (Stage) confirmAlert.getDialogPane().getScene().getWindow();
+        alertStage.setAlwaysOnTop(true);
+
         confirmAlert.showAndWait().ifPresent(response -> {
             if (response == javafx.scene.control.ButtonType.OK) {
                 int movieId = AdminDBH.getMovieIdFromTitle(selectedMovie.getTitle());

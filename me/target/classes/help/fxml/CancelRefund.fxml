@@ -98,7 +98,6 @@
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="19.0" prefHeight="679.0" prefWidth="272.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0.5, 5, 5);" styleClass="infocard-2" stylesheets="@styles.css">
                                  <children>
-                                    <TextField fx:id="ProductNameText" layoutX="22.0" layoutY="309.0" promptText="User Name" text="Product Name" />
                                     <Label alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="96.0" prefHeight="16.0" prefWidth="101.0" style="-fx-background-color: red; -fx-effect: null;" text="Type of Refund" textFill="WHITE">
                                        <font>
                                           <Font name="SansSerif Regular" size="14.0" />
@@ -111,13 +110,7 @@
                                     </Label>
                                     <TextField fx:id="TicketIdText" layoutX="21.0" layoutY="221.0" promptText="Transaction Number" text="Ticket ID" />
                                     <ComboBox fx:id="TypeOfRefund" layoutX="23.0" layoutY="120.0" prefHeight="24.0" prefWidth="121.0" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="287.0" prefHeight="16.0" prefWidth="135.0" style="-fx-background-color: red; -fx-effect: null;" text="Product Name" textFill="WHITE">
-                                       <font>
-                                          <Font name="SansSerif Regular" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Button fx:id="RefundButton" layoutX="148.0" layoutY="542.0" mnemonicParsing="false" onAction="#handleRefundSelection" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Refund" />
-                                    <Button layoutX="25.0" layoutY="542.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Search" />
+                                    <Button fx:id="RefundButton" layoutX="76.0" layoutY="563.0" mnemonicParsing="false" onAction="#handleRefundSelection" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Refund" />
                                  </children>
                               </AnchorPane>
                               <TableView fx:id="TicketTable" editable="true" layoutX="291.0" layoutY="18.0" prefHeight="680.0" prefWidth="647.0" styleClass="table.view" stylesheets="@styles.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="291.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="18.0">

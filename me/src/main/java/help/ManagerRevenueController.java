@@ -11,7 +11,10 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -210,12 +213,30 @@ public class ManagerRevenueController {
         }
     }
 
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void showAlert(String title, String message) {
+        // Store the main window state
+        Stage mainStage = (Stage) RevenueChart.getScene().getWindow();
+        boolean wasFullScreen = mainStage.isFullScreen();
+    
+        // Create the alert
+        Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(content);
+        alert.setContentText(message);
+    
+        // Get the dialog stage (the underlying stage of the alert)
+        Stage dialogStage = (Stage) alert.getDialogPane().getScene().getWindow();
+    
+        // Set the dialog to fullscreen mode
+        dialogStage.setFullScreen(true);
+    
+        // Show the alert and wait for user interaction
         alert.showAndWait();
+    
+        // Restore fullscreen if needed
+        if (wasFullScreen) {
+            mainStage.setFullScreen(true);
+        }
     }
- 
+    
 }

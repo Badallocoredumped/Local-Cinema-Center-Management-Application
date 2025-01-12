@@ -420,6 +420,7 @@ public class Manager_PersonnelController
             if (userDBO.updateUser(user,oldUsername)) 
             {
                 showAlert(AlertType.INFORMATION, "Success", "User information updated successfully!");
+                setCurrentUsername(user.getUsername());
                 loadUsers(); // Refresh table
             } else {
                 showAlert(AlertType.ERROR, "Error", "Failed to update user information");
@@ -445,10 +446,23 @@ public class Manager_PersonnelController
         return true;
     }
 
-    private void showAlert(AlertType type, String title, String content) {
-        Alert alert = new Alert(type);
+    private void showAlert(Alert.AlertType alertType, String title, String content) 
+    {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
+        alert.setHeaderText(null);
         alert.setContentText(content);
+        
+        // Get the primary stage that contains this controller's scene
+        Stage primaryStage = (Stage) Personnel_Table.getScene().getWindow();
+        
+        // Set the alert's owner to the primary stage
+        alert.initOwner(primaryStage);
+        
+        // Keep alert within fullscreen window
+        alert.initModality(Modality.WINDOW_MODAL);
+        
+        // Show and wait for user response
         alert.showAndWait();
     }
 }

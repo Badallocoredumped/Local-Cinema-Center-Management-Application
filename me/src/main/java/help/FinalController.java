@@ -2,6 +2,7 @@ package help;
 
 import java.io.IOException;
 
+import help.classes.ShoppingCart;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,7 +43,11 @@ public class FinalController {
     }
 
     @FXML
-    private void handleBackButtonAction() throws IOException {
+    private void handleBackButtonAction() throws IOException 
+    
+    {
+
+        ShoppingCart.getInstance().clear();
         Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/step1.fxml"));
         Stage stage = (Stage) back_button_final.getScene().getWindow();
         Scene scene = new Scene(root);

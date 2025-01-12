@@ -98,44 +98,42 @@
                <children>
                   <AnchorPane layoutX="128.0" layoutY="141.0" prefHeight="647.0" prefWidth="485.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <AnchorPane layoutX="9.0" layoutY="8.0" prefHeight="200.0" prefWidth="961.0" style="-fx-background-color: #fff; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, .3), 8,0,0,0);">
+                        <AnchorPane layoutY="-29.0" prefHeight="718.0" prefWidth="964.0" style="-fx-background-color: #fff; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, .3), 8,0,0,0);">
                            <children>
-                              <AnchorPane layoutX="38.0" layoutY="14.0" prefHeight="168.0" prefWidth="371.0" style="-fx-background-color: linear-gradient(to right, #4b0000, #800000);;">
+                              <AnchorPane layoutX="3.0" layoutY="259.0" prefHeight="200.0" prefWidth="961.0" style="-fx-background-color: #fff; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, .3), 8,0,0,0);">
                                  <children>
-                                    <Label fx:id="TotalRevenue" layoutX="182.0" layoutY="137.0" text="\$0.0" textFill="WHITE">
-                                       <font>
-                                          <Font name="SansSerif Regular" size="20.0" />
-                                       </font>
-                                    </Label>
-                                    <FontAwesomeIcon fill="WHITE" glyphName="MONEY" layoutX="122.0" layoutY="95.0" size="6em" text="" />
-                                    <Label layoutX="44.0" layoutY="136.0" text="Total Revenue:" textFill="WHITE">
-                                       <font>
-                                          <Font size="20.0" />
-                                       </font>
-                                    </Label>
+                                    <AnchorPane layoutX="38.0" layoutY="14.0" prefHeight="168.0" prefWidth="371.0" style="-fx-background-color: linear-gradient(to right, #4b0000, #800000);;">
+                                       <children>
+                                          <Label fx:id="TotalRevenue" layoutX="182.0" layoutY="137.0" text="\$0.0" textFill="WHITE">
+                                             <font>
+                                                <Font name="SansSerif Regular" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <FontAwesomeIcon fill="WHITE" glyphName="MONEY" layoutX="122.0" layoutY="95.0" size="6em" text="" />
+                                          <Label layoutX="44.0" layoutY="136.0" text="Total Revenue:" textFill="WHITE">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane layoutX="563.0" layoutY="15.0" prefHeight="168.0" prefWidth="371.0" style="-fx-background-color: linear-gradient(to right, #4b0000, #800000);;">
+                                       <children>
+                                          <Label layoutX="49.0" layoutY="135.0" text="Tax Amounts:" textFill="WHITE">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="TaxAmount" layoutX="182.0" layoutY="136.0" text="\$0.0" textFill="WHITE">
+                                             <font>
+                                                <Font name="SansSerif Regular" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <FontAwesomeIcon fill="#fffbfb" glyphName="DOLLAR" layoutX="138.0" layoutY="103.0" size="7em" />
+                                       </children>
+                                    </AnchorPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane layoutX="563.0" layoutY="15.0" prefHeight="168.0" prefWidth="371.0" style="-fx-background-color: linear-gradient(to right, #4b0000, #800000);;">
-                                 <children>
-                                    <Label layoutX="49.0" layoutY="135.0" text="Tax Amounts:" textFill="WHITE">
-                                       <font>
-                                          <Font size="20.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="TaxAmount" layoutX="182.0" layoutY="136.0" text="\$0.0" textFill="WHITE">
-                                       <font>
-                                          <Font name="SansSerif Regular" size="20.0" />
-                                       </font>
-                                    </Label>
-                                    <FontAwesomeIcon fill="#fffbfb" glyphName="DOLLAR" layoutX="138.0" layoutY="103.0" size="7em" />
-                                 </children>
-                              </AnchorPane>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane layoutX="7.0" layoutY="251.0" prefHeight="471.0" prefWidth="964.0" style="-fx-background-color: #fff; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, .3), 8,0,0,0);">
-                           <children>
-                              <AnchorPane layoutX="14.0" layoutY="20.0" prefHeight="439.0" prefWidth="495.0" style="-fx-background-color: #fff; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, .3), 8,0,0,0);" />
-                              <AnchorPane layoutX="528.0" layoutY="20.0" prefHeight="439.0" prefWidth="424.0" style="-fx-background-color: #fff; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, .3), 8,0,0,0);" />
                            </children>
                         </AnchorPane>
                      </children>

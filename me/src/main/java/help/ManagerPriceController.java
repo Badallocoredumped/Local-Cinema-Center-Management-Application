@@ -7,8 +7,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 import java.io.IOException;
 
 import help.utilities.PriceDBO;
@@ -25,6 +29,9 @@ public class ManagerPriceController
     @FXML private Button CloseButton;
     @FXML private Button MinimizeButton;
     @FXML private Button SignoutButton;
+    @FXML private ImageView Image1;
+    @FXML private ImageView Image2;
+
     
     @FXML private Label CurrentPriceHallA;
     @FXML private Label CurrentPriceHallB;
@@ -57,6 +64,17 @@ public class ManagerPriceController
     @FXML
     private void initialize() 
     {
+        Image image1 = new Image(getClass().getResourceAsStream("/help/images/cinema-hall.png"));
+        ImageView imageView1 = new ImageView(image1);
+
+        // Load the second image
+        Image image2 = new Image(getClass().getResourceAsStream("/help/images/discount.png"));
+        ImageView imageView2 = new ImageView(image2);
+
+
+
+
+
         System.out.println("ManagerPriceController initialized");
         loadCurrentPrices();
 
@@ -120,7 +138,7 @@ public class ManagerPriceController
             CurrentPriceHallB.setText(String.format("$%.2f", hallBPrice));
             CurrentDiscountRate.setText(String.format("%.0f%%", discountRate));
         } catch (Exception e) {
-            showAlert("Error", "Could not load prices: " + e.getMessage());
+            showAlert(null, "Error");
         }
     }
 
@@ -154,7 +172,7 @@ public class ManagerPriceController
             stage.setFullScreenExitHint(""); // Hide the exit hint
 
         } catch (IOException e) {
-            showAlert("Error", "Could not load product management page");
+            showAlert(null, "Error");
         }
     }
 
@@ -170,7 +188,7 @@ public class ManagerPriceController
             stage.setFullScreenExitHint("");
             
         } catch (IOException e) {
-            showAlert("Error", "Could not load personnel management page");
+            showAlert(null, "Error");
         }
     }
 
@@ -186,7 +204,7 @@ public class ManagerPriceController
             stage.setFullScreenExitHint("");
             
         } catch (IOException e) {
-            showAlert("Error", "Could not load price management page");
+            showAlert(null, "Error");
         }
     }
 
@@ -202,7 +220,7 @@ public class ManagerPriceController
             stage.setFullScreenExitHint("");
             
         } catch (IOException e) {
-            showAlert("Error", "Could not load revenue management page");
+            showAlert(null, "Error");
         }
     }
 
@@ -214,29 +232,29 @@ public class ManagerPriceController
         try {
             String newPriceText = NewPriceHallA.getText().trim(); // Trim any leading or trailing spaces
             if (newPriceText.isEmpty()) {
-                showAlert("Error", "Please enter a new price for Hall A");
+                showAlert(null, "Error");
                 return;
             }
     
             double newPrice = Double.parseDouble(newPriceText);
             if (newPrice <= 0) {
-                showAlert("Error", "Price must be greater than 0");
+                showAlert(null, "Error");
                 return;
             }
             if (newPrice > 125) {
-                showAlert("Error", "Price cannot exceed $125");
+                showAlert(null, "Error");
                 return;
             }
     
             priceDBO.updateTicketPricing(1, newPrice, priceDBO.getSeatDiscount("Hall_A"));
             loadCurrentPrices();
             NewPriceHallA.clear();
-            showAlert("Success", "Hall A price updated successfully!");
+            showAlert(null, "Succesfully Updated Hall A Price");
     
         } catch (NumberFormatException e) {
-            showAlert("Error", "Invalid price format. Please enter a valid number.");
+            showAlert(null, "Error in Hall A");
         } catch (Exception e) {
-            showAlert("Error", "Failed to update price: " + e.getMessage());
+            showAlert(null, "Error in Hall A");
         }
     }
 
@@ -245,29 +263,29 @@ public class ManagerPriceController
         try {
             String newPriceText = NewPriceHallB.getText().trim(); // Trim any leading or trailing spaces
             if (newPriceText.isEmpty()) {
-                showAlert("Error", "Please enter a new price for Hall B");
+                showAlert(null, "Error in Hall B");
                 return;
             }
 
             double newPrice = Double.parseDouble(newPriceText);
             if (newPrice <= 0) {
-                showAlert("Error", "Price must be greater than 0");
+                showAlert(null, "Error in Hall B");
                 return;
             }
             if (newPrice > 125) {
-                showAlert("Error", "Price cannot exceed $125");
+                showAlert(null, "Error in Hall B");
                 return;
             }
 
             priceDBO.updateTicketPricing(2, newPrice, priceDBO.getSeatDiscount("Hall_B"));
             loadCurrentPrices();
             NewPriceHallB.clear();
-            showAlert("Success", "Hall B price updated successfully!");
+            showAlert(null, "Succesfully Updated Hall B Price");
 
         } catch (NumberFormatException e) {
-            showAlert("Error", "Invalid price format. Please enter a valid number.");
+            showAlert(null, "Error");
         } catch (Exception e) {
-            showAlert("Error", "Failed to update price: " + e.getMessage());
+            showAlert(null, "Error");
         }
     }
 
@@ -276,13 +294,13 @@ public class ManagerPriceController
         try {
             String newDiscountText = NewDiscountRate.getText().trim(); // Trim any leading or trailing spaces
             if (newDiscountText.isEmpty()) {
-                showAlert("Error", "Please enter a new discount rate");
+                showAlert(null, "Error");
                 return;
             }
 
             double discountRate = Double.parseDouble(newDiscountText); // Use the number as-is
             if (discountRate < 0 || discountRate > 100) {  // Check if the discount is between 0 and 100
-                showAlert("Error", "Discount rate must be between 0 and 100");
+                showAlert(null, "Error");
                 return;
             }
 
@@ -292,12 +310,12 @@ public class ManagerPriceController
 
             loadCurrentPrices();
             NewDiscountRate.clear();
-            showAlert("Success", "Discount rate updated successfully!");
+            showAlert(null, "Successfully Updated Discount Rate");
 
         } catch (NumberFormatException e) {
-            showAlert("Error", "Invalid discount rate format. Please enter a valid number.");
+            showAlert(null, "Error");
         } catch (Exception e) {
-            showAlert("Error", "Failed to update discount rate: " + e.getMessage());
+            showAlert(null, "Error");
         }
     }
 
@@ -305,11 +323,13 @@ public class ManagerPriceController
 
 
 
-    private void showAlert(String title, String content) {
+    private void showAlert(String title, String message) 
+    {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(content);
+        alert.setContentText(message);
+        alert.getButtonTypes().setAll(ButtonType.OK);
         alert.showAndWait();
     }
 

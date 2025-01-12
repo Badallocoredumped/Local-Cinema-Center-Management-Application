@@ -146,6 +146,7 @@ public class ScheduleController {
         Time time = Time.valueOf(formattedTime);
 
         int movieId = AdminDBH.getMovieIdFromTitle(title);
+        boolean diditwork = false;
 
         try {
             dbhandler.AddSession(movieId, hall, date, time);
@@ -154,7 +155,9 @@ public class ScheduleController {
             e.printStackTrace();
         }
         loadSessionsFromDatabase();
+        
         showAlert(Alert.AlertType.INFORMATION, "Success", "Session added successfully!");
+        
         clearFields();
     }
 
@@ -191,43 +194,59 @@ public class ScheduleController {
             e.printStackTrace();
         }
         loadSessionsFromDatabase();
+        
         showAlert(Alert.AlertType.INFORMATION, "Success", "Session updated successfully!");
+    
+    
+        showAlert(Alert.AlertType.ERROR, "Error", "Cannot update a session with sold tickets.");
+        
         clearFields();
     }
 
+    
+
     @FXML
-    void OnDelete(ActionEvent event) 
+void OnDelete(ActionEvent event) 
+{
+    selectedSession = sessionTable.getSelectionModel().getSelectedItem();
+    if (selectedSession == null) 
     {
-        selectedSession = sessionTable.getSelectionModel().getSelectedItem();
-        if (selectedSession == null) 
-        {
-            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a movie to delete.");
-            return;
-        }
+        showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a movie to delete.");
+        return;
+    }
 
-        // Confirm deletion
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmAlert.setTitle("Confirm Deletion");
-        confirmAlert.setHeaderText("Are you sure you want to delete this movie?");
-        confirmAlert.setContentText("Session: " + selectedSession.getSessionId());
+    // Confirm deletion
+    Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+    confirmAlert.setTitle("Confirm Deletion");
+    confirmAlert.setHeaderText("Are you sure you want to delete this movie?");
+    confirmAlert.setContentText("Session: " + selectedSession.getSessionId());
 
-        confirmAlert.showAndWait().ifPresent(response -> 
+    confirmAlert.showAndWait().ifPresent(response -> 
+    {
+        if (response == javafx.scene.control.ButtonType.OK) 
         {
-            if (response == javafx.scene.control.ButtonType.OK) 
-            {
-                int sessionId = selectedSession.getSessionId();
-                try {
-                    dbhandler.DeleteSession(sessionId);
-                } catch (SQLException e) 
-                {
-                    e.printStackTrace();
-                }
+            int sessionId = selectedSession.getSessionId();
+            try {
+                dbhandler.DeleteSession(sessionId);  // Delete associated seats and session
                 loadSessionsFromDatabase();
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Session deleted successfully!");
                 clearFields();
-            }
-        });
-    }
+            } catch (SQLException e) {
+                if (e.getMessage().contains("tickets")) {
+                    showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete session because tickets have already been purchased.");
+                } else {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete session.");
+                }
+            } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+        }
+    });
+}
+
+
 
     private void showAlert(Alert.AlertType alertType, String title, String content) 
     {

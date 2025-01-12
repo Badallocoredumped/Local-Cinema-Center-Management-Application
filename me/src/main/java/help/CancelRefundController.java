@@ -92,6 +92,7 @@ public class CancelRefundController
 
     private void setupTableColumns() throws Exception 
     {
+        
         RefundButton.setDisable(true);
 
         // Add selection listener to table
@@ -206,6 +207,7 @@ public class CancelRefundController
 
     private void setupComboBox() 
     {
+        TypeOfRefund.setValue("Full Refund");
         TypeOfRefund.setItems(FXCollections.observableArrayList(
             "Full Refund",
             "Product Refund",

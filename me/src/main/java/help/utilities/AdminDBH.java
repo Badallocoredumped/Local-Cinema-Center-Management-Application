@@ -428,7 +428,6 @@ public class AdminDBH
                     if (rs.next() && rs.getInt(1) > 0) 
                     {
                         System.out.println("Error: Overlapping session detected.");
-                        return;
                     }
                 }
 
@@ -459,10 +458,12 @@ public class AdminDBH
                         seatStmt.executeUpdate();
                         System.out.println("Seat added successfully: " + seatLabel);
                     }
+                    
                 } else {
                     throw new SQLException("Failed to retrieve session ID.");
+
                 }
-        
+                
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();
@@ -558,7 +559,6 @@ public class AdminDBH
             if (rs.next() && rs.getInt(1) > 0) 
             {
                 System.out.println("Error: Cannot update a session with sold tickets.");
-                return;
             }
         }
 
@@ -573,10 +573,8 @@ public class AdminDBH
                     if (rs.next() && rs.getInt(1) > 0) 
                     {
                         System.out.println("Error: Overlapping session detected.");
-                        return;
                     }
                 }
-
         String updateQuery = "UPDATE Sessions SET movie_id = ?, hall_name = ?, session_date = ?, start_time = ? WHERE session_id = ?";
         try (PreparedStatement stmt = dbconnection.prepareStatement(updateQuery)) 
         {
@@ -588,39 +586,58 @@ public class AdminDBH
             System.out.println("Session updated successfully");
             stmt.executeUpdate();
         }
+        
     }
 
-    /**
-     * Deletes an existing session from the database.
-     * 
-     * This method first checks if any tickets have been sold for the session; if tickets exist, the session cannot be deleted. 
-     * If no tickets are sold, the session is deleted from the database.
-     *
-     * @param sessionId The ID of the session to be deleted.
-     * @throws SQLException If there is an error executing the SQL queries or accessing the database.
-     */                                                                         
-    public void DeleteSession(int sessionId) throws SQLException 
-    {
-        String checkTicketsQuery = "SELECT COUNT(*) FROM Tickets WHERE session_id = ?";
-        try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkTicketsQuery)) 
-        {
-            checkStmt.setInt(1, sessionId);
-            ResultSet rs = checkStmt.executeQuery();
-            if (rs.next() && rs.getInt(1) > 0) 
-            {
-                System.out.println("Error: Cannot delete a session with sold tickets.");
-                return;
+    public void DeleteSession(int sessionId) throws Exception {
+        Connection connection = DataBaseHandler.getConnection();
+        
+        try {
+            // Check if there are tickets associated with the session
+            String checkTicketsQuery = "SELECT COUNT(*) FROM tickets WHERE session_id = ?";
+            try (PreparedStatement checkStmt = connection.prepareStatement(checkTicketsQuery)) {
+                checkStmt.setInt(1, sessionId);
+                ResultSet resultSet = checkStmt.executeQuery();
+                resultSet.next();
+                int ticketCount = resultSet.getInt(1);
+                
+                if (ticketCount > 0) {
+                    throw new SQLException("Cannot delete session because tickets have already been purchased for it.");
+                }
             }
-        }
-
-        String deleteQuery = "DELETE FROM Sessions WHERE session_id = ?";
-        try (PreparedStatement stmt = dbconnection.prepareStatement(deleteQuery)) 
-        {
-            stmt.setInt(1, sessionId);
-            stmt.executeUpdate();
-            System.out.println("session deleted successfully");
+            
+            // Start a transaction to ensure both delete operations succeed
+            connection.setAutoCommit(false);
+            
+            // First, delete all seats associated with the session
+            String deleteSeatsQuery = "DELETE FROM seats WHERE session_id = ?";
+            try (PreparedStatement seatStmt = connection.prepareStatement(deleteSeatsQuery)) {
+                seatStmt.setInt(1, sessionId);
+                seatStmt.executeUpdate();
+            }
+            
+            // Then, delete the session itself
+            String deleteSessionQuery = "DELETE FROM sessions WHERE session_id = ?";
+            try (PreparedStatement sessionStmt = connection.prepareStatement(deleteSessionQuery)) {
+                sessionStmt.setInt(1, sessionId);
+                sessionStmt.executeUpdate();
+            }
+            
+            // Commit the transaction
+            connection.commit();
+        } catch (SQLException e) {
+            // Rollback in case of an error
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
         }
     }
+    
+
+                                  
+            
+    
 
     /**
      * Retrieves all sessions from the database.
@@ -666,4 +683,6 @@ public class AdminDBH
         }
         return schedules;
     }
+
+    
 }

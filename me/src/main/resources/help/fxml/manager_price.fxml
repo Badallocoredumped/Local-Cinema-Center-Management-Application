@@ -9,6 +9,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
@@ -174,7 +176,7 @@
                         <Separator layoutX="7.0" layoutY="376.0" prefHeight="0.0" prefWidth="972.0" style="-fx-background-color: black;" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="6.0" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="747.0" prefWidth="985.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane layoutX="-8.0" prefHeight="747.0" prefWidth="985.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Label layoutX="21.0" layoutY="14.0" text="Price Management">
                            <font>
@@ -235,6 +237,11 @@
                                     <Font name="Microsoft Sans Serif" size="18.0" />
                                  </font>
                               </Label>
+                              <ImageView fx:id="Image1" fitHeight="200.0" fitWidth="200.0" layoutX="24.0" layoutY="25.0">
+                                 <image>
+                                    <Image url="@../images/cinema-hall.png" />
+                                 </image>
+                              </ImageView>
                            </children>
                         </AnchorPane>
                         <AnchorPane layoutX="22.0" layoutY="452.0" prefHeight="273.0" prefWidth="593.0" style="-fx-background-color: #fff; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, .3), 8,0,0,0);">
@@ -274,6 +281,11 @@
                                     <Font name="Microsoft Sans Serif" size="18.0" />
                                  </font>
                               </Label>
+                              <ImageView fx:id="Image2" fitHeight="200.0" fitWidth="200.0" layoutX="381.0" layoutY="32.0">
+                                 <image>
+                                    <Image url="@../images/discount.png" />
+                                 </image>
+                              </ImageView>
                            </children>
                         </AnchorPane>
                      </children>

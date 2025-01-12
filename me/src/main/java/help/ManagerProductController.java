@@ -11,9 +11,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 
@@ -276,7 +278,8 @@ public class ManagerProductController
 
 
     @FXML
-    private void handleAddProduct() {
+    private void handleAddProduct() 
+    {
         if (!validateInputs()) return;
         
         try {
@@ -361,51 +364,51 @@ public class ManagerProductController
         }
     }
 
-    private boolean validateInputs() {
-        // Check for empty name and Turkish characters
-        String name = ProductNameText.getText().trim();
-        if (name.isEmpty()) {
+    private boolean validateInputs() 
+    {
+    // Validate Product Name
+        if (ProductNameText == null || ProductNameText.getText().trim().isEmpty()) {
             showAlert("Validation Error", "Product name cannot be empty");
             return false;
-        }
-        
-        if (!name.matches("[a-zA-ZğĞıİöÖşŞüÜçÇ\\s]+")) {
+        } else if (!ProductNameText.getText().trim().matches("[a-zA-ZçÇğĞıİöÖşŞüÜ\\s]+")) {
             showAlert("Validation Error", "Product name can only contain letters and Turkish characters");
             return false;
         }
-    
-        // Check product type selected
-        if (ProductTypeComboBox.getValue() == null) {
-            showAlert("Validation Error", "Please select a product type");
-            return false;
-        }
-    
-        // Validate stock quantity (positive integer)
+
+        // Validate Stock
         try {
             int stock = Integer.parseInt(ProductStockText.getText().trim());
             if (stock < 0) {
-                showAlert("Validation Error", "Stock quantity must be positive");
+                showAlert("Validation Error", "Stock cannot be negative");
                 return false;
             }
         } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Stock quantity must be a valid number");
+            showAlert("Validation Error", "Please enter a valid number for stock");
             return false;
         }
-    
-        // Validate price (positive decimal)
+
+        // Validate Price
         try {
-            BigDecimal price = new BigDecimal(ProductPriceText.getText().trim());
-            if (price.compareTo(BigDecimal.ZERO) <= 0) {
-                showAlert("Validation Error", "Price must be greater than zero");
+            double price = Double.parseDouble(ProductPriceText.getText().trim());
+            if (price < 0) {
+                showAlert("Validation Error", "Price cannot be negative");
                 return false;
             }
         } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Price must be a valid number");
+            showAlert("Validation Error", "Please enter a valid number for price");
             return false;
         }
-    
+
+        // Validate Product Type
+        if (ProductTypeComboBox == null || ProductTypeComboBox.getValue() == null) {
+            showAlert("Validation Error", "Please select a product type");
+            return false;
+        }
+
+        // All validations passed
         return true;
     }
+
 
     private void clearFields() {
         ProductNameText.clear();
@@ -416,22 +419,48 @@ public class ManagerProductController
         selectedImageData = null;
     }
     
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+    private void showAlert(String title, String message) {
+        // Store the main window state
+        Stage mainStage = (Stage) SignoutButton.getScene().getWindow();
+        boolean wasFullScreen = mainStage.isFullScreen();
+        
+        // Create the alert
+        Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(title);
-        alert.setContentText(content);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        
+        // Show the alert and wait for user interaction
         alert.showAndWait();
+        
+        // Ensure the fullscreen state is retained
+        if (wasFullScreen) {
+            mainStage.setFullScreen(true);
+        }
     }
 
     // Add this method for success messages
+    // Add this method for success messages
     private void showSuccessMessage(String action) {
+        // Store the main window state
+        Stage mainStage = (Stage) ProductTable.getScene().getWindow();
+        boolean wasFullScreen = mainStage.isFullScreen();
+        
+        // Create the success message alert
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);
         alert.setContentText("Product successfully " + action + "!");
+        
+        // Show the alert and wait for user interaction
         alert.showAndWait();
+        
+        // Ensure the fullscreen state is retained
+        if (wasFullScreen) {
+            mainStage.setFullScreen(true);
+        }
     }
-
+    
     @FXML
     private void handleProductManagement() {
         try {

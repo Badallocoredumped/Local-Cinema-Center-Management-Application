@@ -28,6 +28,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -93,6 +94,8 @@ public class Step3BController
     {
         ShoppingCart cart = ShoppingCart.getInstance();
         Session session = cart.getSelectedDaySessionAndHall();
+        next_button_step3b.setDisable(true);
+        
 
         selectedMovieLabel.setText(cart.getSelectedMovie().getTitle());
         selectedSession.setText((
@@ -208,7 +211,29 @@ public class Step3BController
     private void handleAddToCartAction() throws Exception
     {
         List<String> cartSeats = ShoppingCart.getInstance().getSelectedSeats();
+
+        if (selectedSeats == null || selectedSeats.isEmpty()) 
+        {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Seats Selected");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select at least one seat before adding to cart.");
+            
+            // Get main stage and configure alert
+            Stage mainStage = (Stage) MinimizeButton.getScene().getWindow();
+            alert.initOwner(mainStage);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            
+            // Configure alert stage
+            Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+            alertStage.setAlwaysOnTop(true);
+            
+            alert.showAndWait();
+            return;
+        }
         ShoppingCart cart = ShoppingCart.getInstance();
+        next_button_step3b.setDisable(false);
+
     
         // Check if the selected seat is already sold
         for (String seat : selectedSeats) 
