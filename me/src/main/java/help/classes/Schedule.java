@@ -47,10 +47,4 @@ public class Schedule {
     public void setVacantSeats(int vacantSeats) { this.vacantSeats.set(vacantSeats); }
 
     public int getID(){ return getSessionId();}
-
-    public void add(Schedule schedule) 
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
-    }
 }

@@ -140,7 +140,7 @@
                               <Font size="15.0" />
                            </font>
                         </Button>
-                        <Button layoutX="157.0" layoutY="179.0" mnemonicParsing="false" onAction="#OnUpdate" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Update">
+                        <Button layoutX="157.0" layoutY="179.0" mnemonicParsing="false" onAction="#onUpdate" prefHeight="24.0" prefWidth="95.0" styleClass="insert-button-1" stylesheets="@styles.css" text="Update">
                            <font>
                               <Font size="15.0" />
                            </font>

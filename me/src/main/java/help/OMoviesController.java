@@ -36,8 +36,6 @@ public class OMoviesController {
     @FXML
     private TextField txtMovieTitle;
     @FXML
-    private TextField txtDuration;
-    @FXML
     private TextField txtSummary;
     @FXML
     private ComboBox<String> cmbGenre;
@@ -57,7 +55,7 @@ public class OMoviesController {
 
     @FXML
     public void initialize() {
-        cmbGenre.setItems(FXCollections.observableArrayList("Action", "Drama", "Comedy", "Horror", "Romance"));
+        cmbGenre.setItems(FXCollections.observableArrayList("Action", "Drama", "Comedy", "Horror", "Romance", "Documentary", "Adventure", "Sci-Fi"));
 
         colTitle.setCellValueFactory(data -> data.getValue().titleProperty());
         colGenre.setCellValueFactory(data -> data.getValue().genreProperty());
@@ -95,7 +93,6 @@ public class OMoviesController {
                 return;
             }
             String genre = cmbGenre.getValue();
-            String duration = txtDuration.getText();
             String summary = txtSummary.getText();
 
             if (posterData == null) {
@@ -103,12 +100,12 @@ public class OMoviesController {
                 return;
             }
 
-            if (title.isEmpty() || genre == null || duration.isEmpty() || summary.isEmpty()) {
+            if (title.isEmpty() || genre == null || summary.isEmpty()) {
                 showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
                 return;
             }
 
-            AdminDBH.AddMovie(title, posterData, genre, summary, duration);
+            AdminDBH.AddMovie(title, posterData, genre, summary);
 
             loadMoviesFromDatabase();
             showAlert(Alert.AlertType.INFORMATION, "Success", "Movie added successfully!");
@@ -138,20 +135,19 @@ public class OMoviesController {
                 return;
             }
             String newGenre = cmbGenre.getValue();
-            String newDuration = txtDuration.getText();
             String newSummary = txtSummary.getText();
 
             if (posterData == null) {
                 posterData = selectedMovie.getPosterImage();
             }
 
-            if (newTitle.isEmpty() || newGenre == null || newDuration.isEmpty() || newSummary.isEmpty()) {
+            if (newTitle.isEmpty() || newGenre == null || newSummary.isEmpty()) {
                 showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
                 return;
             }
 
             int movieId = AdminDBH.getMovieIdFromTitle(selectedMovie.getTitle());
-            dbHandler.FullUpdateMovie(movieId, newTitle, posterData, newGenre, newSummary, newDuration);
+            dbHandler.FullUpdateMovie(movieId, newTitle, posterData, newGenre, newSummary);
             loadMoviesFromDatabase();
             showAlert(Alert.AlertType.INFORMATION, "Success", "Movie updated successfully!");
             clearForm();
@@ -189,7 +185,6 @@ public class OMoviesController {
         if (selectedMovie != null) {
             txtMovieTitle.setText(selectedMovie.getTitle());
             cmbGenre.setValue(selectedMovie.getGenre());
-            txtDuration.setText(selectedMovie.getDuration());
             txtSummary.setText(selectedMovie.getSummary());
             posterData = selectedMovie.getPosterImage();
             displayPoster(selectedMovie);
@@ -211,7 +206,13 @@ public class OMoviesController {
         confirmAlert.showAndWait().ifPresent(response -> {
             if (response == javafx.scene.control.ButtonType.OK) {
                 int movieId = AdminDBH.getMovieIdFromTitle(selectedMovie.getTitle());
-                dbHandler.deleteMovie(movieId);
+                try {
+                    dbHandler.deleteMovie(movieId);
+                } catch (SQLException e) 
+                {
+                    // Handle alert
+                    e.printStackTrace();
+                }
                 loadMoviesFromDatabase();
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Movie deleted successfully!");
                 clearForm();
@@ -227,7 +228,6 @@ public class OMoviesController {
     private void clearForm() {
         txtMovieTitle.clear();
         cmbGenre.setValue(null);
-        txtDuration.clear();
         txtSummary.clear();
         posterData = null;
         selectedMovie = null;

@@ -64,7 +64,7 @@ public class AdminDBH
     }
     
     
-    public static void AddMovie(String title, byte[] posterData, String genre, String summaryText, String duration) throws SQLException 
+    public static void AddMovie(String title, byte[] posterData, String genre, String summaryText) throws SQLException 
     {
         if (dbconnection == null) {
             System.err.println("Database connection failed!!");
@@ -75,25 +75,23 @@ public class AdminDBH
                              + title.replaceAll(" ", "_") + "_summary.txt"; */
     
         
-    
-            // Insert the movie into the database
-            String query = "INSERT INTO movies (title, poster_image, genre, summary, duration) VALUES (?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = dbconnection.prepareStatement(query)) 
-            {
-                stmt.setString(1, title);
-                stmt.setBytes(2, posterData);  // URL or file path of the poster
-                stmt.setString(3, genre);   // Byte array of the poster image
-                stmt.setString(4, summaryText);
-                stmt.setString(5, duration); // File path of the summary
-                stmt.executeUpdate();  // Execute the insertion query
-                System.out.println("Movie added successfully.");
-            }
         
-            
+        // Insert the movie into the database
+        String query = "INSERT INTO movies (title, poster_image, genre, summary, duration) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = dbconnection.prepareStatement(query)) 
+        {
+            stmt.setString(1, title);
+            stmt.setBytes(2, posterData);  // URL or file path of the poster
+            stmt.setString(3, genre);   // Byte array of the poster image
+            stmt.setString(4, summaryText);
+            stmt.setInt(5, 120); // File path of the summary
+            stmt.executeUpdate();  // Execute the insertion query
+            System.out.println("Movie added successfully.");
+        }    
     }
     
 
-    public void FullUpdateMovie(int movieId, String newTitle, byte[] newPosterData, String newGenre, String newSummaryText, String newDuration) throws SQLException 
+    public void FullUpdateMovie(int movieId, String newTitle, byte[] newPosterData, String newGenre, String newSummaryText) throws SQLException 
     {
         if (dbconnection == null) 
         {
@@ -101,6 +99,17 @@ public class AdminDBH
             return; 
         }
         
+        String checkTicketsQuery = "SELECT COUNT(*) FROM sessions WHERE movie_id = ?";
+        try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkTicketsQuery)) 
+        {
+            checkStmt.setInt(1, movieId);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) 
+            {
+                System.out.println("Error: Cannot update a movie with sold tickets.");
+                return;
+            }
+        }
 
         String query = "SELECT summary FROM movies WHERE movie_id = ?";
         try (PreparedStatement selectStmt = dbconnection.prepareStatement(query))
@@ -118,7 +127,7 @@ public class AdminDBH
                         stmt.setBytes(2, newPosterData);
                         stmt.setString(3, newGenre);
                         stmt.setString(4, newSummaryText);
-                        stmt.setString(5, newDuration);
+                        stmt.setInt(5, 120);
                         stmt.setInt(6, movieId);
                         stmt.executeUpdate();
                         System.out.println("Movie updated successfully.");
@@ -128,10 +137,22 @@ public class AdminDBH
         
     }
 
-    public void deleteMovie(int movieId) {
+    public void deleteMovie(int movieId) throws SQLException {
         if (dbconnection == null) {
             System.err.println("Database connection failed!!");
             return;
+        }
+
+        String checkTicketsQuery = "SELECT COUNT(*) FROM sessions WHERE movie_id = ?";
+        try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkTicketsQuery)) 
+        {
+            checkStmt.setInt(1, movieId);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) 
+            {
+                System.out.println("Error: Cannot delete a movie with sold tickets.");
+                return;
+            }
         }
     
         //if session exists, do not delete
@@ -301,6 +322,22 @@ public class AdminDBH
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
             conn.setAutoCommit(false);
             try {
+                // Check for Overlaps
+                String checkOverlapQuery = "SELECT COUNT(*) FROM Sessions WHERE hall_name = ? AND session_date = ? AND (? BETWEEN start_time AND ADDTIME(start_time, '1:59:59') OR ADDTIME(?, '1:59:59') BETWEEN start_time AND ADDTIME(start_time, '1:59:59'))";
+                try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkOverlapQuery)) 
+                {
+                    checkStmt.setString(1, hallName);
+                    checkStmt.setDate(2, java.sql.Date.valueOf(sessionDate));
+                    checkStmt.setTime(3, startTime);
+                    checkStmt.setTime(4, startTime);
+                    ResultSet rs = checkStmt.executeQuery();
+                    if (rs.next() && rs.getInt(1) > 0) 
+                    {
+                        System.out.println("Error: Overlapping session detected.");
+                        return;
+                    }
+                }
+
                 // Insert session
                 PreparedStatement sessionStmt = conn.prepareStatement(insertSession, PreparedStatement.RETURN_GENERATED_KEYS);
                 sessionStmt.setInt(1, movieId);
@@ -396,21 +433,20 @@ public class AdminDBH
             }
         }
 
-        String checkOverlapQuery = "SELECT COUNT(*) FROM Sessions WHERE hall_name = ? AND session_date = ? AND (? BETWEEN start_time AND ADDTIME(start_time, '2:00:00') OR ADDTIME(?, '2:00:00') BETWEEN start_time AND ADDTIME(start_time, '2:00:00')) AND session_id <> ?";
-        try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkOverlapQuery)) 
-        {
-            checkStmt.setString(1, hallName);
-            checkStmt.setDate(2, java.sql.Date.valueOf(sessionDate));
-            checkStmt.setTime(3, startTime);
-            checkStmt.setTime(4, startTime);
-            checkStmt.setInt(5, sessionId);
-            ResultSet rs = checkStmt.executeQuery();
-            if (rs.next() && rs.getInt(1) > 0) 
-            {
-                System.out.println("Error: Overlapping session detected.");
-                return;
-            }
-        }
+        String checkOverlapQuery = "SELECT COUNT(*) FROM Sessions WHERE hall_name = ? AND session_date = ? AND (? BETWEEN start_time AND ADDTIME(start_time, '1:59:59') OR ADDTIME(?, '1:59:59') BETWEEN start_time AND ADDTIME(start_time, '1:59:59'))";
+                try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkOverlapQuery)) 
+                {
+                    checkStmt.setString(1, hallName);
+                    checkStmt.setDate(2, java.sql.Date.valueOf(sessionDate));
+                    checkStmt.setTime(3, startTime);
+                    checkStmt.setTime(4, startTime);
+                    ResultSet rs = checkStmt.executeQuery();
+                    if (rs.next() && rs.getInt(1) > 0) 
+                    {
+                        System.out.println("Error: Overlapping session detected.");
+                        return;
+                    }
+                }
 
         String updateQuery = "UPDATE Sessions SET movie_id = ?, hall_name = ?, session_date = ?, start_time = ? WHERE session_id = ?";
         try (PreparedStatement stmt = dbconnection.prepareStatement(updateQuery)) 
@@ -420,6 +456,7 @@ public class AdminDBH
             stmt.setDate(3, java.sql.Date.valueOf(sessionDate));
             stmt.setTime(4, startTime);
             stmt.setInt(5, sessionId);
+            System.out.println("Session updated successfully");
             stmt.executeUpdate();
         }
     }
@@ -444,6 +481,7 @@ public class AdminDBH
         {
             stmt.setInt(1, sessionId);
             stmt.executeUpdate();
+            System.out.println("session deleted successfully");
         }
     }
 

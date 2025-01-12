@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import help.classes.Movie;
 import help.classes.Schedule;
@@ -140,7 +142,7 @@ public class ScheduleController {
     }
 
     @FXML
-    void OnUpdate(ActionEvent event) {
+    void onUpdate(ActionEvent event) {
         selectedSession = sessionTable.getSelectionModel().getSelectedItem();
         if (selectedSession == null) 
         {
@@ -260,7 +262,9 @@ public class ScheduleController {
             }
             hallComboBox.setValue(selectedSession.getHallName());
             datePicker.setValue(selectedSession.getSessionDate());
-            timeField.setValue(selectedSession.getStartTime().toString());
+            LocalTime startTime = selectedSession.getStartTime().toLocalTime();
+            String formattedTime = startTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+            timeField.setValue(formattedTime);
         }
     }
 
