@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * Database Handler class for managing bank-related operations.
+ * Provides methods for adding, updating, deleting, and fetching bank account data from the database.
+ */
 public class BankDBO 
 {
     /**

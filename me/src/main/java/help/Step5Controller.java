@@ -48,6 +48,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
+/**
+ * Controller class responsible for handling the actions of Step 5 in the cashier multi-step process.
+ */
 public class Step5Controller {
 
     @FXML private Button next_button_step5;
@@ -89,6 +92,12 @@ public class Step5Controller {
     @FXML private Label SeatPrices;
 
 
+    /**
+     * Handles the action when the close button is clicked.
+     * Closes the current stage (window).
+     *
+     * @param event The action event that triggers this method.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) 
     {
@@ -96,6 +105,12 @@ public class Step5Controller {
         stage.close();
     }
 
+    /**
+     * Handles the action when the minimize button is clicked.
+     * Minimizes the current stage (window).
+     *
+     * @param event The action event that triggers this method.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) 
     {
@@ -103,6 +118,13 @@ public class Step5Controller {
         stage.setIconified(true);
     }
 
+    /**
+     * Handles the action when the sign-out button is clicked.
+     * Performs sign-out by returning products to the inventory, deleting the ticket, 
+     * clearing the shopping cart, and navigating back to the login screen.
+     * 
+     * @param event The action event that triggers this method.
+     */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) {
         try {
@@ -148,6 +170,13 @@ public class Step5Controller {
         }
     }
 
+        /**
+     * Initializes the UI with details of the selected shopping cart, movie, session, and customer.
+     * Displays relevant information such as movie name, session details, customer name, seat numbers,
+     * and items in the shopping cart.
+     *
+     * @throws Exception if an error occurs during initialization
+     */
     @FXML
     private void initialize() throws Exception {
         // Get existing instances
@@ -200,6 +229,11 @@ public class Step5Controller {
 
     }
 
+    /**
+     * Handles the action for the "Next" button, which navigates to the final step.
+     *
+     * @throws IOException if an error occurs while loading the next step
+     */
     @FXML
     private void handleNextButtonAction() throws IOException 
     {
@@ -211,6 +245,13 @@ public class Step5Controller {
         stage.show();
     }
 
+    /**
+     * Handles the action for the "Back" button, which navigates back to the previous step 
+     * and returns the products to stock, deletes the ticket, and clears the shopping cart.
+     *
+     * @param event the action event triggered by clicking the "Back" button
+     * @throws Exception if an error occurs during the process
+     */
     @FXML
     private void handleBackButtonAction(ActionEvent event) throws Exception
     {
@@ -254,6 +295,14 @@ public class Step5Controller {
 
         
 
+    /**
+     * Saves the PDF of the invoice to the database.
+     *
+     * @param filepath the path to the PDF file
+     * @param ticketId the ticket ID associated with the invoice
+     * @param format   the format of the invoice
+     * @throws Exception if an error occurs while reading the PDF file or saving to the database
+     */
     private void savePDFToDatabase(String filepath, int ticketId, String format) throws Exception 
     {
         File file = new File(filepath);
@@ -276,63 +325,77 @@ public class Step5Controller {
 
 
 
-
-        @FXML
-        private void handleSaveTicketInvoice(ActionEvent event) 
+    /**
+     * Handles the action for saving the ticket and invoice as PDF files. It updates the bank totals,
+     * creates the PDFs for the ticket and invoice, saves them to the user's Documents folder, and uploads
+     * them to the database.
+     *
+     * @param event the action event triggered by clicking the save button
+     */
+    @FXML
+    private void handleSaveTicketInvoice(ActionEvent event) 
+    {
+        try 
         {
-            try 
-            {
-                Tickets ticket = Tickets.getInstance();
+            Tickets ticket = Tickets.getInstance();
 
-                BankDBO bankDBO = new BankDBO();
-                bankDBO.updateBankTotals(ticket.getTotalCost(), ticket.getTotalTax());
-                bankDBO.updateBankTotalsFromTickets();
-                // Get user's Documents folder path
-                String documentsPath = System.getProperty("user.home") + "\\Documents\\MovieTickets\\";
-                File directory = new File(documentsPath);
-                if (!directory.exists()) {
-                    directory.mkdirs();
-                }
-        
-                ShoppingCart cart = ShoppingCart.getInstance();
-                String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-                
-                // Create full file paths
-                String ticketPath = documentsPath + "ticket_" + ticket.getTicketId() + "_" + timestamp + ".pdf";
-                String invoicePath = documentsPath + "invoice_" + ticket.getTicketId() + "_" + timestamp + ".pdf";
-                
-                // Create PDFs
-                createTicketPDF(ticketPath, ticket, cart);
-                createInvoicePDF(invoicePath, ticket, cart);
-        
-                // Debug print
-                System.out.println("PDFs created at: " + ticketPath);
-                System.out.println("Attempting database upload...");
-        
-                // Save to database with verification
-                savePDFToDatabase(ticketPath, ticket.getTicketId(), "PDF");
-                savePDFToDatabase(invoicePath, ticket.getTicketId(), "PDF");
-        
-                showAlert("Success", "PDFs Created and Saved", 
-                 "Files saved to:\n" + documentsPath + "\nand uploaded to database.",
-                 Alert.AlertType.INFORMATION);
-
-                 Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/final.fxml"));
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.setFullScreen(true);
-                stage.show();
-                        
-            } 
-            catch (Exception e) 
-            {
-                e.printStackTrace();
-                showAlert("Error", null, "Error: " + e.getMessage(), 
-                 Alert.AlertType.ERROR);
+            BankDBO bankDBO = new BankDBO();
+            bankDBO.updateBankTotals(ticket.getTotalCost(), ticket.getTotalTax());
+            bankDBO.updateBankTotalsFromTickets();
+            // Get user's Documents folder path
+            String documentsPath = System.getProperty("user.home") + "\\Documents\\MovieTickets\\";
+            File directory = new File(documentsPath);
+            if (!directory.exists()) {
+                directory.mkdirs();
             }
-        }
+    
+            ShoppingCart cart = ShoppingCart.getInstance();
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+            
+            // Create full file paths
+            String ticketPath = documentsPath + "ticket_" + ticket.getTicketId() + "_" + timestamp + ".pdf";
+            String invoicePath = documentsPath + "invoice_" + ticket.getTicketId() + "_" + timestamp + ".pdf";
+            
+            // Create PDFs
+            createTicketPDF(ticketPath, ticket, cart);
+            createInvoicePDF(invoicePath, ticket, cart);
+    
+            // Debug print
+            System.out.println("PDFs created at: " + ticketPath);
+            System.out.println("Attempting database upload...");
+    
+            // Save to database with verification
+            savePDFToDatabase(ticketPath, ticket.getTicketId(), "PDF");
+            savePDFToDatabase(invoicePath, ticket.getTicketId(), "PDF");
+    
+            showAlert("Success", "PDFs Created and Saved", 
+                "Files saved to:\n" + documentsPath + "\nand uploaded to database.",
+                Alert.AlertType.INFORMATION);
 
+                Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/final.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setFullScreen(true);
+            stage.show();
+                    
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            showAlert("Error", null, "Error: " + e.getMessage(), 
+                Alert.AlertType.ERROR);
+        }
+    }
+
+    /**
+     * Creates a PDF document for the movie ticket with the given ticket details and shopping cart information.
+     *
+     * @param filepath the file path where the ticket PDF will be saved
+     * @param ticket the ticket object containing the ticket details
+     * @param cart the shopping cart object containing the selected movie and seats
+     * @throws IOException if an error occurs while creating or saving the PDF
+     */
     private void createTicketPDF(String filepath, Tickets ticket, ShoppingCart cart) throws IOException {
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();
@@ -393,6 +456,14 @@ public class Step5Controller {
         }
     }
 
+    /**
+     * Creates a PDF document for the invoice with the given ticket details and shopping cart information.
+     *
+     * @param filepath the file path where the invoice PDF will be saved
+     * @param ticket the ticket object containing the ticket details
+     * @param cart the shopping cart object containing the selected products and prices
+     * @throws IOException if an error occurs while creating or saving the PDF
+     */
     private void createInvoicePDF(String filepath, Tickets ticket, ShoppingCart cart) throws IOException {
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();
@@ -475,6 +546,14 @@ public class Step5Controller {
     }
     
 
+    /**
+     * Displays an alert to the user with the specified title, header, content, and alert type.
+     *
+     * @param title the title of the alert
+     * @param header the header of the alert
+     * @param content the content of the alert
+     * @param type the type of the alert (e.g., information, error)
+     */
     private void showAlert(String title, String header, String content, Alert.AlertType type) 
     {
         Alert alert = new Alert(type);

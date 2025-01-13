@@ -31,6 +31,9 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 
+/**
+ * Controller class responsible for handling the actions of Step 1 in the cashier multi-step process.
+ */
 public class Step1Controller 
 {
     @FXML
@@ -70,12 +73,24 @@ public class Step1Controller
 
     private List<Movie> moviesList = null;
 
+    /**
+     * Handles the action when the Close button is clicked.
+     * This method closes the current stage (window).
+     * 
+     * @param event The ActionEvent triggered by the button click.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the action when the Minimize button is clicked.
+     * This method minimizes the current stage (window).
+     * 
+     * @param event The ActionEvent triggered by the button click.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
@@ -83,6 +98,12 @@ public class Step1Controller
     }
     private MovieService movieService = new MovieService();
 
+    /**
+     * Loads all the movies from the database and populates the TreeTableView.
+     * Creates a root item for the tree, adds movie items, and sets up the column.
+     * 
+     * @throws Exception If an error occurs while loading the movies.
+     */
     @FXML
     private void loadAllMovies() throws Exception
     {
@@ -111,6 +132,12 @@ public class Step1Controller
 
     }
     
+    /**
+     * Initializes the UI components and loads movie data.
+     * Sets default values for ComboBox, adds listeners, and makes the window full screen.
+     * 
+     * @throws Exception If an error occurs while initializing the UI or loading movies.
+     */
     @FXML
     private void initialize() throws Exception 
     {
@@ -140,6 +167,12 @@ public class Step1Controller
 
     }
 
+    /**
+     * Updates the selected movie label with the title of the selected movie.
+     * If no movie is selected, the label will display "No movie selected".
+     * 
+     * @param movie The selected movie to display its title.
+     */
     public void updateSelectedMovie(Movie movie) 
     {
         if (movie != null) 
@@ -154,6 +187,13 @@ public class Step1Controller
 
 
 
+    /**
+     * Handles the search button click and performs the search based on the selected type and input.
+     * If the input is invalid (not letters), an error dialog is shown.
+     * The search results are displayed in the TreeTableView.
+     * 
+     * @throws Exception If an error occurs while performing the search.
+     */
     @FXML
     private void handleSearchButtonAction() throws Exception 
     {
@@ -205,6 +245,11 @@ public class Step1Controller
     }
 
 
+    /**
+     * Handles the movie selection event in the TreeTableView.
+     * When a movie is selected, it updates the UI with the movie details including title, genre, summary,
+     * duration, and poster image (if available).
+     */
     @FXML
     private void handleMovieSelection() 
     {
@@ -253,6 +298,13 @@ public class Step1Controller
 
     
 
+    /**
+     * Handles the confirm selection event when the user confirms their movie selection.
+     * It saves the selected movie to the shopping cart and shows a confirmation alert.
+     * If no movie is selected, an error dialog is shown.
+     * 
+     * @throws IOException If an error occurs while displaying the alert or loading the next scene.
+     */
     @FXML
     private void handleConfirmSelection() throws IOException 
     {
@@ -294,6 +346,13 @@ public class Step1Controller
     }
     
 
+    /**
+     * Handles the action when the user clicks the 'Next' button.
+     * It checks if a movie is selected and loads the next step (step2.fxml).
+     * If no movie is selected, an error dialog is shown.
+     * 
+     * @throws IOException If an error occurs while loading the next scene.
+     */
     @FXML
     private void handleNextButtonAction() throws IOException 
     {
@@ -333,6 +392,12 @@ public class Step1Controller
         
     }
 
+    /**
+     * Handles the action when the user clicks the 'Sign Out' button.
+     * It clears the shopping cart, loads the login screen, and displays it in the current window.
+     * 
+     * @param event The ActionEvent triggered by the button click.
+     */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
@@ -375,6 +440,12 @@ public class Step1Controller
         }
     }
 
+    /**
+     * Handles the action when the user clicks the 'Sign Out' button.
+     * It clears the shopping cart, loads the login screen, and displays it in the current window.
+     * 
+     * @param event The ActionEvent triggered by the button click.
+     */
     private void showErrorDialog(String errorMessage) 
     {
         try 

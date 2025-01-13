@@ -13,6 +13,9 @@ import help.classes.Tickets;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * Data Base Object (DBO) class for managing Tickets-related database operations.
+ */
 public class TicketsDBO {
 
     private static TicketsDBO instance;

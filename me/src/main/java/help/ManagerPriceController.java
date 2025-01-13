@@ -19,6 +19,10 @@ import help.utilities.PriceDBO;
 import help.utilities.ProductDBO;
 import help.classes.Product;
 
+/**
+ * Controller class for managing the prices of products within the system.
+ * This class handles the functionality for updating and displaying the prices of various items.
+ */
 public class ManagerPriceController 
 {
 
@@ -49,18 +53,32 @@ public class ManagerPriceController
 
     private PriceDBO priceDBO = new PriceDBO();
 
+    /**
+     * Handles the action for the "Close" button. This will close the current stage.
+     * 
+     * @param event The ActionEvent triggered by the "Close" button click.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the action for the "Minimize" button. This will minimize the current stage to the taskbar.
+     * 
+     * @param event The ActionEvent triggered by the "Minimize" button click.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setIconified(true);
     }
 
+    /**
+     * Initializes the controller and sets up the UI elements. This includes loading images for the UI and
+     * setting initial states for buttons. It also loads the current prices from the PriceDBO.
+     */
     @FXML
     private void initialize() 
     {
@@ -85,6 +103,12 @@ public class ManagerPriceController
        
 
     }
+
+    /**
+     * Handles the action for the "Sign Out" button. This will load the login screen and sign the user out.
+     * 
+     * @param event The ActionEvent triggered by the "Sign Out" button click.
+     */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
@@ -126,6 +150,10 @@ public class ManagerPriceController
     }
 
 
+    /**
+     * Loads and displays the current prices and discount rate for the cinema halls from the PriceDBO.
+     * The prices are displayed in the respective UI elements.
+     */
     private void loadCurrentPrices() 
     {
         System.out.println("Loading current prices");
@@ -142,18 +170,34 @@ public class ManagerPriceController
         }
     }
 
+    /**
+     * Handles the action for the "Close" button. This will close the current stage.
+     * 
+     * @param event The ActionEvent triggered by the "Close" button click.
+     */
     @FXML
     private void handleClose() {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the action for the "Minimize" button. This will minimize the current stage to the taskbar.
+     * 
+     * @param event The ActionEvent triggered by the "Minimize" button click.
+     */
     @FXML
     private void handleMinimize() {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setIconified(true);
     }
 
+    /**
+     * Handles the action for the "Product Management" button. This will load the product management page
+     * in the current window and update the stage to fullscreen.
+     * 
+     * @param event The ActionEvent triggered by the "Product Management" button click.
+     */
     @FXML
     private void handleProductManagement() {
         try {
@@ -176,6 +220,12 @@ public class ManagerPriceController
         }
     }
 
+    /**
+     * Handles the action for the "Personnel Management" button. This will load the personnel management page
+     * in the current window and set the stage to fullscreen.
+     * 
+     * @param event The ActionEvent triggered by the "Personnel Management" button click.
+     */
     @FXML
     private void handlePersonnelManagement() {
         try {
@@ -192,6 +242,12 @@ public class ManagerPriceController
         }
     }
 
+    /**
+     * Handles the action for the "Price Management" button. This will load the price management page
+     * in the current window and set the stage to fullscreen.
+     * 
+     * @param event The ActionEvent triggered by the "Price Management" button click.
+     */
     @FXML
     private void handlePriceManagement() {
         try {
@@ -208,6 +264,12 @@ public class ManagerPriceController
         }
     }
 
+    /**
+     * Handles the action for the "Revenue and Tax" button. This will load the revenue and tax page
+     * in the current window and set the stage to fullscreen.
+     * 
+     * @param event The ActionEvent triggered by the "Revenue and Tax" button click.
+     */
     @FXML
     private void handleRevenueTax() {
         try {
@@ -226,6 +288,10 @@ public class ManagerPriceController
 
     
 
+    /**
+     * Handles the action for updating the price of Hall A. Validates the input price and updates the price in the database.
+     * Displays an alert with success or failure message.
+     */
     @FXML
     private void handleUpdateHallA() 
     {
@@ -258,6 +324,10 @@ public class ManagerPriceController
         }
     }
 
+    /**
+     * Handles the action for updating the price of Hall B. Validates the input price and updates the price in the database.
+     * Displays an alert with success or failure message.
+     */
     @FXML
     private void handleUpdateHallB() {
         try {
@@ -289,6 +359,10 @@ public class ManagerPriceController
         }
     }
 
+    /**
+     * Handles the action for updating the discount rate. Validates the input discount and updates the discount in the database.
+     * Displays an alert with success or failure message.
+     */
     @FXML
     private void handleUpdateDiscount() {
         try {
@@ -323,6 +397,12 @@ public class ManagerPriceController
 
 
 
+    /**
+     * Displays an alert with a given title and message.
+     * 
+     * @param title The title of the alert (can be null).
+     * @param message The message to display in the alert.
+     */
     private void showAlert(String title, String message) 
     {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -1,5 +1,8 @@
 package help.classes;
 
+/**
+ * Class representing a selected session for a movie.
+ */
 public class SelectedSession 
 {
     private static SelectedSession instance;

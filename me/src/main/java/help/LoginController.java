@@ -14,6 +14,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.io.IOException;
 
+/**
+ * Controller class for handling user login functionality.
+ * This class manages the login actions, including user authentication and transitioning to the main application page.
+ */
 public class LoginController {
 
     @FXML

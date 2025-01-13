@@ -32,6 +32,11 @@ import javafx.stage.Stage;
 import help.classes.Movie;
 import help.utilities.AdminDBH;
 
+/**
+ * Controller class for managing movie-related actions in the application.
+ * Handles interactions with the user interface related to movie management, 
+ * such as deleting, adding, or editing movie details.
+ */
 public class OMoviesController {
 
     @FXML
@@ -53,18 +58,33 @@ public class OMoviesController {
     private Movie selectedMovie = null;
     private byte[] posterData = null;
     private AdminDBH dbHandler = new AdminDBH();
+
+    /**
+     * Handles the close button action. This method closes the current stage (window) when the user clicks the close button.
+     * 
+     * @param event The event triggered by the close button click.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the minimize button action. This method minimizes the current stage (window) when the user clicks the minimize button.
+     * 
+     * @param event The event triggered by the minimize button click.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setIconified(true);
     }
 
+    /**
+     * Initializes the controller. Sets up the combo box with genre options, binds the table columns to the movie properties,
+     * and loads the movie data from the database.
+     */
     @FXML
     public void initialize() {
         cmbGenre.setItems(FXCollections.observableArrayList("Action", "Drama", "Comedy", "Horror", "Romance", "Documentary", "Adventure", "Sci-Fi"));
@@ -85,11 +105,14 @@ public class OMoviesController {
         });
     }
 
-    //ADD UPDATE FUNCTIONALITY, IF A SESSION HAS BOUGHT TICKETS, THEN THE SESSION CANNOT BE DELETED/MODIFIED
 
-
-
-    
+    /**
+     * Handles the add movie button action. This method validates the inputs, checks if the movie already exists, 
+     * and adds the new movie to the database.
+     * 
+     * @param event The event triggered by the add button click.
+     * @throws SQLException If there is an issue with the database operation.
+     */
     @FXML
     private void onAdd(ActionEvent event) throws SQLException 
     {
@@ -128,6 +151,13 @@ public class OMoviesController {
         }
     }
 
+    /**
+     * Handles the update movie button action. This method validates the inputs, checks if the movie exists, 
+     * and updates the selected movie in the database.
+     * 
+     * @param event The event triggered by the update button click.
+     * @throws SQLException If there is an issue with the database operation.
+     */
     @FXML
     private void onUpdate(ActionEvent event) throws SQLException {
         if (selectedMovie == null) {
@@ -169,11 +199,23 @@ public class OMoviesController {
         }
     }
 
+    /**
+     * Handles the clear button action. This method clears all the fields in the form.
+     * 
+     * @param event The event triggered by the clear button click.
+     */
     @FXML
     private void onClear(ActionEvent event) {
         clearForm();
     }
 
+    /**
+     * Handles the import movie poster button action. This method opens a file chooser to select an image file and 
+     * imports the selected poster for the movie.
+     * 
+     * @param event The event triggered by the import button click.
+     * @throws IOException If there is an issue with reading the file.
+     */
     @FXML
     private void onImport(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -192,6 +234,12 @@ public class OMoviesController {
         }
     }
 
+    /**
+     * Handles the row selection event in the movie table. This method sets the selected movie's information 
+     * into the form for editing.
+     * 
+     * @param event The mouse event triggered by selecting a row in the table.
+     */
     private void onRowSelect(MouseEvent event) {
         selectedMovie = tblMovies.getSelectionModel().getSelectedItem();
         if (selectedMovie != null) {
@@ -203,6 +251,12 @@ public class OMoviesController {
         }
     }
 
+    /**
+     * Handles the delete movie button action. This method checks if a movie is selected, 
+     * shows a confirmation dialog, and deletes the selected movie from the database upon confirmation.
+     * 
+     * @param event The event triggered by the delete button click.
+     */
     @FXML
     private void onDelete(ActionEvent event) {
         if (selectedMovie == null) {
@@ -243,11 +297,17 @@ public class OMoviesController {
         });
     }
 
+    /**
+     * Loads the movies from the database into the movie list.
+     */
     private void loadMoviesFromDatabase() {
         movieList.clear();
         movieList.addAll(dbHandler.GetAllMovies());
     }
 
+    /**
+     * Clears all the input fields and the movie poster.
+     */
     private void clearForm() {
         txtMovieTitle.clear();
         cmbGenre.setValue(null);
@@ -257,6 +317,13 @@ public class OMoviesController {
         moviePosterImageView.setImage(null);
     }
 
+    /**
+     * Shows an alert with a specified type, title, and content message.
+     * 
+     * @param alertType The type of the alert (e.g., WARNING, INFORMATION, ERROR).
+     * @param title The title of the alert.
+     * @param content The content message of the alert.
+     */
     private void showAlert(Alert.AlertType alertType, String title, String content) 
     {
         Alert alert = new Alert(alertType);
@@ -276,6 +343,11 @@ public class OMoviesController {
         alert.showAndWait();
     }
 
+    /**
+     * Displays the movie poster for the selected movie. If the movie has no poster, the image view is cleared.
+     * 
+     * @param movie The movie whose poster needs to be displayed.
+     */
     private void displayPoster(Movie movie) {
         if (movie == null) {
             moviePosterImageView.setImage(null);
@@ -289,7 +361,12 @@ public class OMoviesController {
         }
     }
 
-    // Function to load Monthly Schedule screen
+    /**
+     * Loads the Monthly Schedule screen into the current window.
+     * 
+     * @param event The event triggered by the "Schedule" button click.
+     * @throws IOException If there is an issue with loading the FXML file.
+     */
     public void onSchedule(ActionEvent event) throws IOException 
     {
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -301,6 +378,12 @@ public class OMoviesController {
         changeScene(stage, root, "Monthly Schedule");
     }
 
+    /**
+     * Loads the Organize Movies screen into the current window.
+     * 
+     * @param event The event triggered by the "Organize Movies" button click.
+     * @throws IOException If there is an issue with loading the FXML file.
+     */
     @FXML
     public void onOrganizeMovies(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -311,7 +394,12 @@ public class OMoviesController {
         changeScene(stage, root, "Organize Movies");
     }
 
-    // Function to load Cancellations and Refunds screen
+    /**
+     * Loads the Cancellations and Refunds screen into the current window.
+     * 
+     * @param event The event triggered by the "Cancellations and Refunds" button click.
+     * @throws IOException If there is an issue with loading the FXML file.
+     */
     public void onCancellationsRefunds(ActionEvent event) throws IOException 
     {
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -323,7 +411,11 @@ public class OMoviesController {
         changeScene(stage, root, "Cancellations and Refunds");
     }
 
-    // Function to sign out
+    /**
+     * Handles the sign-out button action. This method loads the login screen and switches the current window to the login scene.
+     * 
+     * @param event The event triggered by the sign-out button click.
+     */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
@@ -364,7 +456,13 @@ public class OMoviesController {
         }
     }
 
-    // Helper function to change the scene
+    /**
+     * Helper function to change the scene of the current stage.
+     * 
+     * @param stage The current stage.
+     * @param root The new root of the scene.
+     * @param newSceneTitle The title for the new scene.
+     */
     private void changeScene(Stage stage, Parent root, String newSceneTitle) {
         Scene scene = stage.getScene();
         scene.setRoot(root);

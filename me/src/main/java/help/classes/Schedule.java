@@ -4,6 +4,9 @@ import java.sql.Time;
 import java.time.LocalDate;
 import javafx.beans.property.*;
 
+/**
+ * Class representing a schedule for movies.
+ */
 public class Schedule {
 
     private final IntegerProperty sessionId;

@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 import help.utilities.MovieDBO;
 
+/**
+ * Service class that handles operations related to Movie management.
+ */
 public class MovieService 
 {
     private MovieDBO movieDao = new MovieDBO();

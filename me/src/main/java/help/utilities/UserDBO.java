@@ -5,6 +5,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Base Object (DBO) class for managing User-related database operations.
+ */
 public class UserDBO {
     private static final String GET_USER = "SELECT * FROM Users WHERE username = ?";
     private static final String GET_USER_ID = "SELECT user_id FROM Users WHERE username = ?";

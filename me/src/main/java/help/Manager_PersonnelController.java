@@ -40,6 +40,10 @@ import javafx.scene.control.cell.ComboBoxTreeTableCell;
 
 import help.utilities.UserDBO;
 
+/**
+ * Controller class for managing personnel within the application.
+ * This class handles the functionality for personnel management, such as viewing, adding, and removing staff members.
+ */
 public class Manager_PersonnelController 
 {
     private UserDBO userDBO = new UserDBO();
@@ -69,24 +73,48 @@ public class Manager_PersonnelController
     private String currentUsername; // Add this field
 
 
+    /**
+     * Handles the action of closing the application window.
+     * This method is called when the close button is pressed.
+     * It closes the current stage (window).
+     *
+     * @param event The event that triggered the action.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the action of minimizing the application window.
+     * This method is called when the minimize button is pressed.
+     * It minimizes the current stage (window).
+     *
+     * @param event The event that triggered the action.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setIconified(true);
     }
 
+    /**
+     * Sets the current username of the user.
+     * This method is used to update the username of the logged-in user.
+     *
+     * @param username The current username of the user.
+     */
     public void setCurrentUsername(String username) 
     {
         this.currentUsername = username;
     }
 
 
+    /**
+     * Initializes the user interface by setting up the table columns and loading user data.
+     * This method is called automatically when the controller is initialized.
+     */
     @FXML
     public void initialize() 
     {
@@ -118,6 +146,10 @@ public class Manager_PersonnelController
         setupEditableColumns();
     }
 
+    /**
+     * Loads and displays the users in the personnel table.
+     * Retrieves a list of users from the database and updates the table accordingly.
+     */
     private void loadUsers() 
     {
         List<User> users = userDBO.getAllUsers();
@@ -136,6 +168,13 @@ public class Manager_PersonnelController
         Total_Staff_Count.setText(String.valueOf(users.size()));
     }
 
+    /**
+     * Handles the action of adding a new staff member.
+     * This method opens a dialog window to add a new staff member to the system.
+     * Once the dialog is closed, the table is refreshed with updated user data.
+     *
+     * @param event The event that triggered the action.
+     */
     @FXML
     private void handleAddNewStaffButton(ActionEvent event) {
         try {
@@ -170,6 +209,14 @@ public class Manager_PersonnelController
             showAlert("Error", "Could not open add staff dialog");
         }
     }
+
+    /**
+     * Handles the action of firing a staff member.
+     * This method is called when the fire staff button is pressed.
+     * It confirms the deletion of a staff member and removes them from the system.
+     *
+     * @param event The event that triggered the action.
+     */
     @FXML
     private void handleFireStaffButton(ActionEvent event) 
     {
@@ -218,6 +265,13 @@ public class Manager_PersonnelController
         }
     }
 
+
+    /**
+     * Handles the action when the Sign Out button is clicked.
+     * This method switches the current scene to the login screen.
+     * 
+     * @param event The action event triggered by the Sign Out button.
+     */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
@@ -258,6 +312,13 @@ public class Manager_PersonnelController
         }
     }
 
+    /**
+     * Shows an alert message with the specified title and content.
+     * The alert is modal, meaning it will block interaction with the main window until it is dismissed.
+     * 
+     * @param title The title of the alert.
+     * @param content The content text to display in the alert.
+     */
     private void showAlert(String title, String content) 
     {
         Alert alert = new Alert(AlertType.ERROR);
@@ -276,11 +337,20 @@ public class Manager_PersonnelController
 
     
 
-    // Method to be called from AddStaffController
-    public void refreshTable() {
+    /**
+     * Refreshes the user table by reloading the user data.
+     * This method is called when the AddStaffController wants to refresh the table of users.
+     */
+    public void refreshUserTable() {
         loadUsers();
     }
 
+    /**
+     * Handles the action when the Personnel button is clicked.
+     * This method refreshes the current view and updates the button states for visual feedback.
+     * 
+     * @param event The action event triggered by the Personnel button.
+     */
     @FXML
     private void handlePersonnelButtonAction(ActionEvent event) {
         // Refresh the current view since we're already on personnel
@@ -293,6 +363,12 @@ public class Manager_PersonnelController
         Price_Management_Go.setDisable(false);
     }
 
+    /**
+     * Handles the action when the Product Management button is clicked.
+     * This method switches the scene to the product management view.
+     * 
+     * @param event The action event triggered by the Product Management button.
+     */
     @FXML
     private void handleProductManagement() {
         try {
@@ -309,6 +385,12 @@ public class Manager_PersonnelController
         }
     }
 
+    /**
+     * Handles the action when the Personnel Management button is clicked.
+     * This method switches the scene to the personnel management view.
+     * 
+     * @param event The action event triggered by the Personnel Management button.
+     */
     @FXML
     private void handlePersonnelManagement() {
         try {
@@ -331,6 +413,12 @@ public class Manager_PersonnelController
         }
     }
 
+    /**
+     * Handles the action when the Price Management button is clicked.
+     * This method switches the scene to the price management view.
+     * 
+     * @param event The action event triggered by the Price Management button.
+     */
     @FXML
     private void handlePriceManagement() {
         try {
@@ -347,6 +435,12 @@ public class Manager_PersonnelController
         }
     }
 
+    /**
+     * Handles the action when the Revenue and Tax button is clicked.
+     * This method switches the scene to the revenue and tax management view.
+     * 
+     * @param event The action event triggered by the Revenue and Tax button.
+     */
     @FXML
     private void handleRevenueTax() {
         try {
@@ -363,6 +457,11 @@ public class Manager_PersonnelController
         }
     }
 
+    /**
+     * Sets up the editable columns for the user information table.
+     * Each column (First Name, Last Name, Username, Password, and Role) is configured to allow in-place editing.
+     * The method also sets up commit actions that update the user information when changes are made.
+     */
     private void setupEditableColumns() 
     {
             First_Name_Column.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
@@ -415,6 +514,13 @@ public class Manager_PersonnelController
         Role_Column.setEditable(true);
     }
 
+    /**
+     * Updates the user information in the database.
+     * After updating the user, a success or error message is shown based on the outcome.
+     * 
+     * @param user The user whose information will be updated.
+     * @param oldUsername The old username to check for username changes.
+     */
     private void updateUser(User user,String oldUsername) {
         try {
             if (userDBO.updateUser(user,oldUsername)) 
@@ -430,6 +536,13 @@ public class Manager_PersonnelController
         }
     }
 
+    /**
+     * Validates the provided username.
+     * Ensures the username is not null or empty.
+     * 
+     * @param username The username to validate.
+     * @return true if the username is valid, otherwise false.
+     */
     private boolean validateUsername(String username) {
         if (username == null || username.trim().isEmpty()) {
             showAlert(AlertType.ERROR, "Invalid Input", "Username cannot be empty");
@@ -438,6 +551,13 @@ public class Manager_PersonnelController
         return true;
     }
 
+    /**
+     * Validates the provided password.
+     * Ensures the password is at least 6 characters long.
+     * 
+     * @param password The password to validate.
+     * @return true if the password is valid, otherwise false.
+     */
     private boolean validatePassword(String password) {
         if (password == null || password.length() < 6) {
             showAlert(AlertType.ERROR, "Invalid Input", "Password must be at least 6 characters");
@@ -446,6 +566,14 @@ public class Manager_PersonnelController
         return true;
     }
 
+    /**
+     * Displays an alert with the specified type, title, and content.
+     * The alert will block interaction with the main window until dismissed.
+     * 
+     * @param alertType The type of the alert (e.g., INFORMATION, ERROR).
+     * @param title The title of the alert window.
+     * @param content The content text to display in the alert.
+     */
     private void showAlert(Alert.AlertType alertType, String title, String content) 
     {
         Alert alert = new Alert(alertType);

@@ -7,7 +7,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import java.io.ByteArrayInputStream;
 
-
+/**
+ * Represents a movie with details such as title, genre, release year, and duration.
+ */
 public class Movie {
     private int id;
     private StringProperty title;

@@ -27,6 +27,9 @@ import help.classes.Schedule;
 import help.classes.Session;
 import help.utilities.AdminDBH;
 
+/**
+ * Controller class responsible for handling the logic related to managing the schedule of movies and sessions.
+ */
 public class ScheduleController {
 
     @FXML
@@ -67,12 +70,22 @@ public class ScheduleController {
     private AdminDBH dbhandler = new AdminDBH();
     private Schedule selectedSession = null;
 
+    /**
+ * Handles the action for the Close button. Closes the current stage/window.
+ * 
+ * @param event The ActionEvent triggered by the Close button click.
+ */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+ * Handles the action for the Minimize button. Minimizes the current stage/window.
+ * 
+ * @param event The ActionEvent triggered by the Minimize button click.
+ */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
@@ -80,6 +93,10 @@ public class ScheduleController {
     }
     
 
+    /**
+ * Initializes the UI components such as ComboBoxes, TableView, and populates
+ * the ComboBoxes with values. Also sets up the columns in the TableView.
+ */
     public void initialize() 
     {
 
@@ -129,6 +146,12 @@ public class ScheduleController {
 
     }
 
+    /**
+ * Handles the action of adding a new session to the schedule. Validates the input fields and calls the database handler
+ * to add the session to the database.
+ * 
+ * @param event The ActionEvent triggered by the Add button click.
+ */
     @FXML
     void OnAdd(ActionEvent event) 
     {
@@ -160,6 +183,12 @@ public class ScheduleController {
         clearFields();
     }
 
+    /**
+ * Handles the action of updating an existing session. Validates the input fields, retrieves the selected session from 
+ * the TableView, and calls the database handler to update the session in the database.
+ * 
+ * @param event The ActionEvent triggered by the Update button click.
+ */
     @FXML
     void onUpdate(ActionEvent event) {
         selectedSession = sessionTable.getSelectionModel().getSelectedItem();
@@ -204,57 +233,69 @@ public class ScheduleController {
 
     
 
+    /**
+ * Handles the action of deleting an existing session. Displays a confirmation alert before proceeding with deletion.
+ * 
+ * @param event The ActionEvent triggered by the Delete button click.
+ */
     @FXML
-void OnDelete(ActionEvent event) 
-{
-    selectedSession = sessionTable.getSelectionModel().getSelectedItem();
-    if (selectedSession == null) 
+    void OnDelete(ActionEvent event) 
     {
-        showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a movie to delete.");
-        return;
+        selectedSession = sessionTable.getSelectionModel().getSelectedItem();
+        if (selectedSession == null) 
+        {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a movie to delete.");
+            return;
+        }
+
+        // Confirm deletion
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirm Deletion");
+        confirmAlert.setHeaderText("Are you sure you want to delete this movie?");
+        confirmAlert.setContentText("Session: " + selectedSession.getSessionId());
+
+        // Get main stage and configure alert
+        Stage mainStage = (Stage) MinimizeButton.getScene().getWindow();
+        confirmAlert.initOwner(mainStage);
+        confirmAlert.initModality(Modality.APPLICATION_MODAL);
+
+        // Configure alert stage
+        Stage alertStage = (Stage) confirmAlert.getDialogPane().getScene().getWindow();
+        alertStage.setAlwaysOnTop(true);
+        confirmAlert.showAndWait().ifPresent(response -> 
+        {
+            if (response == javafx.scene.control.ButtonType.OK) 
+            {
+                int sessionId = selectedSession.getSessionId();
+                try {
+                    dbhandler.DeleteSession(sessionId);  // Delete associated seats and session
+                    loadSessionsFromDatabase();
+                    showAlert(Alert.AlertType.INFORMATION, "Success", "Session deleted successfully!");
+                    clearFields();
+                } catch (SQLException e) {
+                    if (e.getMessage().contains("tickets")) {
+                        showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete session because tickets have already been purchased.");
+                    } else {
+                        e.printStackTrace();
+                        showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete session.");
+                    }
+                } catch (Exception e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+            }
+        });
     }
 
-    // Confirm deletion
-    Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-    confirmAlert.setTitle("Confirm Deletion");
-    confirmAlert.setHeaderText("Are you sure you want to delete this movie?");
-    confirmAlert.setContentText("Session: " + selectedSession.getSessionId());
 
-    // Get main stage and configure alert
-    Stage mainStage = (Stage) MinimizeButton.getScene().getWindow();
-    confirmAlert.initOwner(mainStage);
-    confirmAlert.initModality(Modality.APPLICATION_MODAL);
-
-    // Configure alert stage
-    Stage alertStage = (Stage) confirmAlert.getDialogPane().getScene().getWindow();
-    alertStage.setAlwaysOnTop(true);
-    confirmAlert.showAndWait().ifPresent(response -> 
-    {
-        if (response == javafx.scene.control.ButtonType.OK) 
-        {
-            int sessionId = selectedSession.getSessionId();
-            try {
-                dbhandler.DeleteSession(sessionId);  // Delete associated seats and session
-                loadSessionsFromDatabase();
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Session deleted successfully!");
-                clearFields();
-            } catch (SQLException e) {
-                if (e.getMessage().contains("tickets")) {
-                    showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete session because tickets have already been purchased.");
-                } else {
-                    e.printStackTrace();
-                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete session.");
-                }
-            } catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-        }
-    });
-}
-
-
-
+/**
+ * Displays an alert with the specified type, title, and content.
+ * The alert is modal and will block user interaction with the main window until dismissed.
+ * 
+ * @param alertType The type of the alert (e.g., INFORMATION, WARNING, ERROR).
+ * @param title The title of the alert.
+ * @param content The content/message of the alert.
+ */
     private void showAlert(Alert.AlertType alertType, String title, String content) 
     {
         Alert alert = new Alert(alertType);
@@ -275,6 +316,10 @@ void OnDelete(ActionEvent event)
         alert.showAndWait();
     }
 
+    /**
+ * Clears all input fields in the UI.
+ * Resets the movie title field, hall combo box, date picker, and time field.
+ */
     private void clearFields() 
     {
         movieTitleField.clear();
@@ -283,6 +328,10 @@ void OnDelete(ActionEvent event)
         timeField.setValue(null);
     }
 
+    /**
+ * Loads all session data from the database and updates the session list.
+ * Catches and prints any SQLException that may occur.
+ */
     private void loadSessionsFromDatabase() {
         sessionList.clear();
         try {
@@ -294,6 +343,11 @@ void OnDelete(ActionEvent event)
         }
     }
 
+    /**
+ * Handles the row selection in the session table and updates the input fields with the selected session's data.
+ * 
+ * @param event The MouseEvent triggered by the row click.
+ */
     private void onRowSelect(MouseEvent event) {
         selectedSession = sessionTable.getSelectionModel().getSelectedItem();
         if (selectedSession != null) {
@@ -311,6 +365,12 @@ void OnDelete(ActionEvent event)
         }
     }
 
+    /**
+ * Handles the event when the "Organize Movie" button is clicked. Loads and changes the scene to the "Organize Movie" screen.
+ * 
+ * @param event The ActionEvent triggered by the button click.
+ * @throws IOException If there is an error loading the FXML file.
+ */
     public void onOrganizeMovie(ActionEvent event) throws IOException 
     {
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -322,7 +382,13 @@ void OnDelete(ActionEvent event)
         changeScene(stage, root, "Organize Movies");
     }
 
-    // Function to load Cancellations and Refunds screen
+
+/**
+ * Handles the event when the "Cancellations and Refunds" button is clicked. Loads and changes the scene to the cancellations and refunds screen.
+ * 
+ * @param event The ActionEvent triggered by the button click.
+ * @throws IOException If there is an error loading the FXML file.
+ */
     public void onCancellationsRefunds(ActionEvent event) throws IOException 
     {
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -334,7 +400,12 @@ void OnDelete(ActionEvent event)
         changeScene(stage, root, "Cancellations and Refunds");
     }
 
-    // Function to sign out
+/**
+ * Handles the event when the "Sign Out" button is clicked. Loads the login screen and changes the scene.
+ * 
+ * @param event The ActionEvent triggered by the button click.
+ * @throws IOException If there is an error loading the FXML file.
+ */
     public void onsignOut(ActionEvent event) throws IOException
     {
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -342,7 +413,13 @@ void OnDelete(ActionEvent event)
         changeScene(stage, root, "Login");
     }
 
-    // Helper function to change the scene
+/**
+ * Helper function to change the current scene. Updates the scene root, title, and fullscreen status of the stage.
+ * 
+ * @param stage The current stage.
+ * @param root The new root of the scene.
+ * @param newSceneTitle The title for the new scene.
+ */
     private void changeScene(Stage stage, Parent root, String newSceneTitle) {
         Scene scene = stage.getScene();
         scene.setRoot(root);
@@ -351,16 +428,15 @@ void OnDelete(ActionEvent event)
         stage.setFullScreenExitHint("");
         
     }
-    @FXML
-    public void onOrganizeMovies(ActionEvent event) throws IOException {
-        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        if (stage.getTitle().equals("Organize Movies")) {
-            return;
-        }
-        Parent root = FXMLLoader.load(getClass().getResource("/help/fxml/OrganizeMovie.fxml"));
-        changeScene(stage, root, "Organize Movies");
-    }
 
+    
+
+
+    /**
+ * Handles the action for the Sign Out button. Loads the login screen and changes the scene to "Login".
+ * 
+ * @param event The ActionEvent triggered by the button click.
+ */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
@@ -401,7 +477,3 @@ void OnDelete(ActionEvent event)
         }
     }
 }
-
-/* Todo:
-    Add more Alerts for appropriate error
-*/

@@ -36,6 +36,12 @@ public class App extends Application
 
     private static Scene scene;
 
+    /**
+     * Starts the application by loading the initial FXML file and setting up the primary stage.
+     * 
+     * @param stage the primary stage for this application
+     * @throws IOException if the FXML file cannot be loaded
+     */
     @Override
     public void start(Stage stage) throws IOException 
     {
@@ -49,11 +55,25 @@ public class App extends Application
         stage.show();
     }
 
+    /**
+     * Changes the root of the current scene to a new FXML layout.
+     * 
+     * @param fxml the name of the FXML file to be loaded as the new root
+     * @throws IOException if the FXML file cannot be loaded
+     */
     static void setRoot(String fxml) throws IOException 
     {
         scene.setRoot(loadFXML(fxml));
     }
 
+    /**
+     * Loads an FXML file from the specified path.
+     * 
+     * @param fxml the name of the FXML file (without extension) located in the /help/fxml/ directory
+     * @return the loaded Parent node for the specified FXML file
+     * @throws IOException if the FXML file cannot be loaded
+     * @throws IllegalStateException if the FXML file cannot be found
+     */
     private static Parent loadFXML(String fxml) throws IOException {
         // Ensure the path is correct and matches the FXML location
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/help/fxml/" + fxml + ".fxml"));
@@ -63,6 +83,11 @@ public class App extends Application
         return fxmlLoader.load();
     }
 
+    /**
+     * The main entry point for the JavaFX application.
+     * 
+     * @param args the command-line arguments
+     */
     public static void main(String[] args) 
     {
         launch();

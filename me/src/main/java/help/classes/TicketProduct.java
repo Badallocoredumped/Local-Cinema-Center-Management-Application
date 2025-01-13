@@ -2,7 +2,9 @@ package help.classes;
 
 import javafx.beans.property.*;
 import java.math.BigDecimal;
-
+/**
+ * Represents a product associated with a movie ticket
+ */
 public class TicketProduct {
 
     private IntegerProperty ticketId;

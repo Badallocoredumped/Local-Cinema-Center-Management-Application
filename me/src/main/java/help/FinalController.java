@@ -12,6 +12,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+/**
+ * Controller for handling the final stage of the application.
+ */
 public class FinalController {
 
     @FXML
@@ -23,6 +26,12 @@ public class FinalController {
     @FXML
     private Label thankYouLabel;
 
+    /**
+     * Handles the action of clicking the close button.
+     * Closes the current window.
+     * 
+     * @param event The action event triggered by clicking the close button.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) 
     {
@@ -30,6 +39,12 @@ public class FinalController {
         stage.close();
     }
 
+    /**
+     * Handles the action of clicking the minimize button.
+     * Minimizes the current window.
+     * 
+     * @param event The action event triggered by clicking the minimize button.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) 
     {
@@ -37,14 +52,23 @@ public class FinalController {
         stage.setIconified(true);
     }
 
+    /**
+     * Initializes the controller.
+     * This method is automatically called after the FXML file has been loaded.
+     */
     @FXML
     private void initialize() {
         // Initialization code here
     }
 
+    /**
+     * Handles the action of clicking the back button.
+     * Clears the shopping cart and navigates to the step1 view.
+     * 
+     * @throws IOException If an error occurs while loading the FXML file.
+     */
     @FXML
     private void handleBackButtonAction() throws IOException 
-    
     {
 
         ShoppingCart.getInstance().clear();

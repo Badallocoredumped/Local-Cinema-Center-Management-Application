@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Data Base Object (DBO) class for managing price-related database operations.
+ */
 public class PriceDBO
 {
     /**

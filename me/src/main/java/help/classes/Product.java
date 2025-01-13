@@ -3,7 +3,9 @@ package help.classes;
 import javafx.beans.property.*;
 import java.math.BigDecimal;
 
-
+/**
+ * Class representing a product in the system.
+ */
 public class Product {
 
     private final ObjectProperty<byte[]> imageData;

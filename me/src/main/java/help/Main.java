@@ -3,6 +3,24 @@ package help;
 import help.utilities.DataBaseHandler;
 
 public class Main {
+    /**
+     * Main method to test various functionalities of the application.
+     * This includes:
+     * <ul>
+     *   <li>Testing database connection</li>
+     *   <li>Authentication functionality</li>
+     *   <li>Searching movies by genre, partial name, and full name</li>
+     *   <li>Retrieving available seats for a session</li>
+     *   <li>Selecting a seat for a session</li>
+     *   <li>Updating ticket sales</li>
+     *   <li>Updating product inventory</li>
+     * </ul>
+     * 
+     * The output of each test is printed to the console.
+     * 
+     * @param args Command-line arguments (not used)
+     */
+
     public static void main(String[] args) 
     {
         // Test database connection

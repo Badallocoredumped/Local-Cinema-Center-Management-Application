@@ -25,6 +25,10 @@ import java.time.format.DateTimeFormatter;
 import help.utilities.BankDBO;
 import help.utilities.DataBaseHandler;
 
+/**
+ * Controller class responsible for managing revenue-related operations in the system.
+ * This class provides the functionality for viewing and displaying revenue details.
+ */
 public class ManagerRevenueController {
 
     @FXML private Button Product_Inventory_Go;
@@ -59,7 +63,10 @@ public class ManagerRevenueController {
     }
     
 
-
+    /**
+     * Initializes the manager revenue controller by setting up initial labels, 
+     * enabling/disabling relevant buttons, and preparing the view.
+     */
     @FXML
     public void initialize() {
         System.out.println("ManagerRevenueController initialized");
@@ -70,6 +77,14 @@ public class ManagerRevenueController {
         Price_Management_Go.setDisable(false);
         //setupChartData();
     }
+
+    /**
+     * Handles the sign-out button action, loading the 'login.fxml' page.
+     * This method loads the login page, sets it as the current scene, 
+     * and resets the stage with a new scene for login. It also disables fullscreen mode.
+     *
+     * @param event The action event triggered by the button press.
+     */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
@@ -110,7 +125,10 @@ public class ManagerRevenueController {
         }
     }
 
-    
+    /**
+     * Updates the revenue and tax labels with the latest data fetched from the bankDBO.
+     * Displays the total revenue and tax amount.
+     */
     private void updateRevenueAndTaxLabels() 
     {
         try {
@@ -130,19 +148,28 @@ public class ManagerRevenueController {
 
 
     
-
+    /**
+     * Closes the current stage when called, typically when clicking the close button.
+     */
     @FXML
     private void handleClose() {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Minimizes the current stage when called, typically when clicking the minimize button.
+     */
     @FXML
     private void handleMinimize() {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setIconified(true);
     }
 
+    /**
+     * Navigates to the product management page by loading the corresponding FXML file.
+     * Ensures the stage remains in fullscreen mode after the page is loaded.
+     */
     @FXML
     private void handleProductManagement() {
         try {
@@ -165,6 +192,10 @@ public class ManagerRevenueController {
         }
     }
 
+    /**
+     * Navigates to the personnel management page by loading the corresponding FXML file.
+     * Ensures the stage remains in fullscreen mode after the page is loaded.
+     */
     @FXML
     private void handlePersonnelManagement() {
         try {
@@ -181,6 +212,10 @@ public class ManagerRevenueController {
         }
     }
 
+    /**
+     * Navigates to the price management page by loading the corresponding FXML file.
+     * Ensures the stage remains in fullscreen mode after the page is loaded.
+     */
     @FXML
     private void handlePriceManagement() {
         try {
@@ -197,6 +232,10 @@ public class ManagerRevenueController {
         }
     }
 
+    /**
+     * Navigates to the revenue and tax management page by loading the corresponding FXML file.
+     * Ensures the stage remains in fullscreen mode after the page is loaded.
+     */
     @FXML
     private void handleRevenueTax() {
         try {
@@ -213,6 +252,13 @@ public class ManagerRevenueController {
         }
     }
 
+    /**
+     * Displays an alert with a specified title and message. It also ensures that the dialog 
+     * retains fullscreen mode if the main window was in fullscreen.
+     *
+     * @param title   The title of the alert.
+     * @param message The content of the alert.
+     */
     private void showAlert(String title, String message) {
         // Store the main window state
         Stage mainStage = (Stage) RevenueChart.getScene().getWindow();

@@ -4,6 +4,10 @@ package help.classes;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Tickets class represents a movie ticket with associated details.
+ * This is a singleton class to ensure a single instance of a ticket is used.
+ */
 public class Tickets 
 {
     private static Tickets instance;

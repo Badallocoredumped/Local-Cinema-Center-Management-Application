@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Arrays;
 import help.classes.Movie;
 
+/**
+ * Data Base Object (DBO) class for managing movie-related database operations.
+ */
 public class MovieDBO {
     /**
      * Retrieves the binary data from a BLOB (Binary Large Object) as a byte array.

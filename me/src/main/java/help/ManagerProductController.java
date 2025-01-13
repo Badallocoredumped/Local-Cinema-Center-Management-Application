@@ -27,6 +27,10 @@ import java.util.List;
 import java.nio.file.Files;
 import java.io.IOException;
 
+/**
+ * Controller class for managing products in the system.
+ * This class provides the functionality for adding, updating, and removing products.
+ */
 public class ManagerProductController 
 {
     
@@ -46,19 +50,33 @@ public class ManagerProductController
     @FXML private ImageView ProductImage;
     @FXML private Button importImageButton;
 
+    /**
+     * Handles the close button action. Closes the current window when the close button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the Close button click.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
-
+    /**
+     * Handles the minimize button action. Minimizes the current window when the minimize button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the Minimize button click.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setIconified(true);
     }
 
-
+    /**
+     * Handles the sign out button action. Clears the shopping cart, loads the login page, and sets it as the 
+     * current scene. 
+     * 
+     * @param event The ActionEvent triggered by the Sign Out button click.
+     */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
@@ -104,6 +122,9 @@ public class ManagerProductController
     private ProductDBO productDBO = new ProductDBO();
     private byte[] selectedImageData;
     
+    /**
+     * Initializes the controller, setting up the table, combo boxes, buttons, and loading the product data.
+     */
     @FXML
     public void initialize() 
     {
@@ -134,6 +155,9 @@ public class ManagerProductController
         Price_Management_Go.setDisable(false);
     }
     
+    /**
+     * Sets up the table columns for the product list, including cell value factories, column widths, and formatting.
+     */
     private void setupTableColumns() {
         // Setup column cell factories
         ProductName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -165,12 +189,18 @@ public class ManagerProductController
         ProductPrice.setStyle("-fx-alignment: CENTER-RIGHT;");
     }
     
+    /**
+     * Sets up the combo box for product type selection with predefined values.
+     */
     private void setupComboBox() {
         ProductTypeComboBox.setItems(FXCollections.observableArrayList(
             "Drinks", "Snacks", "Toys"
         ));
     }
 
+    /**
+     * Sets up button actions for the UI components, including close, minimize, import, and menu navigation.
+     */
     private void setupButtons() {
         CloseButton.setOnAction(e -> handleClose());
         MinimizeButton.setOnAction(e -> handleMinimize());
@@ -191,18 +221,29 @@ public class ManagerProductController
         Revenue_Tax_Go.setOnAction(e -> handleRevenueTax());
     }
     
+    /**
+     * Closes the current window.
+     */
     @FXML
     private void handleClose() {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
     
+    /**
+     * Minimizes the current window.
+     */
     @FXML
     private void handleMinimize() {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setIconified(true);
     }
     
+    /**
+     * Handles the import image action. Allows the user to select an image file and updates the selected product's image.
+     * 
+     * @throws Exception If an error occurs while handling the image import.
+     */
     @FXML
     private void handleImportImage() throws Exception {
         FileChooser fileChooser = new FileChooser();
@@ -239,7 +280,11 @@ public class ManagerProductController
             }
         }
     }
-    
+
+    /**
+     * Loads products from the database and populates the ProductTable with them.
+     * It also logs the details of each product for debugging purposes.
+     */
     private void loadProducts() {
         try {
             System.out.println("Loading products...");
@@ -260,6 +305,11 @@ public class ManagerProductController
         }
     }
     
+    /**
+     * Displays the details of the selected product in the relevant UI fields.
+     *
+     * @param product The product whose details need to be displayed.
+     */
     private void showProductDetails(Product product) {
         ProductNameText.setText(product.getName());
         ProductStockText.setText(String.valueOf(product.getStockAvailability()));
@@ -277,6 +327,11 @@ public class ManagerProductController
     }
 
 
+    /**
+     * Handles the action of adding a new product to the database. 
+     * Validates inputs, creates a new product object, and attempts to insert it into the database.
+     * If successful, the product list is refreshed, and input fields are cleared.
+     */
     @FXML
     private void handleAddProduct() 
     {
@@ -304,6 +359,12 @@ public class ManagerProductController
         }
     }
 
+    /**
+     * Handles the action of updating an existing product in the database.
+     * Validates inputs, retrieves the selected product, creates an updated product object, 
+     * and attempts to update the product in the database.
+     * If successful, the product list is refreshed, and input fields are cleared.
+     */
     @FXML
     private void handleUpdateProduct() {
         Product selectedProduct = ProductTable.getSelectionModel().getSelectedItem();
@@ -336,6 +397,12 @@ public class ManagerProductController
         }
     }
 
+
+    /**
+     * Handles the action of deleting a selected product from the database.
+     * Displays a confirmation dialog before proceeding with the deletion.
+     * If the deletion is successful, the product list is refreshed.
+     */
     @FXML
     private void handleDeleteProduct() {
         Product selectedProduct = ProductTable.getSelectionModel().getSelectedItem();
@@ -364,6 +431,12 @@ public class ManagerProductController
         }
     }
 
+    /**
+     * Validates the inputs for adding or updating a product. 
+     * Checks if the product name, stock, price, and product type are valid.
+     * 
+     * @return true if all inputs are valid, false otherwise.
+     */
     private boolean validateInputs() 
     {
     // Validate Product Name
@@ -410,6 +483,11 @@ public class ManagerProductController
     }
 
 
+    /**
+     * Clears all input fields for product management.
+     * This includes clearing the product name, stock, price, type, 
+     * and image data fields.
+     */
     private void clearFields() {
         ProductNameText.clear();
         ProductStockText.clear();
@@ -419,6 +497,14 @@ public class ManagerProductController
         selectedImageData = null;
     }
     
+    /**
+     * Displays an informational alert with a specified title and message.
+     * The alert appears in the same window as the main application and retains
+     * the fullscreen state if it was active before the alert was shown.
+     *
+     * @param title   The title of the alert.
+     * @param message The message content of the alert.
+     */
     private void showAlert(String title, String message) {
         // Store the main window state
         Stage mainStage = (Stage) SignoutButton.getScene().getWindow();
@@ -439,8 +525,13 @@ public class ManagerProductController
         }
     }
 
-    // Add this method for success messages
-    // Add this method for success messages
+    /**
+     * Displays a success message indicating that a product has been successfully added, updated, or deleted.
+     * The alert appears in the same window as the main application and retains
+     * the fullscreen state if it was active before the alert was shown.
+     *
+     * @param action The action performed, such as "added", "updated", or "deleted".
+     */
     private void showSuccessMessage(String action) {
         // Store the main window state
         Stage mainStage = (Stage) ProductTable.getScene().getWindow();
@@ -461,6 +552,11 @@ public class ManagerProductController
         }
     }
     
+    /**
+     * Handles the action of navigating to the product management page.
+     * Loads the corresponding FXML file and sets it as the root of the current scene.
+     * Ensures the stage remains in fullscreen mode.
+     */
     @FXML
     private void handleProductManagement() {
         try {
@@ -483,6 +579,11 @@ public class ManagerProductController
         }
     }
 
+    /**
+     * Handles the action of navigating to the personnel management page.
+     * Loads the corresponding FXML file and sets it as the root of the current scene.
+     * Ensures the stage remains in fullscreen mode.
+     */
     @FXML
     private void handlePersonnelManagement() {
         try {
@@ -498,7 +599,11 @@ public class ManagerProductController
             showAlert("Error", "Could not load personnel management page");
         }
     }
-
+    /**
+     * Handles the action of navigating to the price management page.
+     * Loads the corresponding FXML file and sets it as the root of the current scene.
+     * Ensures the stage remains in fullscreen mode.
+     */
     @FXML
     private void handlePriceManagement() {
         try {
@@ -514,7 +619,12 @@ public class ManagerProductController
             showAlert("Error", "Could not load price management page");
         }
     }
-
+        
+    /**
+     * Handles the action of navigating to the revenue and tax management page.
+     * Loads the corresponding FXML file and sets it as the root of the current scene.
+     * Ensures the stage remains in fullscreen mode.
+     */
     @FXML
     private void handleRevenueTax() {
         try {

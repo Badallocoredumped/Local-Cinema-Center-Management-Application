@@ -3,6 +3,9 @@ package help.classes;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Class representing sessions for a movie.
+ */
 public class Session 
 {
     private final StringProperty day;

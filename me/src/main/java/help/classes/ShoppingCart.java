@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class representing a shopping cart that holds the products (movies and other items).
+ */
 public class ShoppingCart {
 
     private static ShoppingCart instance;

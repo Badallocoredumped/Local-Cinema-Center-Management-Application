@@ -3,7 +3,10 @@ package help.utilities;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
+/**
+ * Data Base Object (DBO) class for managing invoice-related database operations.
+ * Provides methods for creating invoices.
+ */
 public class InvoiceDBO 
 {
     /**

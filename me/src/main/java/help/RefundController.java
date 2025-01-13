@@ -9,6 +9,10 @@ import java.math.BigDecimal;
 
 import help.classes.TicketProduct;
 
+/**
+ * Controller class responsible for handling the logic related to processing refunds.
+ * This includes initiating refund actions and updating the necessary records.
+ */
 public class RefundController {
 
     @FXML
@@ -68,15 +72,25 @@ public class RefundController {
     // Observable list for the table
     private ObservableList<TicketProduct> ticketProducts;
 
-    // Handle refund button click
+    /**
+     * Handles the click event for the Refund button.
+     * This method processes the refund logic.
+     * 
+     * @param event The ActionEvent triggered by the button click.
+     */
     @FXML
     private void handleRefundButtonClick(ActionEvent event) {
         // Logic for processing the refund
         System.out.println("Refund button clicked");
     }
 
-    // Handle search button click
-    @FXML
+    /**
+     * Handles the click event for the Search button.
+     * This method handles the logic for searching refund records.
+     * 
+     * @param event The ActionEvent triggered by the button click.
+     */ 
+   @FXML
     private void handleSearchButtonClick(ActionEvent event) {
         // Logic for searching refund records
         System.out.println("Search button clicked");
@@ -86,14 +100,22 @@ public class RefundController {
         ticketProducts.add(product);
     }
     
-    // Handle sign out button click
+    /**
+     * Handles the click event for the Sign Out button.
+     * This method handles the logic for signing out the user.
+     * 
+     * @param event The ActionEvent triggered by the button click.
+     */
     @FXML
     private void handleSignOutButtonClick(ActionEvent event) {
         // Logic for signing out
         System.out.println("Sign out button clicked");
     }
 
-    // Initialize the controller
+    /**
+     * Initializes the controller. This method is called after the FXML file is loaded.
+     * It initializes the ComboBoxes, TableView, and sets up the columns.
+     */
     @FXML
     public void initialize() {
         // Initialize ComboBoxes or other UI elements

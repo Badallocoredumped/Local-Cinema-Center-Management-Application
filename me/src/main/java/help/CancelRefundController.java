@@ -60,6 +60,11 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.control.cell.ComboBoxTreeTableCell;
 
+/**
+ * Controller for handling the cancellation of refunds in the application.
+ * This class provides methods to cancel a refund request, update the database, 
+ * and show success or error messages.
+ */
 public class CancelRefundController 
 {
     @FXML private Button MinimizeButton, CloseButton, SignoutButton, RefundButton;
@@ -80,7 +85,11 @@ public class CancelRefundController
     private TicketsDBO ticketService = new TicketsDBO();  // Assuming TicketService is your helper class.
     private TicketProductsDBO ticketProductsDBO = new TicketProductsDBO();
 
-
+    /**
+     * Initializes the controller by setting up the table columns, combo box, table selection, and loading ticket data.
+     * 
+     * @throws Exception if any error occurs during initialization.
+     */
     @FXML
     public void initialize() throws Exception 
     {
@@ -90,6 +99,11 @@ public class CancelRefundController
         loadTicketData();
     }
 
+    /**
+     * Configures the table columns and sets up data factories for displaying ticket and product information.
+     * 
+     * @throws Exception if any error occurs while setting up the table columns.
+     */
     private void setupTableColumns() throws Exception 
     {
         
@@ -205,6 +219,9 @@ public class CancelRefundController
         //loadTicketData();
     }
 
+    /**
+     * Configures the refund type combo box with available options.
+     */
     private void setupComboBox() 
     {
         TypeOfRefund.setValue("Full Refund");
@@ -215,6 +232,12 @@ public class CancelRefundController
         ));
     }
 
+    /**
+     * Fetches ticket product data by joining the Tickets and Ticket_Products tables.
+     * 
+     * @return an ObservableList of TicketProduct objects.
+     * @throws Exception if any error occurs while fetching the data.
+     */
     public ObservableList<TicketProduct> fetchTicketProducts() throws Exception 
     {
         ObservableList<TicketProduct> ticketProducts = FXCollections.observableArrayList();
@@ -262,6 +285,10 @@ public class CancelRefundController
 
         return ticketProducts;
     }
+
+    /**
+     * Sets up table selection listeners to enable or disable the refund button based on ticket selection.
+     */    
     private void setupTableSelection() {
         // Disable refund button initially
         RefundButton.setDisable(true);
@@ -280,7 +307,9 @@ public class CancelRefundController
         });
     }
 
-    
+    /**
+     * Loads ticket data from the database and populates the TableView.
+     */    
     private void loadTicketData() {
         try {
             TicketsDBO ticketsDBO = new TicketsDBO();
@@ -291,7 +320,13 @@ public class CancelRefundController
         }
     }
     
-
+    /**
+     * Displays an alert dialog with the specified type, title, and message.
+     * 
+     * @param alertType the type of alert (e.g., INFORMATION, WARNING, ERROR).
+     * @param title     the title of the alert.
+     * @param message   the content message of the alert.
+     */
     private void showAlert(Alert.AlertType alertType, String title, String message) 
     {
         Stage ownerStage = (Stage) TicketTable.getScene().getWindow();
@@ -338,7 +373,9 @@ public class CancelRefundController
 
 
     
-
+    /**
+     * Handles the search action for finding a ticket by its ID.
+     */
     @FXML
     private void handleSearch() {
         String ticketId = TicketIdText.getText().trim();
@@ -350,13 +387,22 @@ public class CancelRefundController
         }
     }
 
-    
+    /**
+     * Handles the refund process based on the selected refund type.
+     * 
+     * @param event the ActionEvent triggered by the refund button.
+     */
     @FXML
     private void handleSearchButton() {
         String ticketId = TicketIdText.getText();
         // Implement search logic
     }
 
+    /**
+     * Handles the refund process based on the selected refund type.
+     * 
+     * @param event the ActionEvent triggered by the refund button.
+     */
     @FXML
     private void handleRefundSelection(ActionEvent event) 
     {
@@ -416,19 +462,33 @@ public class CancelRefundController
     }
 
     
-
+    /**
+     * Handles the close button action by closing the current window.
+     * 
+     * @param event the ActionEvent triggered by the close button.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the minimize button action by minimizing the current window.
+     * 
+     * @param event the ActionEvent triggered by the minimize button.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setIconified(true);
     }
 
+        /**
+     * Handles the sign-out button action by navigating to the login screen.
+     * 
+     * @param event the ActionEvent triggered by the sign-out button.
+     */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
@@ -469,6 +529,12 @@ public class CancelRefundController
         }
     }
 
+    /**
+     * Handles the action of scheduling movies by switching to the "MovieSchedule" scene.
+     * 
+     * @param event The ActionEvent triggered by clicking the schedule button.
+     * @throws IOException If loading the FXML file fails.
+     */
     @FXML
     private void onSchedule(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -479,6 +545,12 @@ public class CancelRefundController
         changeScene(stage, root, "Organize Movies");
     }
 
+    /**
+     * Handles the action of organizing movies by switching to the "OrganizeMovie" scene.
+     * 
+     * @param event The ActionEvent triggered by clicking the organize movie button.
+     * @throws IOException If loading the FXML file fails.
+     */
     @FXML
     public void onOrganizeMovie(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -489,6 +561,13 @@ public class CancelRefundController
         changeScene(stage, root, "Organize Movies");
     }
 
+    /**
+     * Changes the current scene of the given stage to a new one.
+     * 
+     * @param stage The current stage where the scene is being set.
+     * @param root  The root node of the new scene to be displayed.
+     * @param newSceneTitle The title of the new scene to be displayed on the stage.
+     */
     private void changeScene(Stage stage, Parent root, String newSceneTitle) {
         Scene scene = stage.getScene();
         scene.setRoot(root);

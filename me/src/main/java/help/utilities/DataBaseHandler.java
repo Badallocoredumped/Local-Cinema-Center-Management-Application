@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A handler class for managing database connections and operations.
+ * Provides methods to connect to the database and execute queries.
+ */
 public class DataBaseHandler
 {
     private static final String URL = "jdbc:mysql://localhost:3306/cinemacenter";

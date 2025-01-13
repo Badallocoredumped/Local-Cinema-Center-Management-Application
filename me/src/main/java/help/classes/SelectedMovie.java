@@ -1,5 +1,8 @@
 package help.classes;
 
+/**
+ * Class representing a selected movie for viewing.
+ */
 public class SelectedMovie 
 {
     private static SelectedMovie instance;

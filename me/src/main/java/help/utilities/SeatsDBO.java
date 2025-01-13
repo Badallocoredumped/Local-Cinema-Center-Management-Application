@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Data Base Object (DBO) class for managing seats-related database operations.
+ */
 public class SeatsDBO 
 {
     /**

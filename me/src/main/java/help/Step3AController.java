@@ -30,6 +30,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
+/**
+ * Controller class responsible for handling the actions of Step 3A in the cashier multi-step process.
+ */
 public class Step3AController 
 {
     @FXML
@@ -68,18 +71,37 @@ public class Step3AController
     private List<String> selectedSeats = new ArrayList<>();
     private List<String> confirmedSeats = new ArrayList<>();
 
+    /**
+     * Handles the action when the close button is clicked.
+     * Closes the current stage (window).
+     *
+     * @param event The action event that triggers this method.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the action when the minimize button is clicked.
+     * Minimizes the current stage (window).
+     *
+     * @param event The action event that triggers this method.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setIconified(true);
     }
 
+    /**
+     * Initializes the view with the selected movie and session details, and sets up the seat buttons.
+     * This method is called when the controller is initialized and sets up the interface based on the 
+     * session and movie in the shopping cart.
+     * 
+     * @throws Exception If an error occurs while fetching session or movie data.
+     */
     @FXML
     private void initialize() throws Exception
     {
@@ -97,6 +119,12 @@ public class Step3AController
         initializeSeatButtons();
     }
 
+    /**
+     * Fetches the list of sold seats for the currently selected session from the database.
+     * 
+     * @return A list of seat labels representing the sold seats.
+     * @throws Exception If an error occurs while querying the database.
+     */
     private List<String> fetchSoldSeats() throws Exception {
         List<String> soldSeats = new ArrayList<>();
         ShoppingCart cart = ShoppingCart.getInstance();
@@ -124,7 +152,12 @@ public class Step3AController
     
     
 
-
+    /**
+     * Initializes the seat buttons based on the availability of the seats.
+     * Marks seats as available (green), sold (red), or selected (yellow) based on their state.
+     * 
+     * @throws Exception If an error occurs while fetching sold seat data.
+     */
     private void initializeSeatButtons() throws Exception 
     {
         Button[] seats = 
@@ -159,6 +192,12 @@ public class Step3AController
     }
     
 
+    /**
+         * Handles the selection and deselection of a seat by the user.
+         * Updates the seat's color to yellow when selected and green when deselected.
+         * 
+         * @param seatButton The button representing the selected seat.
+         */
     private void handleSeatSelection(Button seatButton) 
     {
         String seatId = seatButton.getId();
@@ -179,6 +218,10 @@ public class Step3AController
     
     
 
+    /**
+     * Updates the shopping cart with the currently selected seats.
+     * Displays the updated seat list in the UI and ensures seats are added to the cart.
+     */
     private void updateShoppingCart() 
     {
         // Get the current selected seats
@@ -201,6 +244,13 @@ public class Step3AController
 
     
 
+    /**
+     * Handles the action of adding selected seats to the shopping cart.
+     * Checks if the seats are already in the cart and if not, adds them, marks them as sold,
+     * and disables the seat buttons in the UI.
+     * 
+     * @throws Exception If an error occurs while adding the seats to the cart or marking them as sold.
+     */
     @FXML
     private void handleAddToCartAction() throws Exception
     {
@@ -254,6 +304,12 @@ public class Step3AController
         }
     }
 
+    /**
+     * Reduces the vacant seat count for the given session by 1. If no vacant seats are available, an exception is thrown.
+     * 
+     * @param sessionId the ID of the session for which the vacant seat count will be reduced
+     * @throws SQLException if no vacant seats are available or there is an issue updating the database
+     */
     private void reduceHallCapacity(int sessionId) throws Exception 
     {
         try (Connection conn = DataBaseHandler.getConnection()) 
@@ -292,6 +348,13 @@ public class Step3AController
     
     
 
+    /**
+     * Retrieves the number of vacant seats for a given session.
+     * 
+     * @param sessionId the ID of the session for which to get the vacant seat count
+     * @return the number of vacant seats for the session
+     * @throws SQLException if no session is found with the provided session ID or there is an issue querying the database
+    */
     private int getVacantSeatsForSession(int sessionId) throws Exception 
     {
         int vacantSeats = -1;  // Default value in case no data is found.
@@ -327,6 +390,12 @@ public class Step3AController
     
     
     
+    /**
+     * Marks a list of seats as sold (occupied) in the database.
+     * 
+     * @param seatLabels a list of seat labels to be marked as sold
+     * @throws SQLException if there is an issue updating the database
+     */
     private void markSeatsAsSold(List<String> seatLabels) throws Exception 
     {
         // Query to mark seats as occupied
@@ -360,7 +429,12 @@ public class Step3AController
     
     
     
-
+    /**
+     * Finds a seat button by its seat label.
+     * 
+     * @param seatId the ID of the seat to find
+     * @return the Button corresponding to the given seat ID, or null if no matching button is found
+     */
     private Button findSeatButtonById(String seatId) 
     {
         for (Node node : seatsGridPane.getChildren()) 
@@ -374,6 +448,12 @@ public class Step3AController
         return null;
     }
 
+    /**
+     * Marks a list of seats as available and updates the vacant seat count for the session.
+     * 
+     * @param seatLabels a list of seat labels to be unmarked as sold and made available again
+     * @throws SQLException if there is an issue updating the database
+     */
     private void unmarkSeatsAsAvailable(List<String> seatLabels) throws Exception 
     {
         // Query to mark seats as available
@@ -414,6 +494,12 @@ public class Step3AController
     }
 
 
+    /**
+     * Displays an informational alert to the user with the given title and message.
+     * 
+     * @param title the title of the alert
+     * @param message the message to display in the alert
+     */
     private void showAlert(String title, String message) 
     {
         Alert alert = new Alert(AlertType.INFORMATION);
@@ -423,6 +509,11 @@ public class Step3AController
         alert.showAndWait();
     }
 
+    /**
+     * Handles the action when the "Next" button is pressed. Loads the next step's FXML and updates the scene.
+     * 
+     * @throws IOException if there is an issue loading the FXML file for the next step
+     */
     @FXML
     private void handleNextButtonAction() throws IOException 
     {
@@ -444,6 +535,11 @@ public class Step3AController
         stage.setFullScreenExitHint(""); // Hide the exit hint
     }
 
+    /**
+     * Handles the action when the "Back" button is pressed. Unmarks confirmed seats as available and loads the previous step's FXML.
+     * 
+     * @throws IOException if there is an issue loading the FXML file for the previous step
+     */
     @FXML
     private void handleBackButtonAction() throws IOException 
     {
@@ -505,6 +601,11 @@ public class Step3AController
         
     }
 
+    /**
+     * Handles the sign-out action when the user clicks the "Sign Out" button.
+     *
+     * @param event The action event triggered when the "Sign Out" button is clicked.
+     */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) {
         try {

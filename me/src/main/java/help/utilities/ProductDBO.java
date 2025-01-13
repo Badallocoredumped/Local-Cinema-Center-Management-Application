@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
+/**
+ * Data Base Object (DBO) class for managing product-related database operations.
+ */
 public class ProductDBO 
 {
     /**

@@ -10,7 +10,9 @@ import help.classes.Product;
 import help.classes.TicketProduct;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
+/**
+ * Data Base Object (DBO) class for managing Tickets product-related database operations.
+ */
 public class TicketProductsDBO {
 
     /**

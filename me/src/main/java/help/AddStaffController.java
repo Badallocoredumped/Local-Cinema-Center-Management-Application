@@ -33,6 +33,11 @@ import javafx.event.ActionEvent;
 import javafx.beans.property.SimpleStringProperty;
 
 
+/**
+ * Controller for the "Add Staff" functionality in the application.
+ * This class handles the input, validation, and submission of staff data to the system.
+ * The staff data is then saved either in a database.
+ */
 public class AddStaffController {
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
@@ -43,6 +48,9 @@ public class AddStaffController {
     private UserDBO userDBO = new UserDBO();
     private Manager_PersonnelController parentController;
     
+    /**
+    * Initializes the Add Staff dialog by populating the roleComboBox with predefined roles.
+    */
     @FXML
     public void initialize() 
     {
@@ -50,21 +58,39 @@ public class AddStaffController {
         
     }
 
+    /**
+     * Closes the current dialog window.
+     */
     private void closeDialog() 
     {
         Stage stage = (Stage) firstNameField.getScene().getWindow();
         stage.close();
     }
-        @FXML
+
+    /**
+     * Handles the Cancel button action by closing the dialog window.
+     * 
+     * @param event the ActionEvent triggered by clicking the Cancel button
+     */
+    @FXML
     private void handleCancel(ActionEvent event) {
         closeDialog();
     }
     
+    /**
+     * Sets the parent controller to allow interaction between this dialog and the parent view.
+     * 
+     * @param controller the parent Manager_PersonnelController
+     */
     public void setParentController(Manager_PersonnelController controller) 
     {
         this.parentController = controller;
     }
     
+    /**
+     * Handles the Save button action by validating user inputs and saving the new user.
+     * If successful, the dialog is closed, and the parent controller is refreshed.
+     */
     @FXML
     private void handleSave() {
         if (!validateInputs()) {
@@ -82,12 +108,17 @@ public class AddStaffController {
         
         if (userDBO.insertUser(newUser, passwordField.getText())) {
             closeDialog();
-            parentController.refreshTable();
+            parentController.refreshUserTable();
         } else {
             showAlert("Error", "Could not save new staff member");
         }
     }
     
+    /**
+     * Validates the inputs provided by the user.
+     * 
+     * @return true if all inputs are valid, false otherwise
+     */
     private boolean validateInputs() {
         // Check empty fields
         if (firstNameField.getText().trim().isEmpty() ||
@@ -127,6 +158,12 @@ public class AddStaffController {
         return true;
     }
     
+    /**
+     * Displays an alert dialog with a specified title and message content.
+     * 
+     * @param title the title of the alert
+     * @param content the content message of the alert
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(title);

@@ -24,6 +24,10 @@ import help.classes.Schedule;
 import help.classes.Session;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Database Handler class for managing admin-related operations.
+ * Provides methods for adding, updating, deleting, and fetching admin related data from the database.
+ */
 public class AdminDBH 
 {
     private static final String URL = "jdbc:mysql://localhost:3306/cinemacenter";
@@ -592,6 +596,17 @@ public class AdminDBH
         
     }
 
+    /**
+     * Deletes a session from the database if no tickets have been purchased for it.
+     * This method checks if there are any associated tickets with the given session.
+     * If tickets exist, an exception is thrown to prevent deletion.
+     * Otherwise, it proceeds to delete all associated seats and the session itself.
+     * A transaction is used to ensure both deletion operations are successful.
+     *
+     * @param sessionId the ID of the session to be deleted
+     * @throws Exception if an error occurs during the deletion process, 
+     *                   including cases where tickets have already been purchased for the session
+     */
     public void DeleteSession(int sessionId) throws Exception {
         Connection connection = DataBaseHandler.getConnection();
         

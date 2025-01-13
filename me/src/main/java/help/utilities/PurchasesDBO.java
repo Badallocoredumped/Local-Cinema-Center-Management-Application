@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
+/**
+ * Data Base Object (DBO) class for managing purchase-related database operations.
+ */
 public class PurchasesDBO {
 
     /**

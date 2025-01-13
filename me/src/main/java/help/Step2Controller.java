@@ -33,6 +33,9 @@ import javafx.stage.Stage;
 import help.classes.Session;
 import help.classes.ShoppingCart;
 
+/**
+ * Controller class responsible for handling the actions of Step 2 in the cashier multi-step process.
+ */
 public class Step2Controller 
 {
     @FXML
@@ -67,18 +70,32 @@ public class Step2Controller
     @FXML
     private Label selectedSession;
 
+    /**
+     * Handles the action for the Close button, closing the current stage.
+     * 
+     * @param event The action event triggered when the Close button is clicked.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
         Stage stage = (Stage) CloseButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the action for the Minimize button, minimizing the current stage.
+     * 
+     * @param event The action event triggered when the Minimize button is clicked.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) {
         Stage stage = (Stage) MinimizeButton.getScene().getWindow();
         stage.setIconified(true);
     }
  
+    /**
+     * Initializes the view by setting up the movie selection and session data.
+     * Adds a listener to update the selected session label when a session is selected.
+     */
     @FXML
     private void initialize() 
     {
@@ -120,6 +137,11 @@ public class Step2Controller
 
     }
 
+    /**
+    * Loads session data for the selected movie and populates the session table.
+    * 
+    * @param selectedMovie The movie for which session data will be loaded.
+    */
     private void loadSessionData(Movie selectedMovie) 
     {
         if (selectedMovie == null) 
@@ -177,6 +199,12 @@ public class Step2Controller
     }
 
 
+    /**
+     * Handles the action for the Next button, navigating to the next step in the process.
+     * 
+     * @param event The action event triggered when the Next button is clicked.
+     * @throws IOException If an I/O error occurs while loading the next FXML file.
+     */
     @FXML
     private void handleNextButtonAction(ActionEvent event) throws IOException 
     {
@@ -226,6 +254,13 @@ public class Step2Controller
 
     }
 
+ 
+    /**
+     * Handles the action for the Back button, navigating back to Step 1.
+     * 
+     * @param event The action event triggered when the Back button is clicked.
+     * @throws IOException If an I/O error occurs while loading the FXML file for Step 1.
+     */
     @FXML
     private void handleBackButtonAction(ActionEvent event) throws IOException 
     {
@@ -270,6 +305,11 @@ public class Step2Controller
     }
     
 
+    /**
+     * Updates the selected movie in Step 1 by setting the movie title in the label.
+     * 
+     * @param movie The selected movie to be displayed.
+     */
     public void updateSelectedMovie(Movie movie) 
     {
         if (movie != null) 
@@ -283,6 +323,11 @@ public class Step2Controller
     }
 
 
+    /**
+     * Handles the confirmation of the selected session, saving the session to the cart and showing a confirmation dialog.
+     * 
+     * @throws IOException If an I/O error occurs during the confirmation process.
+     */
     @FXML
     private void handleConfirmSelection() throws IOException 
     {
@@ -307,6 +352,9 @@ public class Step2Controller
         }
     }
 
+    /**
+     * Displays a confirmation dialog when the session is successfully selected.
+     */
     private void showConfirmationDialog() 
     {
         try 
@@ -329,6 +377,11 @@ public class Step2Controller
         }
     }
 
+    /**
+     * Displays an error dialog with the provided error message.
+     * 
+     * @param errorMessage The error message to be displayed in the dialog.
+     */
     private void showErrorDialog(String errorMessage) 
     {
         try 
@@ -353,6 +406,12 @@ public class Step2Controller
 
     
 
+    /**
+     * Determines the next step's FXML file based on the selected session's hall.
+     * 
+     * @param selectedSession The session for which the next step is being determined.
+     * @return The FXML file path for the next step, based on the selected session's hall.
+     */
     private String getNextStepFXML(Session selectedSession) 
     {
         
@@ -361,7 +420,13 @@ public class Step2Controller
         return hall.contains("A") ? "/help/fxml/step3_salonA.fxml" : "/help/fxml/step3_salonB.fxml";
         
     }
-        @FXML
+
+    /**
+     * Handles the action for the Sign Out button, signing the user out and navigating to the login screen.
+     * 
+     * @param event The action event triggered when the Sign Out button is clicked.
+     */
+    @FXML
     private void handleSignOutButtonAction(ActionEvent event) 
     {
         try 

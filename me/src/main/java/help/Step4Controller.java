@@ -52,6 +52,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
+/**
+ * Controller class responsible for handling the actions of Step 4 in the cashier multi-step process.
+ */
 public class Step4Controller {
 
     
@@ -135,18 +138,35 @@ public class Step4Controller {
 
     private String customerName;
     private String customerSurname;
-
+    
+    /**
+     * Returns the amount of tax applied to products.
+     * 
+     * @return The product tax amount.
+     */
     public double getProductTaxAmount() 
     {
         return productTaxAmount;
     }
 
-
+    /**
+     * Returns the amount of tax applied to tickets.
+     * 
+     * @return The ticket tax amount.
+     */
     public double getTicketTaxAmount() 
     {
         return ticketTaxAmount;
     }
 
+    /**
+     * Returns the total tax amount for both products and tickets.
+     * 
+     * This method calculates the total tax by summing up the product tax and ticket tax amounts.
+     * It also prints the individual tax amounts for debugging purposes.
+     * 
+     * @return The total tax amount (product tax + ticket tax).
+     */
     public double getTotalTaxAmount() 
     {
         System.out.println("Product Tax: " + productTaxAmount);
@@ -154,21 +174,49 @@ public class Step4Controller {
         return productTaxAmount + ticketTaxAmount;
     }
 
+    /**
+    * Calculates the tax amount for a seat based on the base price and a predefined tax rate.
+    * 
+    * @param basePrice The base price of the seat before tax.
+    * @return The calculated seat tax amount.
+    */
     private double calculateSeatTax(double basePrice) 
     {
         return basePrice * TICKET_TAX_RATE;
     }
     
+    /**
+     * Calculates the tax amount for a product based on the base price and a predefined tax rate.
+     * 
+     * @param basePrice The base price of the product before tax.
+     * @return The calculated product tax amount.
+     */
     private double calculateProductTax(double basePrice) 
     {
         return basePrice * PRODUCT_TAX_RATE;
     }
 
+    /**
+     * Calculates the savings from applying a discount to the original price.
+     * 
+     * @param originalPrice The original price before the discount.
+     * @param discountedPrice The price after the discount has been applied.
+     * @return The amount saved by applying the discount.
+     */
     private double calculateDiscountSavings(double originalPrice, double discountedPrice) 
     {
         return originalPrice - discountedPrice;
     }
     
+    /**
+     * Updates the label showing the savings from a discount on the selected seats.
+     * 
+     * This method calculates the original total price, the savings, and updates the UI label to display the savings.
+     * 
+     * @param seatCount The number of seats selected.
+     * @param seatPrice The price of a single seat.
+     * @param discountedTotal The total price after discount is applied.
+     */
     private void updateDiscountSavingsLabel(int seatCount, double seatPrice, double discountedTotal) 
     {
         double originalTotal = seatCount * seatPrice;
@@ -179,6 +227,11 @@ public class Step4Controller {
     
     
 
+    /**
+     * Handles the action when the "Close" button is clicked. This method closes the current window.
+     * 
+     * @param event The action event triggered by the "Close" button.
+     */
     @FXML
     private void handleCloseButtonAction(ActionEvent event) 
     {
@@ -186,6 +239,11 @@ public class Step4Controller {
         stage.close();
     }
 
+    /**
+     * Handles the action when the "Minimize" button is clicked. This method minimizes the current window.
+     * 
+     * @param event The action event triggered by the "Minimize" button.
+     */
     @FXML
     private void handleMinimizeButtonAction(ActionEvent event) 
     {
@@ -193,6 +251,16 @@ public class Step4Controller {
         stage.setIconified(true);
     }
 
+    /**
+     * Initializes the components of the current view. This method is called when the controller is loaded.
+     * It performs the following tasks:
+     * - Updates the shopping cart labels.
+     * - Sets up the product table.
+     * - Loads the available products.
+     * - Sets seat price and updates selected shopping cart.
+     * 
+     * @throws Exception if an error occurs while initializing the components.
+     */
     @FXML
     private void initialize() throws Exception 
     {
@@ -226,6 +294,12 @@ public class Step4Controller {
 
         
     }
+
+    /**
+     * Sets the label displaying the total seat price. This method also updates the tax label based on the current seat price.
+     * 
+     * @throws Exception if an error occurs while fetching the seat price.
+     */
     private void setSeatPriceLabel()
     {
         try 
@@ -241,6 +315,9 @@ public class Step4Controller {
         }   
     }
 
+    /**
+     * Updates the label displaying the total tax amount based on the current product and ticket taxes.
+     */
     private void updateTaxLabel() 
     {
 
@@ -248,6 +325,13 @@ public class Step4Controller {
         TotalTax.setText("$ " + String.format("%.2f", totalTax));
     }
 
+    /**
+     * Calculates the total seat price, including any discounts applied to the selected seats.
+     * The method also calculates and sets the ticket tax amount.
+     * 
+     * @return The total seat price after applying any discounts.
+     * @throws Exception if an error occurs while calculating the seat price or fetching required data.
+     */
     private double getTotalSeatPrice() throws Exception 
     {
         ShoppingCart cart = ShoppingCart.getInstance();
@@ -281,6 +365,13 @@ public class Step4Controller {
         return 0.0;
     }
 
+    /**
+     * Calculates the total price of the products in the shopping cart, including their quantities.
+     * This method calculates the base price of the products and also calculates tax separately.
+     * 
+     * @return The total price of the products in the cart, excluding tax.
+     * @throws Exception if an error occurs while calculating the product price.
+     */
     private double getTotalProductPrice() throws Exception 
     {
         ShoppingCart cart = ShoppingCart.getInstance();
@@ -299,6 +390,13 @@ public class Step4Controller {
         productTaxAmount = calculateProductTax(baseProductPrice);
         return baseProductPrice;
     }
+
+    /**
+     * Updates the total price label by calculating the sum of the total seat price, total product price, and total tax.
+     * This method also updates the tax label.
+     * 
+     * @throws Exception if an error occurs while calculating the prices.
+     */
     private void getsetTotalPrice() throws Exception
     {
         
@@ -307,6 +405,17 @@ public class Step4Controller {
     
     }
 
+    /**
+     * Handles the action when the "Add Product to Cart" button is clicked. This method performs the following actions:
+     * - Retrieves the selected products from the product table.
+     * - Prompts the user for a quantity to add to the cart.
+     * - Updates the product stock in the database.
+     * - Adds the selected products and their quantities to the cart.
+     * - Updates the total price and tax labels.
+     * 
+     * @param event The action event triggered by clicking the "Add Product to Cart" button.
+     * @throws Exception if an error occurs while adding the product to the cart or updating the database.
+     */
     @FXML
     private void handleAddProductToCartAction(ActionEvent event) throws Exception 
     {
@@ -365,6 +474,13 @@ public class Step4Controller {
 
    
 
+    /**
+     * Prompts the user to enter a quantity for the specified product.
+     * This method validates the input and ensures that the quantity is valid and available in stock.
+     * 
+     * @param product The product for which the quantity is being requested.
+     * @return The quantity entered by the user, or -1 if the quantity is invalid or the user cancels.
+     */
     private int getQuantityFromUser(Product product) 
     {
         // Retrieve the current stage from the main window (using the SignoutButton as an example)
@@ -415,6 +531,16 @@ public class Step4Controller {
         }
     }
 
+    /**
+     * Handles the action when the "Apply Discount" button is clicked. This method performs the following actions:
+     * - Validates the customer's name and surname.
+     * - Checks if a discount has already been applied.
+     * - Validates and applies the discount based on the number of seats bought.
+     * - Updates the total price and tax labels.
+     * 
+     * @param event The action event triggered by clicking the "Apply Discount" button.
+     * @throws Exception if an error occurs while applying the discount or calculating the prices.
+     */
     @FXML
     private void handleApplyDiscountAction(ActionEvent event) throws Exception 
     {
@@ -520,6 +646,11 @@ public class Step4Controller {
     } */
     
 
+    /**
+     * Updates the shopping cart labels for the selected movie, session, and seats.
+     * This method checks if the cart contains the selected movie, session, and seats and updates
+     * the corresponding labels accordingly. If no selection is made, it sets a default message.
+     */
     private void updateShoppingCartLabels() 
     {
         ShoppingCart cart = ShoppingCart.getInstance();
@@ -568,6 +699,16 @@ public class Step4Controller {
     }
     
 
+
+    /**
+     * Handles the action when the "Next" button is clicked. This method performs the following:
+     * - Sets the ticket details based on the shopping cart's selected movie, session, seats, and products.
+     * - Calculates the total costs (seats, products, tax, and discount).
+     * - Saves the ticket information to the database.
+     * - Loads the next scene (Step 5) for the next stage of the process.
+     * 
+     * @throws Exception if an error occurs during the ticket creation, database interaction, or scene loading.
+     */
    @FXML
     private void handleNextButtonAction() throws Exception {
         
@@ -629,6 +770,16 @@ public class Step4Controller {
             }
         
     }
+
+    /**
+     * Handles the action when the "Back" button is clicked. This method performs the following:
+     * - Returns the selected products' stock to the inventory.
+     * - Unmarks the selected seats and updates the session's vacant seat count in the database.
+     * - Clears the shopping cart's session and selected seats.
+     * - Loads the previous step (Step 2) scene.
+     * 
+     * @throws SQLException if an error occurs during the database interaction.
+     */
     @FXML
     private void handleBackButtonAction() throws Exception 
     {
@@ -698,6 +849,15 @@ public class Step4Controller {
         stage.show();
     }
 
+    /**
+     * Validates a given name for required conditions. It checks if the name is not empty, 
+     * has a minimum length of 2 characters, a maximum length of 50 characters, and contains 
+     * only letters, spaces, and hyphens.
+     * 
+     * @param name The name to be validated.
+     * @param fieldName The name of the field being validated (used in error messages).
+     * @return true if the name is valid, false otherwise.
+     */
     private boolean isValidName(String name, String fieldName) {
         if (name == null || name.trim().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Error", fieldName + " cannot be empty");
@@ -722,6 +882,13 @@ public class Step4Controller {
         return true;
     }
 
+    /**
+     * Displays an alert with a specific type, title, and message.
+     * 
+     * @param alertType The type of alert (e.g., ERROR, INFORMATION).
+     * @param title The title of the alert.
+     * @param message The message to be displayed in the alert.
+     */
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -731,6 +898,12 @@ public class Step4Controller {
     }
 
 
+    /**
+     * Handles the action of signing out, including unmarking selected seats, returning products to the inventory,
+     * clearing the shopping cart, and navigating to the login screen.
+     * 
+     * @param event The ActionEvent triggered by the sign-out button.
+     */
     @FXML
     private void handleSignOutButtonAction(ActionEvent event) {
         try {
@@ -819,7 +992,7 @@ public class Step4Controller {
     
 
     /**
-     * Sets up the product table columns.
+     * Sets up the product table columns and custom cell factory for images.
      */
     private void setupProductTable() 
     {
@@ -875,9 +1048,10 @@ public class Step4Controller {
     
 
     /**
-     * Loads products from the database and populates the TreeTableView.
-        * @throws Exception 
-        */
+     * Loads products from the database and populates the TreeTableView with product data.
+     * 
+     * @throws Exception If an error occurs while loading the products.
+     */
     private void loadProducts() throws Exception 
     {
         try 
@@ -897,6 +1071,11 @@ public class Step4Controller {
     }
 
     
+    /**
+     * Sets the selected products in the shopping cart to be displayed in the UI.
+     * 
+     * @throws Exception If an error occurs while updating the shopping cart display.
+     */
     private void setselectedShoppingCart() throws Exception {
         ShoppingCart cart = ShoppingCart.getInstance();
         ObservableList<Product> cartProducts = FXCollections.observableArrayList(
@@ -950,6 +1129,11 @@ public class Step4Controller {
     
 
 
+    /**
+     * Shows an error dialog with a specified error message.
+     * 
+     * @param errorMessage The error message to be displayed in the dialog.
+     */
     private void showErrorDialog(String errorMessage) 
     {
         try 
@@ -972,6 +1156,11 @@ public class Step4Controller {
         }
     }
 
+    /**
+     * Shows a confirmation dialog with a specified message.
+     * 
+     * @param message The message to be displayed in the confirmation dialog.
+     */
     private void showConfirmationDialog(String message) 
     {
         try 
@@ -993,6 +1182,15 @@ public class Step4Controller {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Validates the customer's name and surname to ensure they are not empty, too short or too long, 
+     * and contain only valid characters (including Turkish characters).
+     * 
+     * @param name The first name of the customer.
+     * @param surname The last name of the customer.
+     * @return true if the name and surname are valid, false otherwise.
+     */
     private boolean validateCustomerName(String name, String surname) 
     {
         // Empty check
