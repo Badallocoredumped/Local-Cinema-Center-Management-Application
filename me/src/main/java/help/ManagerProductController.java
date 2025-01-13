@@ -268,15 +268,15 @@ public class ManagerProductController
                 if (selectedProduct != null) {
                     selectedProduct.setImageData(imageData);
                     if (productDBO.updateProduct(selectedProduct.getName(), selectedProduct)) {
-                        showAlert("Success", "Image updated successfully");
+                        showAlert(AlertType.ERROR, "Success", "Successfully imported image");
                         loadProducts(); // Refresh table
                     }
                 } else {
-                    showAlert("Error", "Please select a product first");
+                    showAlert(AlertType.ERROR, "Error", "Import error: No product selected");
                 }
                 
             } catch (IOException e) {
-                showAlert("Error", "Failed to load image: " + e.getMessage());
+                showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
             }
         }
     }
@@ -301,7 +301,7 @@ public class ManagerProductController
             
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error", "Failed to load products: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
         }
     }
     
@@ -348,14 +348,14 @@ public class ManagerProductController
             );
             
             if (productDBO.insertProduct(newProduct)) {
-                showSuccessMessage("added");
+                showAlert(AlertType.CONFIRMATION, "Success", "Product successfully added");
                 clearFields();
                 loadProducts();
             } else {
-                showAlert("Error", "Failed to add product");
+                showAlert(AlertType.ERROR, "Error", "Failed to add product");
             }
         } catch (Exception e) {
-            showAlert("Error", "Invalid input: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
         }
     }
 
@@ -369,7 +369,7 @@ public class ManagerProductController
     private void handleUpdateProduct() {
         Product selectedProduct = ProductTable.getSelectionModel().getSelectedItem();
         if (selectedProduct == null) {
-            showAlert("Error", "Please select a product to update");
+            showAlert(AlertType.ERROR, "Error", "Please select a product to update");
             return;
         }
         
@@ -386,14 +386,14 @@ public class ManagerProductController
             );
             
             if (productDBO.updateProduct(selectedProduct.getName(), updatedProduct)) {
-                showSuccessMessage("updated");
+                showAlert(AlertType.CONFIRMATION, "Success", "Product successfully updated");
                 clearFields();
                 loadProducts();
             } else {
-                showAlert("Error", "Failed to update product");
+                showAlert(AlertType.ERROR, "Error", "Failed to add product");
             }
         } catch (Exception e) {
-            showAlert("Error", "Invalid input: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Error", "Failed to add product");
         }
     }
 
@@ -407,7 +407,7 @@ public class ManagerProductController
     private void handleDeleteProduct() {
         Product selectedProduct = ProductTable.getSelectionModel().getSelectedItem();
         if (selectedProduct == null) {
-            showAlert("Error", "Please select a product to delete");
+            showAlert(AlertType.ERROR, "Error", "Please select a product to delete");
             return;
         }
         
@@ -419,14 +419,14 @@ public class ManagerProductController
         if (confirmation.showAndWait().get() == ButtonType.OK) {
             try {
                 if (productDBO.deleteProduct(selectedProduct.getName())) {
-                    showSuccessMessage("deleted");
+                    showAlert(AlertType.CONFIRMATION, "Success", "Product successfully deleted");
                     clearFields();
                     loadProducts();
                 } else {
-                    showAlert("Error", "Failed to delete product");
+                    showAlert(AlertType.ERROR, "Error", "Error");
                 }
             } catch (Exception e) {
-                showAlert("Error", "Could not delete product: " + e.getMessage());
+                showAlert(AlertType.ERROR, "Error", "Couldn't delete product");
             }
         }
     }
@@ -441,10 +441,10 @@ public class ManagerProductController
     {
     // Validate Product Name
         if (ProductNameText == null || ProductNameText.getText().trim().isEmpty()) {
-            showAlert("Validation Error", "Product name cannot be empty");
+            showAlert(AlertType.ERROR, "Error", "Product name cannot be empty");
             return false;
         } else if (!ProductNameText.getText().trim().matches("[a-zA-ZçÇğĞıİöÖşŞüÜ\\s]+")) {
-            showAlert("Validation Error", "Product name can only contain letters and Turkish characters");
+            showAlert(AlertType.ERROR, "Error", "Product name can only contain letters and spaces");
             return false;
         }
 
@@ -452,11 +452,11 @@ public class ManagerProductController
         try {
             int stock = Integer.parseInt(ProductStockText.getText().trim());
             if (stock < 0) {
-                showAlert("Validation Error", "Stock cannot be negative");
+                showAlert(AlertType.ERROR, "Error", "Stock cannot be negative");
                 return false;
             }
         } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Please enter a valid number for stock");
+            showAlert(AlertType.ERROR, "Error", "Please enter a valid number for stock");
             return false;
         }
 
@@ -464,17 +464,17 @@ public class ManagerProductController
         try {
             double price = Double.parseDouble(ProductPriceText.getText().trim());
             if (price < 0) {
-                showAlert("Validation Error", "Price cannot be negative");
+                showAlert(AlertType.ERROR, "Error", " Price cannot be negative");
                 return false;
             }
         } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Please enter a valid number for price");
+            showAlert(AlertType.ERROR, "Error", "Please enter a valid number for price");
             return false;
         }
 
         // Validate Product Type
         if (ProductTypeComboBox == null || ProductTypeComboBox.getValue() == null) {
-            showAlert("Validation Error", "Please select a product type");
+            showAlert(AlertType.ERROR, "Error", "Please select a product type");
             return false;
         }
 
@@ -497,60 +497,37 @@ public class ManagerProductController
         selectedImageData = null;
     }
     
-    /**
-     * Displays an informational alert with a specified title and message.
-     * The alert appears in the same window as the main application and retains
-     * the fullscreen state if it was active before the alert was shown.
+        /**
+     * Displays an alert dialog with a specified type, title, and message content.
+     * The alert is modal to the primary application window and ensures it appears
+     * within the same window context. If the primary application window is in fullscreen,
+     * the alert retains this state.
      *
-     * @param title   The title of the alert.
-     * @param message The message content of the alert.
+     * @param alertType The type of alert to display (e.g., INFORMATION, WARNING, ERROR).
+     * @param title     The title of the alert dialog, displayed in the dialog's title bar.
+     * @param content   The message content to be displayed in the alert dialog.
      */
-    private void showAlert(String title, String message) {
-        // Store the main window state
-        Stage mainStage = (Stage) SignoutButton.getScene().getWindow();
-        boolean wasFullScreen = mainStage.isFullScreen();
-        
-        // Create the alert
-        Alert alert = new Alert(AlertType.INFORMATION);
+    private void showAlert(Alert.AlertType alertType, String title, String content) 
+    {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText(content);
         
-        // Show the alert and wait for user interaction
+        // Get the primary stage that contains this controller's scene
+        Stage primaryStage = (Stage) Product_Inventory_Go.getScene().getWindow();
+        
+        // Set the alert's owner to the primary stage
+        alert.initOwner(primaryStage);
+        
+        // Keep alert within fullscreen window
+        alert.initModality(Modality.WINDOW_MODAL);
+        
+        // Show and wait for user response
         alert.showAndWait();
-        
-        // Ensure the fullscreen state is retained
-        if (wasFullScreen) {
-            mainStage.setFullScreen(true);
-        }
     }
 
-    /**
-     * Displays a success message indicating that a product has been successfully added, updated, or deleted.
-     * The alert appears in the same window as the main application and retains
-     * the fullscreen state if it was active before the alert was shown.
-     *
-     * @param action The action performed, such as "added", "updated", or "deleted".
-     */
-    private void showSuccessMessage(String action) {
-        // Store the main window state
-        Stage mainStage = (Stage) ProductTable.getScene().getWindow();
-        boolean wasFullScreen = mainStage.isFullScreen();
-        
-        // Create the success message alert
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
-        alert.setHeaderText(null);
-        alert.setContentText("Product successfully " + action + "!");
-        
-        // Show the alert and wait for user interaction
-        alert.showAndWait();
-        
-        // Ensure the fullscreen state is retained
-        if (wasFullScreen) {
-            mainStage.setFullScreen(true);
-        }
-    }
+    
     
     /**
      * Handles the action of navigating to the product management page.
@@ -575,7 +552,7 @@ public class ManagerProductController
             stage.setFullScreenExitHint(""); // Hide the exit hint
 
         } catch (IOException e) {
-            showAlert("Error", "Could not load product management page");
+            showAlert(AlertType.ERROR, "Error", "Couldn't delete product");
         }
     }
 
@@ -596,7 +573,7 @@ public class ManagerProductController
             stage.setFullScreenExitHint("");
             
         } catch (IOException e) {
-            showAlert("Error", "Could not load personnel management page");
+            showAlert(AlertType.ERROR, "Error", "Couldn't delete product");
         }
     }
     /**
@@ -616,7 +593,7 @@ public class ManagerProductController
             stage.setFullScreenExitHint("");
             
         } catch (IOException e) {
-            showAlert("Error", "Could not load price management page");
+            showAlert(AlertType.ERROR, "Error", "Couldn't delete product");
         }
     }
         
@@ -637,7 +614,10 @@ public class ManagerProductController
             stage.setFullScreenExitHint("");
             
         } catch (IOException e) {
-            showAlert("Error", "Could not load revenue management page");
+            showAlert(AlertType.ERROR, "Error", "Couldn't delete product");
         }
     }
+
+   
+    
 }

@@ -154,6 +154,7 @@ public class ShoppingCart {
         selectedMovie = null;
         selectedDaySessionAndHall = null;
         itemsBought.clear();
+        instance = null;
     }
 
     /**

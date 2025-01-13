@@ -166,7 +166,7 @@ public class ManagerPriceController
             CurrentPriceHallB.setText(String.format("$%.2f", hallBPrice));
             CurrentDiscountRate.setText(String.format("%.0f%%", discountRate));
         } catch (Exception e) {
-            showAlert(null, "Error");
+            showAlert(AlertType.ERROR, "Error", "Failed to load the prices");
         }
     }
 
@@ -216,7 +216,7 @@ public class ManagerPriceController
             stage.setFullScreenExitHint(""); // Hide the exit hint
 
         } catch (IOException e) {
-            showAlert(null, "Error");
+            showAlert(AlertType.ERROR, "Error", "Failed to load the prices");
         }
     }
 
@@ -238,7 +238,7 @@ public class ManagerPriceController
             stage.setFullScreenExitHint("");
             
         } catch (IOException e) {
-            showAlert(null, "Error");
+            showAlert(AlertType.ERROR, "Error", "Failed to load the prices");
         }
     }
 
@@ -260,7 +260,7 @@ public class ManagerPriceController
             stage.setFullScreenExitHint("");
             
         } catch (IOException e) {
-            showAlert(null, "Error");
+            showAlert(AlertType.ERROR, "Error", "Failed to load the prices");
         }
     }
 
@@ -282,7 +282,7 @@ public class ManagerPriceController
             stage.setFullScreenExitHint("");
             
         } catch (IOException e) {
-            showAlert(null, "Error");
+            showAlert(AlertType.ERROR, "Error", "Failed to load the prices");
         }
     }
 
@@ -298,29 +298,29 @@ public class ManagerPriceController
         try {
             String newPriceText = NewPriceHallA.getText().trim(); // Trim any leading or trailing spaces
             if (newPriceText.isEmpty()) {
-                showAlert(null, "Error");
+                showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
                 return;
             }
     
             double newPrice = Double.parseDouble(newPriceText);
             if (newPrice <= 0) {
-                showAlert(null, "Error");
+                showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
                 return;
             }
             if (newPrice > 125) {
-                showAlert(null, "Error");
+                showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
                 return;
             }
     
             priceDBO.updateTicketPricing(1, newPrice, priceDBO.getSeatDiscount("Hall_A"));
             loadCurrentPrices();
             NewPriceHallA.clear();
-            showAlert(null, "Succesfully Updated Hall A Price");
+            showAlert(AlertType.CONFIRMATION, "Success", "Successfully Updated Hall A Price");
     
         } catch (NumberFormatException e) {
-            showAlert(null, "Error in Hall A");
+            showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
         } catch (Exception e) {
-            showAlert(null, "Error in Hall A");
+            showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
         }
     }
 
@@ -333,29 +333,29 @@ public class ManagerPriceController
         try {
             String newPriceText = NewPriceHallB.getText().trim(); // Trim any leading or trailing spaces
             if (newPriceText.isEmpty()) {
-                showAlert(null, "Error in Hall B");
+                showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
                 return;
             }
 
             double newPrice = Double.parseDouble(newPriceText);
             if (newPrice <= 0) {
-                showAlert(null, "Error in Hall B");
+                showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
                 return;
             }
             if (newPrice > 125) {
-                showAlert(null, "Error in Hall B");
+                showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
                 return;
             }
 
             priceDBO.updateTicketPricing(2, newPrice, priceDBO.getSeatDiscount("Hall_B"));
             loadCurrentPrices();
             NewPriceHallB.clear();
-            showAlert(null, "Succesfully Updated Hall B Price");
+            showAlert(AlertType.CONFIRMATION, "Success", "Successfully Updated Hall B Price");
 
         } catch (NumberFormatException e) {
-            showAlert(null, "Error");
+            showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
         } catch (Exception e) {
-            showAlert(null, "Error");
+            showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
         }
     }
 
@@ -368,13 +368,13 @@ public class ManagerPriceController
         try {
             String newDiscountText = NewDiscountRate.getText().trim(); // Trim any leading or trailing spaces
             if (newDiscountText.isEmpty()) {
-                showAlert(null, "Error");
+                showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
                 return;
             }
 
             double discountRate = Double.parseDouble(newDiscountText); // Use the number as-is
             if (discountRate < 0 || discountRate > 100) {  // Check if the discount is between 0 and 100
-                showAlert(null, "Error");
+                showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
                 return;
             }
 
@@ -384,12 +384,12 @@ public class ManagerPriceController
 
             loadCurrentPrices();
             NewDiscountRate.clear();
-            showAlert(null, "Successfully Updated Discount Rate");
+            showAlert(AlertType.ERROR, "Success", "Successfully Updated Discount Rate");
 
         } catch (NumberFormatException e) {
-            showAlert(null, "Error");
+            showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
         } catch (Exception e) {
-            showAlert(null, "Error");
+            showAlert(AlertType.ERROR, "Error", "Failed invalid parameter");
         }
     }
 
@@ -398,18 +398,32 @@ public class ManagerPriceController
 
 
     /**
-     * Displays an alert with a given title and message.
-     * 
-     * @param title The title of the alert (can be null).
-     * @param message The message to display in the alert.
+     * Displays an alert dialog with a specified type, title, and message content.
+     * The alert is modal to the primary application window and ensures it appears
+     * within the same window context. If the primary application window is in fullscreen,
+     * the alert retains this state.
+     *
+     * @param alertType The type of alert to display (e.g., INFORMATION, WARNING, ERROR).
+     * @param title     The title of the alert dialog, displayed in the dialog's title bar.
+     * @param content   The message content to be displayed in the alert dialog.
      */
-    private void showAlert(String title, String message) 
+    private void showAlert(Alert.AlertType alertType, String title, String content) 
     {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.getButtonTypes().setAll(ButtonType.OK);
+        alert.setContentText(content);
+        
+        // Get the primary stage that contains this controller's scene
+        Stage primaryStage = (Stage) Product_Inventory_Go.getScene().getWindow();
+        
+        // Set the alert's owner to the primary stage
+        alert.initOwner(primaryStage);
+        
+        // Keep alert within fullscreen window
+        alert.initModality(Modality.WINDOW_MODAL);
+        
+        // Show and wait for user response
         alert.showAndWait();
     }
 

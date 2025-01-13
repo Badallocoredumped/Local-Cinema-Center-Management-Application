@@ -226,7 +226,6 @@ public class ScheduleController {
         showAlert(Alert.AlertType.INFORMATION, "Success", "Session updated successfully!");
     
     
-        showAlert(Alert.AlertType.ERROR, "Error", "Cannot update a session with sold tickets.");
         
         clearFields();
     }

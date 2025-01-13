@@ -107,6 +107,8 @@ public class Step3AController
     {
         ShoppingCart cart = ShoppingCart.getInstance();
         Session session = cart.getSelectedDaySessionAndHall();
+        next_button_step3a.setDisable(true);
+
 
         selectedMovieLabel.setText(cart.getSelectedMovie().getTitle());
         selectedSession.setText((
@@ -256,6 +258,27 @@ public class Step3AController
     {
         List<String> cartSeats = ShoppingCart.getInstance().getSelectedSeats();
         ShoppingCart cart = ShoppingCart.getInstance();
+
+        if (selectedSeats == null || selectedSeats.isEmpty()) 
+        {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Seats Selected");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select at least one seat before adding to cart.");
+            
+            // Get main stage and configure alert
+            Stage mainStage = (Stage) MinimizeButton.getScene().getWindow();
+            alert.initOwner(mainStage);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            
+            // Configure alert stage
+            Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+            alertStage.setAlwaysOnTop(true);
+            
+            alert.showAndWait();
+            return;
+        }
+        next_button_step3a.setDisable(false);
     
         // Check if the selected seat is already sold
         for (String seat : selectedSeats) 

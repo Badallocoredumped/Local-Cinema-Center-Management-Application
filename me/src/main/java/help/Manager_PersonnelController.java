@@ -522,11 +522,15 @@ public class Manager_PersonnelController
      * @param oldUsername The old username to check for username changes.
      */
     private void updateUser(User user,String oldUsername) {
-        try {
+        try 
+        {
             if (userDBO.updateUser(user,oldUsername)) 
             {
                 showAlert(AlertType.INFORMATION, "Success", "User information updated successfully!");
-                setCurrentUsername(user.getUsername());
+                if(oldUsername.equals(currentUsername))
+                {
+                    setCurrentUsername(user.getUsername());
+                }
                 loadUsers(); // Refresh table
             } else {
                 showAlert(AlertType.ERROR, "Error", "Failed to update user information");
