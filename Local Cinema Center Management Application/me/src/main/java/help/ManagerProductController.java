@@ -411,12 +411,9 @@ public class ManagerProductController
             return;
         }
         
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirm Delete");
-        confirmation.setHeaderText("Delete Product");
-        confirmation.setContentText("Are you sure you want to delete " + selectedProduct.getName() + "?");
+
         
-        if (confirmation.showAndWait().get() == ButtonType.OK) {
+        
             try {
                 if (productDBO.deleteProduct(selectedProduct.getName())) {
                     showAlert(AlertType.CONFIRMATION, "Success", "Product successfully deleted");
@@ -428,7 +425,7 @@ public class ManagerProductController
             } catch (Exception e) {
                 showAlert(AlertType.ERROR, "Error", "Couldn't delete product");
             }
-        }
+        
     }
 
     /**

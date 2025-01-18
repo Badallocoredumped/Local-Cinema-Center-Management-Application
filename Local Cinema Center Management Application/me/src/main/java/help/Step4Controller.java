@@ -138,6 +138,8 @@ public class Step4Controller {
 
     private String customerName;
     private String customerSurname;
+
+    
     
     /**
      * Returns the amount of tax applied to products.

@@ -134,6 +134,11 @@ public class OMoviesController {
                 showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please import a poster.");
                 return;
             }
+            if(summary.isEmpty())
+            {
+                showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please enter a summary.");
+                return;
+            }
 
             if (title.isEmpty() || genre == null || summary.isEmpty()) {
                 showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please fill in all fields.");
@@ -189,13 +194,23 @@ public class OMoviesController {
             }
 
             int movieId = AdminDBH.getMovieIdFromTitle(selectedMovie.getTitle());
-            dbHandler.FullUpdateMovie(movieId, newTitle, posterData, newGenre, newSummary);
+            boolean isError = false;
+            isError = dbHandler.FullUpdateMovie(movieId, newTitle, posterData, newGenre, newSummary);
             loadMoviesFromDatabase();
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Movie updated successfully!");
+            if(!isError)
+            {
+
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Movie updated successfully!");
+            }
+            else
+            {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to update movie ");
+
+            }
             clearForm();
         } catch (SQLException e) {
-            e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to update movie: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -279,19 +294,30 @@ public class OMoviesController {
         // Position alert
         Stage alertStage = (Stage) confirmAlert.getDialogPane().getScene().getWindow();
         alertStage.setAlwaysOnTop(true);
-
+       
         confirmAlert.showAndWait().ifPresent(response -> {
-            if (response == javafx.scene.control.ButtonType.OK) {
+            if (response == javafx.scene.control.ButtonType.OK) 
+            {
+                boolean isError = false;
                 int movieId = AdminDBH.getMovieIdFromTitle(selectedMovie.getTitle());
                 try {
-                    dbHandler.deleteMovie(movieId);
+                    isError = dbHandler.deleteMovie(movieId);
                 } catch (SQLException e) 
                 {
                     // Handle alert
                     e.printStackTrace();
                 }
                 loadMoviesFromDatabase();
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Movie deleted successfully!");
+                if(!isError)
+                {
+                    showAlert(Alert.AlertType.INFORMATION, "Success", "Movie deleted successfully!");
+
+                }
+                else
+                {
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete movie!");
+
+                }
                 clearForm();
             }
         });

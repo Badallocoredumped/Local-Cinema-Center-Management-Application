@@ -1,0 +1,150 @@
+/* General styling for anchor-pane */
+
+
+/* Insert Button Styling */
+.insert-button {
+    -fx-background-color: #e74c3c; /* Red background */
+    -fx-text-fill: white;          /* White text */
+    -fx-font-weight: bold;         /* Bold text */
+    -fx-border-color: #c0392b;     /* Dark red border */
+    -fx-border-width: 2px;
+    -fx-background-radius: 5px;    /* Rounded corners */
+    -fx-border-radius: 5px;
+}
+
+/* TableView Column Header Styling */
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #800000, #ff0000); /* Red gradient */
+}
+
+.insert-button:hover {
+    -fx-background-color: #c0392b; /* Darker red */
+    -fx-scale-x: 1.1; /* Increase width */
+    -fx-scale-y: 1.1; /* Increase height */
+}
+
+/* TableView Column Header Text Styling */
+.table-view .column-header .label {
+    -fx-text-fill: white; /* White text */
+    -fx-font-weight: bold; /* Bold text */
+    -fx-alignment: center; /* Centered text */
+    -fx-line-height: 50px;
+}
+
+/* Info Card Styles */
+.infocard-2, .infocard-1 {
+    -fx-background-color: transparent; /* Transparent background */
+    -fx-text-fill: white;              /* White text */
+    -fx-font-weight: bold;             /* Bold text */
+    -fx-border-color: #d35400;         /* Dark orange border */
+    -fx-border-width: 2px;
+    -fx-background-radius: 5px;        /* Rounded corners */
+    -fx-border-radius: 5px;
+}
+
+/* Insert Button Styles for Different Colors */
+.insert-button-1 {
+    -fx-background-color: #2ecc71; /* Green background */
+    -fx-text-fill: white;          /* White text */
+    -fx-font-weight: bold;         /* Bold text */
+    -fx-border-color: #27ae60;     /* Dark green border */
+    -fx-border-width: 2px;
+    -fx-background-radius: 5px;    /* Rounded corners */
+    -fx-border-radius: 5px;
+}
+
+.insert-button-2, .insert-button-3, .insert-button-4 {
+    -fx-background-color: #3498db; /* Blue background for button 2 */
+    -fx-background-color: #f1c40f; /* Yellow background for button 3 */
+    -fx-background-color: #9b59b6; /* Purple background for button 4 */
+    -fx-text-fill: white;          /* White text */
+    -fx-font-weight: bold;         /* Bold text */
+    -fx-border-width: 2px;
+    -fx-background-radius: 5px;    /* Rounded corners */
+    -fx-border-radius: 5px;
+}
+
+.insert-button-2:hover, .insert-button-3:hover, .insert-button-4:hover {
+    -fx-scale-x: 1.1; /* Increase width */
+    -fx-scale-y: 1.1; /* Increase height */
+}
+
+/* Delete Button */
+.insert-button-delete {
+    -fx-background-color: #e42222; /* Red background */
+    -fx-text-fill: white;          /* White text */
+    -fx-font-weight: bold;         /* Bold text */
+    -fx-border-color: #e42222;     /* Dark red border */
+    -fx-border-width: 2px;
+    -fx-background-radius: 5px;    /* Rounded corners */
+    -fx-border-radius: 5px;
+}
+
+/* Minus Button Styling */
+.minus-button {
+    -fx-pref-width: 62px; /* Preferred width */
+    -fx-pref-height: 24px; /* Preferred height */
+    -fx-font-size: 14px; /* Font size */
+}
+
+/* Responsive Design for Small and Large Screens */
+@media (max-width: 768px) {
+    .minus-button {
+        -fx-pref-width: 40px; /* Smaller width */
+        -fx-pref-height: 20px; /* Smaller height */
+        -fx-font-size: 12px; /* Smaller font size */
+    }
+}
+
+@media (min-width: 1200px) {
+    .minus-button {
+        -fx-pref-width: 70px; /* Larger width */
+        -fx-pref-height: 28px; /* Larger height */
+        -fx-font-size: 16px; /* Larger font size */
+    }
+}
+
+/* Menu Card Styling */
+.menu-card {
+    -fx-text-fill: #fff;          /* White text */
+    -fx-font-weight: bold;        /* Bold text */
+    -fx-cursor: hand;             /* Hand cursor */
+    -fx-background-color: linear-gradient(to right, #800000, #4b0000); /* Red gradient */
+}
+
+/* Image View Hover Effects */
+.image-view {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0), 15, 0, 0, 0); /* No shadow initially */
+    -fx-scale-x: 1; /* Normal size */
+    -fx-scale-y: 1;
+    -fx-transition: all 0.3s ease; /* Smooth transition */
+}
+
+.image-view:hover {
+    -fx-effect: dropshadow(gaussian, rgba(128, 0, 0, 0.7), 15, 0.2, 0, 0); /* Red shadow */
+    -fx-scale-x: 1.1; /* Enlarge width */
+    -fx-scale-y: 1.1; /* Enlarge height */
+}
+
+/* Hover Effect for anchor-pane1 */
+.anchor-pane1 {
+    -fx-border-color: maroon; /* Border color */
+    -fx-border-width: 3; /* Border width */
+    -fx-border-style: solid; /* Solid border */
+    -fx-transition: all 0.3s ease; /* Transition effect */
+}
+
+.anchor-pane1:hover {
+    -fx-scale-x: 1.1; /* Enlarge width */
+    -fx-scale-y: 1.1; /* Enlarge height */
+}
+
+/* Text Field Search Styling */
+.text-field-search {
+    -fx-prompt-text-fill: gray; /* Placeholder text color */
+    -fx-alignment: center; /* Center text */
+    -fx-padding: 5; /* Padding */
+    -fx-border-color: gray; /* Border color */
+    -fx-border-width: 1; /* Border width */
+    -fx-border-radius: 5; /* Border radius */
+}

@@ -140,12 +140,12 @@ public class AdminDBH
      * @param newSummaryText The new summary text for the movie.
      * @throws SQLException If there is an error executing the SQL queries or accessing the database.
      */
-    public void FullUpdateMovie(int movieId, String newTitle, byte[] newPosterData, String newGenre, String newSummaryText) throws SQLException 
+    public boolean FullUpdateMovie(int movieId, String newTitle, byte[] newPosterData, String newGenre, String newSummaryText) throws SQLException 
     {
         if (dbconnection == null) 
         {
             System.err.println("Database connection failed!!");
-            return; 
+            return true; 
         }
         
         String checkTicketsQuery = "SELECT COUNT(*) FROM sessions WHERE movie_id = ?";
@@ -156,7 +156,7 @@ public class AdminDBH
             if (rs.next() && rs.getInt(1) > 0) 
             {
                 System.out.println("Error: Cannot update a movie with sold tickets.");
-                return;
+                return true;
             }
         }
 
@@ -183,7 +183,7 @@ public class AdminDBH
                     } 
             }
         } 
-        
+        return false;
     }
 
     /**
@@ -196,11 +196,11 @@ public class AdminDBH
      * @param movieId The ID of the movie to be deleted.
      * @throws SQLException If there is an error executing the SQL queries or accessing the database.
      */
-    public void deleteMovie(int movieId) throws SQLException 
+    public boolean deleteMovie(int movieId) throws SQLException 
     {
         if (dbconnection == null) {
             System.err.println("Database connection failed!!");
-            return;
+            return true;
         }
 
         String checkTicketsQuery = "SELECT COUNT(*) FROM sessions WHERE movie_id = ?";
@@ -211,7 +211,7 @@ public class AdminDBH
             if (rs.next() && rs.getInt(1) > 0) 
             {
                 System.out.println("Error: Cannot delete a movie with sold tickets.");
-                return;
+                return true;
             }
         }
     
@@ -243,7 +243,8 @@ public class AdminDBH
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+        return false;
+}
     
     /**
      * Retrieves all movies from the database.
@@ -409,7 +410,7 @@ public class AdminDBH
      * @param startTime The start time of the session.
      * @throws SQLException If there is an error executing the SQL queries or accessing the database.
      */
-    public void AddSession(int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
+    public boolean AddSession(int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
     {
         String insertSession = "INSERT INTO Sessions (movie_id, hall_name, session_date, start_time, vacant_seats) VALUES (?, ?, ?, ?, ?)";
         String insertSeat = "INSERT INTO seats (session_id, hall_name,seat_label, is_occupied) VALUES (?, ?, ?, ?)";
@@ -432,7 +433,7 @@ public class AdminDBH
                     if (rs.next() && rs.getInt(1) > 0) 
                     {
                         System.out.println("Error: Overlapping session detected.");
-                        return;
+                        return true;
                     }
                 }
 
@@ -476,6 +477,7 @@ public class AdminDBH
                 throw e;
             }
         }
+        return false;
         
     }
 
@@ -554,8 +556,9 @@ public class AdminDBH
      * @param startTime The new start time for the session.
      * @throws SQLException If there is an error executing the SQL queries or accessing the database.
      */
-    public void UpdateSession(int sessionId, int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
+    public boolean UpdateSession(int sessionId, int movieId, String hallName, LocalDate sessionDate, Time startTime) throws SQLException 
     {
+        String insertSeat = "INSERT INTO seats (session_id, hall_name,seat_label, is_occupied) VALUES (?, ?, ?, ?)";
         String checkTicketsQuery = "SELECT COUNT(*) FROM Tickets WHERE session_id = ?";
         try (PreparedStatement checkStmt = dbconnection.prepareStatement(checkTicketsQuery)) 
         {
@@ -564,7 +567,7 @@ public class AdminDBH
             if (rs.next() && rs.getInt(1) > 0) 
             {
                 System.out.println("Error: Cannot update a session with sold tickets.");
-                return;
+                return true;
             }
         }
 
@@ -579,9 +582,45 @@ public class AdminDBH
                     if (rs.next() && rs.getInt(1) > 0) 
                     {
                         System.out.println("Error: Overlapping session detected.");
-                        return;
+                        return true;
                     }
                 }
+            String currentHallQuery = "SELECT hall_name FROM Sessions WHERE session_id = ?";
+            String currentHall = null;
+            try (PreparedStatement stmt = dbconnection.prepareStatement(currentHallQuery)) {
+                stmt.setInt(1, sessionId);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    currentHall = rs.getString(1);
+                }
+            }
+
+            if (!hallName.equals(currentHall)) {
+                // Remove all seats linked to the session ID
+                String deleteSeatsQuery = "DELETE FROM Seats WHERE session_id = ?";
+                try (PreparedStatement stmt = dbconnection.prepareStatement(deleteSeatsQuery)) {
+                    stmt.setInt(1, sessionId);
+                    stmt.executeUpdate();
+                    System.out.println("Old seats removed successfully.");
+                }
+                int hallCapacity = getHallCapacity(hallName);
+                List<String> seatLabels = generateSeatLabels(hallName);
+
+        
+                // Create new seats for the new hall
+                PreparedStatement seatStmt = dbconnection.prepareStatement(insertSeat);
+                    for (String seatLabel : seatLabels) 
+                    {
+                        System.out.println("Inserting seat: " + seatLabel);
+                        seatStmt.setInt(1, sessionId);
+                        seatStmt.setString(2, hallName);
+                        seatStmt.setString(3, seatLabel);
+                        seatStmt.setBoolean(4, false);
+                        seatStmt.executeUpdate();
+                        System.out.println("Seat added successfully: " + seatLabel);
+                    }
+            }
+        
         String updateQuery = "UPDATE Sessions SET movie_id = ?, hall_name = ?, session_date = ?, start_time = ? WHERE session_id = ?";
         try (PreparedStatement stmt = dbconnection.prepareStatement(updateQuery)) 
         {
@@ -593,6 +632,7 @@ public class AdminDBH
             System.out.println("Session updated successfully");
             stmt.executeUpdate();
         }
+        return false;
         
     }
 

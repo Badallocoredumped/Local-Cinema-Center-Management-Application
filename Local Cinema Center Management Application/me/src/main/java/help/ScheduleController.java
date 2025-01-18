@@ -170,15 +170,26 @@ public class ScheduleController {
 
         int movieId = AdminDBH.getMovieIdFromTitle(title);
 
+        boolean isError = false;
+
         try {
-            dbhandler.AddSession(movieId, hall, date, time);
+            isError = dbhandler.AddSession(movieId, hall, date, time);
         } catch (SQLException e) 
         {
             e.printStackTrace();
         }
         loadSessionsFromDatabase();
+        if(!isError)
+        {
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Session added successfully!");
+
+        }
+        else
+        {
+            showAlert(Alert.AlertType.ERROR, "Error", "Overlaping session or this session has sold tickets!");
+
+        }
         
-        showAlert(Alert.AlertType.INFORMATION, "Success", "Session added successfully!");
         
         clearFields();
     }
@@ -190,7 +201,8 @@ public class ScheduleController {
  * @param event The ActionEvent triggered by the Update button click.
  */
     @FXML
-    void onUpdate(ActionEvent event) {
+    void onUpdate(ActionEvent event) 
+    {
         selectedSession = sessionTable.getSelectionModel().getSelectedItem();
         if (selectedSession == null) 
         {
@@ -216,14 +228,24 @@ public class ScheduleController {
         int sessionId = selectedSession.getSessionId();
         int movieId = AdminDBH.getMovieIdFromTitle(newTitle);
 
-        try {
-            dbhandler.UpdateSession(sessionId, movieId, newHall, newDate, newTime);
+        boolean isError = false;
+
+        try 
+        {
+            isError = dbhandler.UpdateSession(sessionId, movieId, newHall, newDate, newTime);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         loadSessionsFromDatabase();
-        
-        showAlert(Alert.AlertType.INFORMATION, "Success", "Session updated successfully!");
+        if(isError)
+        {
+            showAlert(Alert.AlertType.ERROR, "Error", "Overlaping session or this session has sold tickets!");
+        }
+        else
+        {
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Session updated successfully!");
+
+        }
     
     
         

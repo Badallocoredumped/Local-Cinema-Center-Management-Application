@@ -1,0 +1,60 @@
+/* General TreeTableView Styles */
+.tree-table-view {
+    -fx-background-color: #f5f5f5; /* Light gray background */
+    -fx-border-color: #cccccc;     /* Subtle border */
+    -fx-border-width: 1px;
+}
+
+/* Header Style */
+.tree-table-view .column-header {
+    -fx-background-color: linear-gradient(to bottom, #4CAF50, #357A38); /* Green gradient */
+    -fx-text-fill: white;               /* White text */
+    -fx-font-weight: bold;              /* Bold font */
+    -fx-font-size: 14px;                /* Slightly larger text */
+    -fx-alignment: center;              /* Centered text */
+    -fx-padding: 5px;                   /* Padding for header text */
+}
+
+/* Hover Effect for Column Headers */
+.tree-table-view .column-header:hover {
+    -fx-background-color: #5cb85c; /* Lighter green on hover */
+}
+
+/* Row Styling */
+.tree-table-view .cell {
+    -fx-background-color: #ffffff; /* White rows */
+    -fx-text-fill: #333333;        /* Dark text */
+    -fx-font-size: 13px;           /* Standard font size */
+    -fx-padding: 5px;              /* Cell padding */
+}
+
+/* Alternate Row Colors */
+.tree-table-view .tree-table-row-cell:odd {
+    -fx-background-color: #f9f9f9; /* Light gray for alternate rows */
+}
+
+.tree-table-view .tree-table-row-cell:even {
+    -fx-background-color: #ffffff; /* White for regular rows */
+}
+
+/* Hover Effect for Rows */
+.tree-table-view .tree-table-row-cell:hover {
+    -fx-background-color: #e8f5e9; /* Light green highlight */
+}
+
+/* Selected Row */
+.tree-table-view .tree-table-row-cell:selected {
+    -fx-background-color: #a5d6a7; /* Light green for selected rows */
+    -fx-text-fill: white;          /* White text for selected rows */
+}
+
+/* Tree Table Expand/Collapse Icon */
+.tree-table-view .arrow {
+    -fx-background-color: transparent; /* Transparent background */
+    -fx-shape: "M 0 4 L 8 4 L 4 0 Z";  /* Triangle shape */
+    -fx-fill: #4CAF50;                 /* Green color for the arrow */
+}
+
+.tree-table-view .arrow:hover {
+    -fx-fill: #357A38; /* Darker green when hovered */
+}

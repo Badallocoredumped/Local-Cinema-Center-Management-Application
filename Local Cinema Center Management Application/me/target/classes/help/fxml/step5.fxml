@@ -35,17 +35,13 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.control.TreeTableColumn?>
-<?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../css/style4.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="help.Step4Controller">   <children>
-      <AnchorPane prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <BorderPane prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="help.Step5Controller">   <children>
+      <BorderPane prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: linear-gradient(to right, #800000, #4c0005);" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to right, #800000, #4c0005);" BorderPane.alignment="CENTER">
                <children>
@@ -145,66 +141,98 @@
             </AnchorPane>
          </top>
          <center>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" BorderPane.alignment="CENTER">
+            <AnchorPane style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" BorderPane.alignment="CENTER">
                <children>
-                  <Button id="next_button_step4" fx:id="next_button_step4" layoutX="962.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleNextButtonAction" prefHeight="31.0" prefWidth="58.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Next" AnchorPane.bottomAnchor="55.0" AnchorPane.rightAnchor="118.0" />
-                  <Button id="back_button_step4" fx:id="back_button_step4" layoutX="107.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleBackButtonAction" prefHeight="31.0" prefWidth="58.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Back" AnchorPane.bottomAnchor="55.0" />
-                  <Label layoutX="300.0" layoutY="24.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" text="Customer Information">
-                     <font>
-                        <Font name="SansSerif Bold" size="18.0" />
-                     </font>
-                  </Label>
-                  <AnchorPane layoutX="300.0" layoutY="45.0" prefHeight="89.0" prefWidth="720.0" style="-fx-background-color: linear-gradient(to right, #800000, #4c0005); -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);">
+                  <Button id="back_button_step5" fx:id="back_button_step5" layoutX="107.0" layoutY="680.0" mnemonicParsing="false" onAction="#handleBackButtonAction" prefHeight="31.0" prefWidth="58.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #c0392b; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Back" AnchorPane.bottomAnchor="55.0" />
+                  <AnchorPane layoutX="466.0" layoutY="14.0" prefHeight="231.0" prefWidth="638.0" style="-fx-background-color: #e4e4e4; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 20, 0.5, 0, 0);">
                      <children>
-                        <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="280.0" text="Name" textFill="WHITE">
+                        <Label layoutX="110.0" layoutY="18.0" text="MOVIE TICKET">
                            <font>
-                              <Font name="SansSerif Bold" size="15.0" />
+                              <Font name="SansSerif Bold" size="36.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="NameEnter" layoutX="56.0" layoutY="40.0" prefHeight="25.0" prefWidth="197.0" />
-                        <TextField fx:id="SurnameEnter" layoutX="273.0" layoutY="40.0" prefHeight="25.0" prefWidth="198.0" />
-                        <Label alignment="CENTER" layoutX="226.0" layoutY="14.0" prefHeight="17.0" prefWidth="269.0" text="Surname" textFill="WHITE">
+                        <Line endX="242.0" layoutX="154.0" layoutY="73.0" startX="-129.0" strokeWidth="3.0" />
+                        <Label fx:id="MovieName" layoutX="339.0" layoutY="96.0" text="Movie Name...">
                            <font>
-                              <Font name="SansSerif Bold" size="15.0" />
+                              <Font name="SansSerif Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="457.0" layoutY="14.0" prefHeight="17.0" prefWidth="273.0" text="Age-discounted Tickets" textFill="WHITE">
+                        <Label fx:id="SessionName" layoutX="339.0" layoutY="127.0" text="Session...">
                            <font>
-                              <Font name="SansSerif Bold" size="15.0" />
+                              <Font name="SansSerif Bold" size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="DiscountEnter" layoutX="495.0" layoutY="40.0" prefHeight="25.0" prefWidth="197.0" />
-                        <Button fx:id="ApplyDiscount1" layoutX="699.0" layoutY="38.0" mnemonicParsing="false" onAction="#handleApplyDiscountAction" prefHeight="7.0" prefWidth="7.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 0; -fx-background-radius: 150; -fx-border-radius: 5px;" text="?">
-                           <tooltip>
-                              <Tooltip text="People with age younger than 18 and older than 60 are eligible for the discount." />
-                           </tooltip>
-                        </Button>
+                        <Label fx:id="HallName" layoutX="343.0" layoutY="159.0" text="Hall..">
+                           <font>
+                              <Font name="SansSerif Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="SeatsNumber" layoutX="343.0" layoutY="186.0" text="Seat Number...">
+                           <font>
+                              <Font name="SansSerif Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <FontAwesomeIcon glyphName="FILM" layoutX="35.0" layoutY="56.0" size="4em" wrappingWidth="64.8571424484253" />
+                        <Label fx:id="CustomerName" layoutX="23.0" layoutY="96.0" text="Customer Name...">
+                           <font>
+                              <Font name="SansSerif Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="NonDiscNum" layoutX="23.0" layoutY="159.0" prefHeight="21.0" prefWidth="263.0" text="non-discounted ticket num...">
+                           <font>
+                              <Font name="SansSerif Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="DiscNum" layoutX="23.0" layoutY="127.0" prefHeight="21.0" prefWidth="215.0" text="discounted ticket num...">
+                           <font>
+                              <Font name="SansSerif Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Line endX="-100.0" endY="106.0" layoutX="419.0" layoutY="95.0" startX="-100.0" strokeWidth="3.0" />
                      </children>
                   </AnchorPane>
-                  <Label layoutX="534.0" layoutY="134.0" prefHeight="31.0" prefWidth="263.0" text="Age-based discounts available">
-                     <font>
-                        <Font name="Microsoft Sans Serif" size="18.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="ApplyDiscount" layoutX="797.0" layoutY="134.0" mnemonicParsing="false" onAction="#handleApplyDiscountAction" prefHeight="31.0" prefWidth="54.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Apply" />
-                  <Label layoutX="291.0" layoutY="236.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 2, 0.5, 0, 0);" text="Additional Products" textFill="MAROON">
-                     <font>
-                        <Font name="SansSerif Bold" size="36.0" />
-                     </font>
-                  </Label>
-                  <TreeTableView fx:id="AdditionalProductTable" layoutX="36.0" layoutY="284.0" pickOnBounds="false" prefHeight="416.0" prefWidth="1112.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0.5, 2, 0); -fx-background-radius: 20px;">
-                     <columns>
-                        <TreeTableColumn fx:id="imageColumn" prefWidth="291.0" text="Image" />
-                        <TreeTableColumn fx:id="nameColumn" prefWidth="175.0" text="Product Name" />
-                        <TreeTableColumn fx:id="priceColumn" prefWidth="101.0" text="Price" />
-                        <TreeTableColumn fx:id="CategoryColumn" prefWidth="219.0" text="Category" />
-                        <TreeTableColumn fx:id="stockAvailabilityColumn" prefWidth="184.0" text="Stock Availability" />
-                     </columns>
-                     <columnResizePolicy>
-                        <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                  </TreeTableView>
-                  <Button fx:id="AddProductToCart" layoutX="549.0" layoutY="729.0" mnemonicParsing="false" onAction="#handleAddProductToCartAction" prefHeight="31.0" prefWidth="259.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Add additional products to cart" />
+                  <AnchorPane layoutX="626.0" layoutY="273.0" prefHeight="407.0" prefWidth="302.0" style="-fx-background-color: #e4e4e4; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 20, 0.5, 0, 0);">
+                     <children>
+                        <Label layoutX="25.0" layoutY="14.0" text="MOVIE INVOCIE">
+                           <font>
+                              <Font name="SansSerif Bold" size="32.0" />
+                           </font>
+                        </Label>
+                        <Line endX="188.0" layoutX="95.0" layoutY="60.0" startX="-79.0" strokeWidth="3.0" />
+                        <Line endX="188.0" layoutX="96.0" layoutY="327.0" startX="-79.0" strokeWidth="3.0" />
+                        <Label layoutX="14.0" layoutY="336.0" text="TOTAL PRICE :">
+                           <font>
+                              <Font name="SansSerif Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="16.0" layoutY="371.0" text="TAXES :">
+                           <font>
+                              <Font name="SansSerif Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="MovieInvolveTotalPrice" layoutX="152.0" layoutY="333.0" text="Total Price:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="MovieInvolveTotalTax" layoutX="99.0" layoutY="368.0" text="Total Tax:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="SeatPrices" layoutX="21.0" layoutY="266.0" text="SeatPrices:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="selectedShoppingCart" layoutX="25.0" layoutY="76.0" text="Empty">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <Button fx:id="SaveTicketInvoice" layoutX="689.0" layoutY="721.0" mnemonicParsing="false" onAction="#handleSaveTicketInvoice" prefHeight="31.0" prefWidth="193.0" style="-fx-background-color: #4bb541; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #3c8a32; -fx-border-width: 2px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Save Ticket and Invoice" />
                </children>
             </AnchorPane>
          </center>
@@ -263,41 +291,6 @@
                   <Label fx:id="selectedSeat" layoutX="29.0" layoutY="405.0" minHeight="15.0" minWidth="50.0" prefHeight="59.0" prefWidth="171.0" text="Empty" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="selectedShoppingCart" layoutX="34.0" layoutY="540.0" text="Empty">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="19.0" layoutY="780.0" text="Total Cost:">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="TotalPrice" layoutX="120.0" layoutY="780.0" text="Total Price:">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="SeatPrices" layoutX="18.0" layoutY="723.0" text="SeatPrices">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="19.0" layoutY="743.0" text="Total Tax:">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="TotalTax" layoutX="118.0" layoutY="743.0" text="Total Tax:">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="SeatDiscountedPrice" layoutX="18.0" layoutY="763.0" text="Total Price:">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                </children>
