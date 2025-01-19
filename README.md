@@ -3,7 +3,7 @@
 
 ### Local Cinema Center Management Application 🎥  
 
-A **JavaFX desktop application** integrated with a **MySQL database**, developed for managing a local cinema center as part of the CMPE343 course project.
+A **JavaFX desktop application** integrated with a **MySQL database**, developed for managing a local cinema center.
 
 ---
 
